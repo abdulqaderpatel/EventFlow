@@ -12,7 +12,7 @@ class AuthButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      textAlign: TextAlign.center,
+      textAlign: TextAlign.justify,
       obscureText: obscureText,
       decoration: InputDecoration(
         focusedBorder: OutlineInputBorder(
@@ -21,6 +21,7 @@ class AuthButton extends StatelessWidget {
         prefixIcon: Container(
           height: Get.height * 0.069,
           width: Get.width * 0.13,
+          margin: EdgeInsets.only(right: Get.width * 0.2),
           decoration: BoxDecoration(
               color: Colors.white, borderRadius: BorderRadius.circular(30)),
           child: Icon(icon),

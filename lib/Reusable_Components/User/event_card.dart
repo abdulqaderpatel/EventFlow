@@ -13,7 +13,7 @@ class EventCard extends StatelessWidget {
       children: [
         Card(
           shape: RoundedRectangleBorder(
-              //<-- SEE HERE
+              
               side: const BorderSide(color: Color(0xffff6b74), width: 0),
               borderRadius: BorderRadius.circular(15)),
           elevation: 3,
