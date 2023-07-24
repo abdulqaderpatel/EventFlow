@@ -1,6 +1,7 @@
 import 'package:eventflow/Reusable_Components/Authentication/auth_button.dart';
 import 'package:eventflow/Screens/Authentication/signup.dart';
 import 'package:eventflow/Screens/User/display_events.dart';
+import 'package:eventflow/Screens/User/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -94,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 20),
                 InkWell(
                   onTap: () {
-                    Get.to(DisplayEventsScreen());
+                    Get.to(Navigation());
                   },
                   child: Container(
                     width: Get.width,

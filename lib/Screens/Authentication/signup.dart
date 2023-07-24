@@ -1,4 +1,5 @@
 import 'package:eventflow/Reusable_Components/Authentication/auth_button.dart';
+import 'package:eventflow/Screens/Misc/toast.dart';
 import 'package:eventflow/Screens/User/display_events.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -133,7 +134,22 @@ class _SignupScreenState extends State<SignupScreen> {
                 AuthButton("Password", Icons.key, passwordController, true),
                 SizedBox(height: Get.height * 0.05),
                 InkWell(
-                  onTap: () => Get.to(DisplayEventsScreen()),
+                  onTap: () {
+                    if (nameController.text.isEmpty) {
+                      Toast().errorMessage("Name field cannot be empty");
+                    } else if (emailController.text.isEmpty) {
+                      Toast().errorMessage("Email field cannot be empty");
+                    } else if (passwordController.text.isEmpty) {
+                      Toast().errorMessage("Password field cannot be empty");
+                    } else if (passwordController.text.length < 7) {
+                      Toast().errorMessage(
+                          "password length should be more than 8 characters");
+                    } else if (!emailController.text.contains("@")) {
+                      Toast().errorMessage("Not a valid email address");
+                    } else {
+                      Get.to(DisplayEventsScreen());
+                    }
+                  },
                   child: Container(
                     width: Get.width,
                     height: Get.height * 0.07,
