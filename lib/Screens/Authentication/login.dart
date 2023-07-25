@@ -1,7 +1,10 @@
 import 'package:eventflow/Reusable_Components/Authentication/auth_button.dart';
 import 'package:eventflow/Screens/Authentication/signup.dart';
+import 'package:eventflow/Screens/Misc/toast.dart';
 import 'package:eventflow/Screens/User/display_events.dart';
 import 'package:eventflow/Screens/User/navigation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -32,8 +35,14 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: EdgeInsets.only(
             left: Get.width * 0.1,
             right: Get.width * 0.1,
-            top: MediaQuery.of(context).size.height * 0.07,
-            bottom: MediaQuery.of(context).size.height * 0.07,
+            top: MediaQuery
+                .of(context)
+                .size
+                .height * 0.07,
+            bottom: MediaQuery
+                .of(context)
+                .size
+                .height * 0.07,
           ),
           decoration: BoxDecoration(
               border: Border.all(
@@ -94,8 +103,33 @@ class _LoginScreenState extends State<LoginScreen> {
                 AuthButton("Password", Icons.key, passwordController, true),
                 const SizedBox(height: 20),
                 InkWell(
-                  onTap: () {
-                    Get.to(Navigation());
+                  onTap: () async{
+                    try {
+                      await FirebaseAuth.instance.signInWithEmailAndPassword(
+                          email: emailController.text,
+                          password: passwordController.text);
+                      Get.to(Navigation());
+                      Toast().successMessage("Logged in successfully");
+                    }
+                    on FirebaseAuthException catch(e)
+                    {
+                    if(e.code=="invalid-email")
+                    {
+                    Toast().errorMessage("Invalid email entered");
+                    }
+                    else  if(e.code=="user-not-found")
+                    {
+                    Toast().errorMessage("No user found with the corresponding email");
+                    }
+                     else if(e.code=="wrong-password")
+                        {
+                          Toast().errorMessage("Wrong password entered");
+                        }
+
+
+                    }
+
+
                   },
                   child: Container(
                     width: Get.width,
@@ -106,12 +140,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     child: const Center(
                         child: Text(
-                      "Login",
-                      style: TextStyle(
-                          color: Color(0xffff5085),
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16),
-                    )),
+                          "Login",
+                          style: TextStyle(
+                              color: Color(0xffff5085),
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16),
+                        )),
                   ),
                 ),
                 SizedBox(
@@ -151,20 +185,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     child: Center(
                         child: Row(
-                      children: [
-                        Image.asset("assets/images/google-logo.png"),
-                        Container(
-                          margin: EdgeInsets.only(left: Get.width * 0.1),
-                          child: const Text(
-                            "Sign In with Google",
-                            style: TextStyle(
-                                color: Color(0xff000000),
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16),
-                          ),
-                        ),
-                      ],
-                    )),
+                          children: [
+                            Image.asset("assets/images/google-logo.png"),
+                            Container(
+                              margin: EdgeInsets.only(left: Get.width * 0.1),
+                              child: const Text(
+                                "Sign In with Google",
+                                style: TextStyle(
+                                    color: Color(0xff000000),
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16),
+                              ),
+                            ),
+                          ],
+                        )),
                   ),
                 ),
                 SizedBox(

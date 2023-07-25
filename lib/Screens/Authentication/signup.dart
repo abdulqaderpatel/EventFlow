@@ -1,6 +1,7 @@
 import 'package:eventflow/Reusable_Components/Authentication/auth_button.dart';
 import 'package:eventflow/Screens/Misc/toast.dart';
 import 'package:eventflow/Screens/User/display_events.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -37,8 +38,14 @@ class _SignupScreenState extends State<SignupScreen> {
           padding: EdgeInsets.only(
             left: Get.width * 0.1,
             right: Get.width * 0.1,
-            top: MediaQuery.of(context).size.height * 0.07,
-            bottom: MediaQuery.of(context).size.height * 0.08,
+            top: MediaQuery
+                .of(context)
+                .size
+                .height * 0.07,
+            bottom: MediaQuery
+                .of(context)
+                .size
+                .height * 0.08,
           ),
           decoration: BoxDecoration(
               border: Border.all(
@@ -134,20 +141,28 @@ class _SignupScreenState extends State<SignupScreen> {
                 AuthButton("Password", Icons.key, passwordController, true),
                 SizedBox(height: Get.height * 0.05),
                 InkWell(
-                  onTap: () {
-                    if (nameController.text.isEmpty) {
-                      Toast().errorMessage("Name field cannot be empty");
-                    } else if (emailController.text.isEmpty) {
-                      Toast().errorMessage("Email field cannot be empty");
-                    } else if (passwordController.text.isEmpty) {
-                      Toast().errorMessage("Password field cannot be empty");
-                    } else if (passwordController.text.length < 7) {
-                      Toast().errorMessage(
-                          "password length should be more than 8 characters");
-                    } else if (!emailController.text.contains("@")) {
-                      Toast().errorMessage("Not a valid email address");
-                    } else {
-                      Get.to(DisplayEventsScreen());
+                  onTap: () async{
+                    try{
+                      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                          email: emailController.text,
+                          password: passwordController.text);
+                         Get.to(DisplayEventsScreen());
+                         Toast().successMessage("Account created successfully");
+                    }
+                    on FirebaseAuthException  catch(e)
+                   {
+                      if(e.code=="email-already-in-use")
+                        {
+                          Toast().errorMessage("The email is already in use");
+                        }
+                      else if(e.code=="invalid-email"){
+                        Toast().errorMessage("The email entered is invalid");
+                      }
+                      else if(e.code=="weak-password")
+                        {
+                          Toast().errorMessage("Weak password entered");
+                        }
+
                     }
                   },
                   child: Container(
@@ -159,12 +174,12 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     child: const Center(
                         child: Text(
-                      "Sign Up",
-                      style: TextStyle(
-                          color: Color(0xffff5085),
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16),
-                    )),
+                          "Sign Up",
+                          style: TextStyle(
+                              color: Color(0xffff5085),
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16),
+                        )),
                   ),
                 ),
                 SizedBox(
