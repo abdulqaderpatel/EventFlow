@@ -1,11 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventflow/Reusable_Components/Authentication/auth_button.dart';
-import 'package:eventflow/Screens/Misc/toast.dart';
+import 'package:eventflow/Screens/Misc/Firebase/firebase_tables.dart';
+import 'package:eventflow/Screens/Misc/toast/toast.dart';
 import 'package:eventflow/Screens/User/display_events.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../User/navigation.dart';
 import 'Login.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -21,6 +24,8 @@ class _SignupScreenState extends State<SignupScreen> {
   final emailController = TextEditingController();
 
   final passwordController = TextEditingController();
+
+
 
   @override
   void dispose() {
@@ -146,8 +151,15 @@ class _SignupScreenState extends State<SignupScreen> {
                       await FirebaseAuth.instance.createUserWithEmailAndPassword(
                           email: emailController.text,
                           password: passwordController.text);
-                         Get.to(DisplayEventsScreen());
+                         Get.to(Navigation());
+                      await FirebaseTable().usersTable.doc(FirebaseAuth.instance.currentUser!.uid).set({
+                      "email":FirebaseAuth.instance.currentUser!.email,
+                      "username":"",
+                        "name":nameController.text,
+                      "image":"",
+                      "phone_number":0});
                          Toast().successMessage("Account created successfully");
+
                     }
                     on FirebaseAuthException  catch(e)
                    {

@@ -1,6 +1,6 @@
 import 'package:eventflow/Reusable_Components/Authentication/auth_button.dart';
 import 'package:eventflow/Screens/Authentication/signup.dart';
-import 'package:eventflow/Screens/Misc/toast.dart';
+import 'package:eventflow/Screens/Misc/toast/toast.dart';
 import 'package:eventflow/Screens/User/display_events.dart';
 import 'package:eventflow/Screens/User/navigation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
