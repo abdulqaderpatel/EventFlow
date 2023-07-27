@@ -29,6 +29,14 @@ class _SignupScreenState extends State<SignupScreen> {
 
   final passwordController = TextEditingController();
 
+  Future registerWithEmailAndPassword(String name,String password, String email)async
+  {
+    UserCredential result = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+    User? user = result.user;
+    user!.updateProfile(displayName: name); //added this line
+    return user;
+  }
+
 
 
   @override
@@ -149,9 +157,10 @@ class _SignupScreenState extends State<SignupScreen> {
                 InkWell(
                   onTap: () async{
                     try{
-                      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                          email: emailController.text,
-                          password: passwordController.text);
+registerWithEmailAndPassword(nameController.text, passwordController.text , emailController.text);
+
+
+
                       if(widget.isAdmin==true) {
                         Get.to(AdminNavigationBar());
                         await FirebaseTable().adminsTable.doc(FirebaseAuth

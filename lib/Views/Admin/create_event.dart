@@ -79,6 +79,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -217,7 +218,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                   .millisecondsSinceEpoch
                                   .toString())
                               .set({
-                            "event_creator":FirebaseAuth.instance.currentUser!.uid,
+                            "event_creator":FirebaseAuth.instance.currentUser!.displayName,
                             "name":titleController.text.toString(),
                             "description":descriptionController.text.toString(),
                             "price":int.parse(priceController.text.toString()),
@@ -226,8 +227,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                             "max_participants":maxEntries.text.toString(),
                             "start_time":startTimeController.text.toString(),
                             "end_time":endTimeController.text.toString(),
+                            "location":locationController.text.toString(),
 
                           });
+                          Toast().successMessage("Event successfully created");
                         });
                       },
                       child: const Text(
