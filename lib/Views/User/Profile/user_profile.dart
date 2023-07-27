@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:eventflow/Controllers/Users/user_Controller.dart';
-import 'package:eventflow/Screens/Misc/Firebase/firebase_tables.dart';
-import 'package:eventflow/Screens/Misc/toast/toast.dart';
+
+import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
+import 'package:eventflow/Views/Misc/toast/toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -184,18 +184,17 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           MaterialStateProperty.all<Color>(Colors.white),
                     ),
                     onPressed: () async {
-                      Reference ref =
-                          FirebaseStorage.instance.ref("/${FirebaseAuth.instance.currentUser!.uid}/profile_picture");
+                      Reference ref = FirebaseStorage.instance.ref(
+                          "/${FirebaseAuth.instance.currentUser!.uid}/profile_picture");
                       UploadTask uploadTask =
-                          ref
-                          .putFile(profileImage!.absolute);
-                     Future.value(uploadTask).then((value)async {
-                       var newUrl=ref.getDownloadURL();
-                       await FirebaseTable().usersTable.doc(FirebaseAuth.instance.currentUser!.uid).update({"image":newUrl.toString()});
-                     } );
-
-                      
-
+                          ref.putFile(profileImage!.absolute);
+                      Future.value(uploadTask).then((value) async {
+                        var newUrl =await ref.getDownloadURL();
+                        await FirebaseTable()
+                            .usersTable
+                            .doc(FirebaseAuth.instance.currentUser!.uid)
+                            .update({"image": newUrl.toString()});
+                      });
                     },
                     child: const Text(
                       "Submit",

@@ -1,19 +1,23 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:eventflow/Reusable_Components/Authentication/auth_button.dart';
-import 'package:eventflow/Screens/Misc/Firebase/firebase_tables.dart';
-import 'package:eventflow/Screens/Misc/toast/toast.dart';
-import 'package:eventflow/Screens/User/display_events.dart';
+import 'package:eventflow/Views/Admin/admin_navigation_bar.dart';
+import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
+import 'package:eventflow/Views/Misc/toast/toast.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../User/navigation.dart';
+import '../User/user_navigation_bar.dart';
 import 'Login.dart';
 
 class SignupScreen extends StatefulWidget {
-  const SignupScreen({Key? key}) : super(key: key);
 
+  final bool? isAdmin;
+  final bool? isUser;
+
+  const SignupScreen({super.key, this.isAdmin=false, this.isUser=false});
   @override
   State<SignupScreen> createState() => _SignupScreenState();
 }
@@ -39,7 +43,7 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Container(
+        child: Container(height: Get.height,
           padding: EdgeInsets.only(
             left: Get.width * 0.1,
             right: Get.width * 0.1,
@@ -47,10 +51,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 .of(context)
                 .size
                 .height * 0.07,
-            bottom: MediaQuery
-                .of(context)
-                .size
-                .height * 0.08,
+
           ),
           decoration: BoxDecoration(
               border: Border.all(
@@ -116,12 +117,12 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 Container(
                   alignment: Alignment.topCenter,
-                  width: Get.width * 0.3,
-                  height: Get.height * 0.16,
+                  width: Get.width * 0.34,
+                  height: Get.height * 0.17,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
-                    color: Color(0xffff8a84),
-                  ),
+                    color:const Color(0xffff8a84),
+                    ),
                   child: Center(
                     child: Text(
                       "Sign up",
@@ -151,13 +152,26 @@ class _SignupScreenState extends State<SignupScreen> {
                       await FirebaseAuth.instance.createUserWithEmailAndPassword(
                           email: emailController.text,
                           password: passwordController.text);
-                         Get.to(Navigation());
-                      await FirebaseTable().usersTable.doc(FirebaseAuth.instance.currentUser!.uid).set({
-                      "email":FirebaseAuth.instance.currentUser!.email,
-                      "username":"",
-                        "name":nameController.text,
-                      "image":"",
-                      "phone_number":0});
+                      if(widget.isAdmin==true) {
+                        Get.to(AdminNavigationBar());
+                        await FirebaseTable().adminsTable.doc(FirebaseAuth
+                            .instance.currentUser!.uid).set({
+                          "email": FirebaseAuth.instance.currentUser!.email,
+                          "username": "",
+                          "name": nameController.text,
+                          "image": "",
+                          "phone_number": 0});
+                      }
+                         else {
+                        Get.to(UserNavigationBar());
+                        await FirebaseTable().usersTable.doc(FirebaseAuth
+                            .instance.currentUser!.uid).set({
+                          "email": FirebaseAuth.instance.currentUser!.email,
+                          "username": "",
+                          "name": nameController.text,
+                          "image": "",
+                          "phone_number": 0});
+                      }
                          Toast().successMessage("Account created successfully");
 
                     }
@@ -184,10 +198,10 @@ class _SignupScreenState extends State<SignupScreen> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(30),
                     ),
-                    child: const Center(
+                    child: Center(
                         child: Text(
-                          "Sign Up",
-                          style: TextStyle(
+                          widget.isAdmin==true?"Sign Up as Admin":"Sign up as User",
+                          style: const TextStyle(
                               color: Color(0xffff5085),
                               fontWeight: FontWeight.w600,
                               fontSize: 16),

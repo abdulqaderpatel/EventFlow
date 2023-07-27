@@ -1,8 +1,9 @@
+import 'package:eventflow/Views/Authentication/admin_or_user.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'Screens/Authentication/login.dart';
+import 'Views/Authentication/login.dart';
 import 'firebase_options.dart';
 
 void main() async{
@@ -24,6 +25,6 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           useMaterial3: true,
         ),
-        home: const LoginScreen());
+        home: AdminOrUserScreen());
   }
 }

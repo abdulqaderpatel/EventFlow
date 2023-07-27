@@ -18,6 +18,7 @@ dependencies:
   fluttertoast:
   image_picker:
   firebase_storage:
+  dotted_border:
 
 dev_dependencies:
   flutter_test:

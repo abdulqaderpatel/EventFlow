@@ -1,16 +1,20 @@
 import 'package:eventflow/Reusable_Components/Authentication/auth_button.dart';
-import 'package:eventflow/Screens/Authentication/signup.dart';
-import 'package:eventflow/Screens/Misc/toast/toast.dart';
-import 'package:eventflow/Screens/User/display_events.dart';
-import 'package:eventflow/Screens/User/navigation.dart';
+import 'package:eventflow/Views/Authentication/signup.dart';
+import 'package:eventflow/Views/Misc/toast/toast.dart';
+
+import 'package:eventflow/Views/User/user_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  final  bool? isAdmin;
+  final bool? isUser;
+
+
+const LoginScreen({super.key, this.isAdmin=false,this.isUser=false});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -18,6 +22,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
+
   final passwordController = TextEditingController();
 
   @override
@@ -25,13 +30,14 @@ class _LoginScreenState extends State<LoginScreen> {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
+
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Container(
+        child: Container(height: Get.height,
           padding: EdgeInsets.only(
             left: Get.width * 0.1,
             right: Get.width * 0.1,
@@ -39,10 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 .of(context)
                 .size
                 .height * 0.07,
-            bottom: MediaQuery
-                .of(context)
-                .size
-                .height * 0.07,
+
           ),
           decoration: BoxDecoration(
               border: Border.all(
@@ -108,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       await FirebaseAuth.instance.signInWithEmailAndPassword(
                           email: emailController.text,
                           password: passwordController.text);
-                      Get.to(Navigation());
+                      Get.to(UserNavigationBar());
                       Toast().successMessage("Logged in successfully");
                     }
                     on FirebaseAuthException catch(e)
@@ -138,10 +141,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(30),
                     ),
-                    child: const Center(
+                    child: Center(
                         child: Text(
-                          "Login",
-                          style: TextStyle(
+                          widget.isAdmin==true?"Login as Admin":"Login as User",
+                          style: const TextStyle(
                               color: Color(0xffff5085),
                               fontWeight: FontWeight.w600,
                               fontSize: 16),
@@ -216,7 +219,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         )),
                     InkWell(
-                      onTap: () => Get.to(const SignupScreen()),
+                      onTap: () => Get.to(SignupScreen(isAdmin: widget.isAdmin,isUser: widget.isUser,),),
                       child: const Text(
                         "Sign up now",
                         style: TextStyle(

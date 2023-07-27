@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
  class  FirebaseTable extends StatelessWidget {
 
   final usersTable=FirebaseFirestore.instance.collection("Users");
+  final adminsTable=FirebaseFirestore.instance.collection("admins");
 
   FirebaseTable({super.key});
 
