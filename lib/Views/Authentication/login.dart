@@ -1,4 +1,5 @@
 import 'package:eventflow/Reusable_Components/Authentication/auth_button.dart';
+import 'package:eventflow/Views/Admin/admin_navigation_bar.dart';
 import 'package:eventflow/Views/Authentication/signup.dart';
 import 'package:eventflow/Views/Misc/toast/toast.dart';
 
@@ -108,10 +109,19 @@ class _LoginScreenState extends State<LoginScreen> {
                 InkWell(
                   onTap: () async{
                     try {
-                      await FirebaseAuth.instance.signInWithEmailAndPassword(
-                          email: emailController.text,
-                          password: passwordController.text);
-                      Get.to(UserNavigationBar());
+                      if(widget.isAdmin==true)
+                        {
+                          await FirebaseAuth.instance.signInWithEmailAndPassword(
+                              email: emailController.text,
+                              password: passwordController.text);
+                          Get.to(AdminNavigationBar());
+                        }
+                        else {
+                        await FirebaseAuth.instance.signInWithEmailAndPassword(
+                            email: emailController.text,
+                            password: passwordController.text);
+                        Get.to(UserNavigationBar());
+                      }
                       Toast().successMessage("Logged in successfully");
                     }
                     on FirebaseAuthException catch(e)

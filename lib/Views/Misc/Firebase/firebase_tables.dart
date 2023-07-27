@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
   final usersTable=FirebaseFirestore.instance.collection("Users");
   final adminsTable=FirebaseFirestore.instance.collection("admins");
+  final eventsTable=FirebaseFirestore.instance.collection("events");
 
   FirebaseTable({super.key});
 
