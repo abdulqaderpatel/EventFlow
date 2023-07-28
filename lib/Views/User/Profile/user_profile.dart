@@ -1,16 +1,18 @@
 import 'dart:io';
 
-
+import 'package:eventflow/Reusable_Components/User/user_details_field.dart';
 import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
 import 'package:eventflow/Views/Misc/toast/toast.dart';
+import 'package:eventflow/Views/User/Profile/edit_profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import 'package:image_picker/image_picker.dart';
 
 class UserProfileScreen extends StatefulWidget {
-  UserProfileScreen({super.key});
+  const UserProfileScreen({super.key});
 
   @override
   State<UserProfileScreen> createState() => _UserProfileScreenState();
@@ -27,189 +29,141 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   FirebaseStorage storage = FirebaseStorage.instance;
 
-  File? profileImage;
 
-  final picker = ImagePicker();
 
-  Future getImageGallery() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
+
+
+  late List<Map<String, dynamic>> items;
+  bool isLoaded = false;
+
+  void incrementCounter() async {
+    List<Map<String, dynamic>> temp = [];
+    var data = await FirebaseTable()
+        .usersTable
+        .where("email", isEqualTo: FirebaseAuth.instance.currentUser!.email)
+        .get();
+
+    for (var element in data.docs) {
       setState(() {
-        profileImage = File(pickedFile.path);
+        temp.add(element.data());
       });
-    } else {
-      Toast().errorMessage("Please choose an image");
     }
+
+    setState(() {
+      items = temp;
+      isLoaded = true;
+    });
+
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // TODO: implement initState
+    incrementCounter();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        margin: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
-        child: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              children: [
-                InkWell(
-                  onTap: () {
-                    getImageGallery();
-                  },
-                  child: Container(
-                    width: 120,
-                    height: 120,
-                    margin: const EdgeInsets.only(top: 35),
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(70),
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color(0xff7DDCFB),
-                          Color(0xffBC67F2),
-                          Color(0xffACF6AF),
-                          Color(0xffF95549),
-                        ],
-                      ),
-                    ),
-                    child: Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(70),
-                      ),
-                      child: profileImage == null
-                          ? CircleAvatar(
-                              radius: 56,
-                              backgroundColor: Colors.white,
-                              child: Icon(
-                                Icons.camera_alt,
-                                color: Colors.blue,
-                                size: 50,
-                              ),
-                            )
-                          : CircleAvatar(
-                              radius: 56,
-                              backgroundColor: Colors.white,
-                              backgroundImage: FileImage(
-                                profileImage!,
-                              ),
+        body: isLoaded
+            ? SingleChildScrollView(
+                child: Center(
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(30),
+                        height: Get.height * 0.38,
+                        decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(15)),
+                        width: Get.width,
+                        child: Column(
+                          children: [
+                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                const Text(
+                                  "Profile",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 22,fontWeight: FontWeight.w500),
+                                ),
+                                InkWell(onTap: ()=>Get.to(const EditProfileScreen()),
+                                  child: const Icon(
+                                    Icons.edit,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
                             ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 40,
-                ),
-                SizedBox(
-                  height: 50,
-                  child: TextFormField(
-                    controller: usernameController,
-                    decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.only(top: 2, left: 3),
-                        errorStyle: const TextStyle(fontSize: 0),
-                        hintStyle: const TextStyle(
-                          color: Colors.black38,
+                            const SizedBox(
+                              height: 25,
+                            ),
+                            Container(
+                              child: items[0]["image"] == null
+                                  ? const CircleAvatar(
+                                      radius: 60,
+                                      backgroundColor: Colors.white,
+                                      child: Icon(
+                                        Icons.camera_alt,
+                                        color: Colors.blue,
+                                        size: 50,
+                                      ),
+                                    )
+                                  : CircleAvatar(
+                                      radius: 56,
+                                      backgroundColor: Colors.white,
+                                      backgroundImage: NetworkImage(
+                                        items[0]["image"] ,
+                                      ),
+                                    ),
+                            ),
+                            const SizedBox(
+                              height: 25,
+                            ),
+                            Text(
+                              items[0]["name"],
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 23,
+                                  fontWeight: FontWeight.w600),
+                            )
+                          ],
                         ),
-                        hintText: "Enter username",
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0))),
-                  ),
-                ),
-                const SizedBox(
-                  height: 30,
-                ),
-                SizedBox(
-                  height: 50,
-                  child: TextFormField(
-                    controller: firstNameController,
-                    decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.only(top: 2, left: 3),
-                        errorStyle: const TextStyle(fontSize: 0),
-                        hintStyle: const TextStyle(
-                          color: Colors.black38,
-                        ),
-                        hintText: "Enter first name",
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0))),
-                  ),
-                ),
-                const SizedBox(
-                  height: 30,
-                ),
-                SizedBox(
-                  height: 50,
-                  child: TextFormField(
-                    controller: lastNameController,
-                    decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.only(top: 2, left: 3),
-                        errorStyle: const TextStyle(fontSize: 0),
-                        hintStyle: const TextStyle(
-                          color: Colors.black38,
-                        ),
-                        hintText: "Enter last name",
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0))),
-                  ),
-                ),
-                const SizedBox(
-                  height: 30,
-                ),
-                SizedBox(
-                  height: 50,
-                  child: TextFormField(
-                    controller: phoneNumberController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.only(top: 2, left: 3),
-                        errorStyle: const TextStyle(fontSize: 0),
-                        hintStyle: const TextStyle(
-                          color: Colors.black38,
-                        ),
-                        hintText: "Enter phone number",
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0))),
-                  ),
-                ),
-                const SizedBox(
-                  height: 30,
-                ),
-                SizedBox(
-                  width: Get.width * 0.8,
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                          const Color(0xff223b55)),
-                      foregroundColor:
-                          MaterialStateProperty.all<Color>(Colors.white),
-                    ),
-                    onPressed: () async {
-                      Reference ref = FirebaseStorage.instance.ref(
-                          "/${FirebaseAuth.instance.currentUser!.uid}/profile_picture");
-                      UploadTask uploadTask =
-                          ref.putFile(profileImage!.absolute);
-                      Future.value(uploadTask).then((value) async {
-                        var newUrl =await ref.getDownloadURL();
-                        await FirebaseTable()
-                            .usersTable
-                            .doc(FirebaseAuth.instance.currentUser!.uid)
-                            .update({"image": newUrl.toString()});
-                      });
-                    },
-                    child: const Text(
-                      "Submit",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
                       ),
-                    ),
+                      const SizedBox(
+                        height: 40,
+                      ),
+                      UserDetailField(
+                          icon: Icons.verified_user,
+                          placeholder: "username",
+                          details: items[0]["username"]),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      UserDetailField(
+                          icon: Icons.email,
+                          placeholder: "email",
+                          details: items[0]["email"]),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      UserDetailField(
+                          icon: Icons.phone,
+                          placeholder: "phone number",
+                          details: items[0]["phone_number"].toString()),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+              )
+            : const Center(
+                child: CircularProgressIndicator(),
+              ));
   }
 }

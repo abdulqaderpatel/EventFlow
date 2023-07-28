@@ -2,6 +2,7 @@
 import 'package:eventflow/Views/Authentication/login.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 
@@ -13,7 +14,7 @@ class AdminOrUserScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold(appBar: AppBar(),
         body: SizedBox(
       height: Get.height/1.2,
       child: Center(
