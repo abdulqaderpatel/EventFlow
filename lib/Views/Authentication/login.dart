@@ -10,12 +10,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../Misc/Firebase/firebase_tables.dart';
+
 class LoginScreen extends StatefulWidget {
-  final  bool? isAdmin;
+  final bool? isAdmin;
   final bool? isUser;
 
-
-const LoginScreen({super.key, this.isAdmin=false,this.isUser=false});
+  const LoginScreen({super.key, this.isAdmin = false, this.isUser = false});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -26,27 +27,79 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final passwordController = TextEditingController();
 
+  late List<Map<String, dynamic>> users;
+  late List<Map<String, dynamic>> admins;
+
+  Future<bool> checkIfAdminLoggingIntoUser(String email) async {
+    users = [];
+    var userData =
+        await FirebaseTable().usersTable.where('email', isEqualTo: email).get();
+
+    List<Map<String, dynamic>> userTemp = [];
+
+    userData.docs.forEach((element) {
+      setState(() {
+        userTemp.add(element.data());
+      });
+    });
+
+    setState(() {
+      users = userTemp;
+    });
+
+    if (users.isEmpty) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  Future<bool> checkIfUserLoggingIntoAdmin(String email) async {
+    admins = [];
+
+    var adminData = await FirebaseTable()
+        .adminsTable
+        .where('email', isEqualTo: emailController.text)
+        .get();
+
+    List<Map<String, dynamic>> adminTemp = [];
+
+    adminData.docs.forEach((element) {
+      setState(() {
+        adminTemp.add(element.data());
+      });
+    });
+
+    setState(() {
+      admins = adminTemp;
+    });
+
+    if (admins.isEmpty) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  late bool adminOrUser;
+
   @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
-
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Container(height: Get.height,
+        child: Container(
+          height: Get.height,
           padding: EdgeInsets.only(
             left: Get.width * 0.1,
             right: Get.width * 0.1,
-            top: MediaQuery
-                .of(context)
-                .size
-                .height * 0.07,
-
+            top: MediaQuery.of(context).size.height * 0.07,
           ),
           decoration: BoxDecoration(
               border: Border.all(
@@ -107,42 +160,46 @@ class _LoginScreenState extends State<LoginScreen> {
                 AuthButton("Password", Icons.key, passwordController, true),
                 const SizedBox(height: 20),
                 InkWell(
-                  onTap: () async{
-                    try {
-                      if(widget.isAdmin==true)
-                        {
-                          await FirebaseAuth.instance.signInWithEmailAndPassword(
-                              email: emailController.text,
-                              password: passwordController.text);
+                  onTap: () async {
+                    adminOrUser = widget.isAdmin == true
+                        ? await checkIfAdminLoggingIntoUser(
+                            emailController.text)
+                        : await checkIfUserLoggingIntoAdmin(
+                            emailController.text);
+                    if (adminOrUser) {
+                      if (widget.isAdmin == true) {
+                        Toast().errorMessage(
+                            "This email already exists as a user");
+                      } else {
+                        Toast().errorMessage(
+                            "This email already exists as an admin");
+                      }} else {
+                      try {
+                        if (widget.isAdmin == true) {
+                          await FirebaseAuth.instance
+                              .signInWithEmailAndPassword(
+                                  email: emailController.text,
+                                  password: passwordController.text);
                           Get.to(AdminNavigationBar());
+                        } else {
+                          await FirebaseAuth.instance
+                              .signInWithEmailAndPassword(
+                                  email: emailController.text,
+                                  password: passwordController.text);
+                          Get.to(UserNavigationBar());
                         }
-                        else {
-                        await FirebaseAuth.instance.signInWithEmailAndPassword(
-                            email: emailController.text,
-                            password: passwordController.text);
-                        Get.to(UserNavigationBar());
-                      }
-                      Toast().successMessage("Logged in successfully");
-                    }
-                    on FirebaseAuthException catch(e)
-                    {
-                    if(e.code=="invalid-email")
-                    {
-                    Toast().errorMessage("Invalid email entered");
-                    }
-                    else  if(e.code=="user-not-found")
-                    {
-                    Toast().errorMessage("No user found with the corresponding email");
-                    }
-                     else if(e.code=="wrong-password")
-                        {
+                        Toast().successMessage("Logged in successfully");
+                      } on FirebaseAuthException catch (e) {
+                        if (e.code == "invalid-email") {
+                          Toast().errorMessage("Invalid email entered");
+                        } else if (e.code == "user-not-found") {
+                          Toast().errorMessage(
+                              "No user found with the corresponding email");
+                        } else if (e.code == "wrong-password") {
                           Toast().errorMessage("Wrong password entered");
                         }
-
-
+                      }
                     }
-
-
                   },
                   child: Container(
                     width: Get.width,
@@ -153,12 +210,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     child: Center(
                         child: Text(
-                          widget.isAdmin==true?"Login as Admin":"Login as User",
-                          style: const TextStyle(
-                              color: Color(0xffff5085),
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16),
-                        )),
+                      widget.isAdmin == true
+                          ? "Login as Admin"
+                          : "Login as User",
+                      style: const TextStyle(
+                          color: Color(0xffff5085),
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16),
+                    )),
                   ),
                 ),
                 SizedBox(
@@ -198,20 +257,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     child: Center(
                         child: Row(
-                          children: [
-                            Image.asset("assets/images/google-logo.png"),
-                            Container(
-                              margin: EdgeInsets.only(left: Get.width * 0.1),
-                              child: const Text(
-                                "Sign In with Google",
-                                style: TextStyle(
-                                    color: Color(0xff000000),
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16),
-                              ),
-                            ),
-                          ],
-                        )),
+                      children: [
+                        Image.asset("assets/images/google-logo.png"),
+                        Container(
+                          margin: EdgeInsets.only(left: Get.width * 0.1),
+                          child: const Text(
+                            "Sign In with Google",
+                            style: TextStyle(
+                                color: Color(0xff000000),
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16),
+                          ),
+                        ),
+                      ],
+                    )),
                   ),
                 ),
                 SizedBox(
@@ -229,7 +288,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         )),
                     InkWell(
-                      onTap: () => Get.to(SignupScreen(isAdmin: widget.isAdmin,isUser: widget.isUser,),),
+                      onTap: () => Get.to(
+                        SignupScreen(
+                          isAdmin: widget.isAdmin,
+                          isUser: widget.isUser,
+                        ),
+                      ),
                       child: const Text(
                         "Sign up now",
                         style: TextStyle(

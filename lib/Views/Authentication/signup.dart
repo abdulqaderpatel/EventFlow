@@ -1,4 +1,3 @@
-
 import 'package:eventflow/Reusable_Components/Authentication/auth_button.dart';
 import 'package:eventflow/Views/Admin/admin_navigation_bar.dart';
 import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
@@ -13,11 +12,11 @@ import '../User/user_navigation_bar.dart';
 import 'Login.dart';
 
 class SignupScreen extends StatefulWidget {
-
   final bool? isAdmin;
   final bool? isUser;
 
-  const SignupScreen({super.key, this.isAdmin=false, this.isUser=false});
+  const SignupScreen({super.key, this.isAdmin = false, this.isUser = false});
+
   @override
   State<SignupScreen> createState() => _SignupScreenState();
 }
@@ -29,14 +28,14 @@ class _SignupScreenState extends State<SignupScreen> {
 
   final passwordController = TextEditingController();
 
-  Future registerWithEmailAndPassword(String name,String password, String email)async
-  {
-    UserCredential result = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+  Future registerWithEmailAndPassword(
+      String name, String password, String email) async {
+    UserCredential result = await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(email: email, password: password);
     User? user = result.user;
     user!.updateProfile(displayName: name); //added this line
     return user;
   }
-
 
 
   @override
@@ -47,19 +46,18 @@ class _SignupScreenState extends State<SignupScreen> {
     super.dispose();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Container(height: Get.height,
+        child: Container(
+          height: Get.height,
           padding: EdgeInsets.only(
             left: Get.width * 0.1,
             right: Get.width * 0.1,
-            top: MediaQuery
-                .of(context)
-                .size
-                .height * 0.07,
-
+            top: MediaQuery.of(context).size.height * 0.07,
           ),
           decoration: BoxDecoration(
               border: Border.all(
@@ -129,8 +127,8 @@ class _SignupScreenState extends State<SignupScreen> {
                   height: Get.height * 0.17,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
-                    color:const Color(0xffff8a84),
-                    ),
+                    color: const Color(0xffff8a84),
+                  ),
                   child: Center(
                     child: Text(
                       "Sign up",
@@ -155,50 +153,48 @@ class _SignupScreenState extends State<SignupScreen> {
                 AuthButton("Password", Icons.key, passwordController, true),
                 SizedBox(height: Get.height * 0.05),
                 InkWell(
-                  onTap: () async{
-                    try{
-registerWithEmailAndPassword(nameController.text, passwordController.text , emailController.text);
+                  onTap: () async {
 
+                      try {
+                        registerWithEmailAndPassword(nameController.text,
+                            passwordController.text, emailController.text);
 
-
-                      if(widget.isAdmin==true) {
-                        Get.to(AdminNavigationBar());
-                        await FirebaseTable().adminsTable.doc(FirebaseAuth
-                            .instance.currentUser!.uid).set({
-                          "email": FirebaseAuth.instance.currentUser!.email,
-                          "username": "",
-                          "name": nameController.text,
-                          "image": "",
-                          "phone_number": 0});
-                      }
-                         else {
-                        Get.to(UserNavigationBar());
-                        await FirebaseTable().usersTable.doc(FirebaseAuth
-                            .instance.currentUser!.uid).set({
-                          "email": FirebaseAuth.instance.currentUser!.email,
-                          "username": "",
-                          "name": nameController.text,
-                          "image": "",
-                          "phone_number": 0});
-                      }
-                         Toast().successMessage("Account created successfully");
-
-                    }
-                    on FirebaseAuthException  catch(e)
-                   {
-                      if(e.code=="email-already-in-use")
-                        {
-                          Toast().errorMessage("The email is already in use");
+                        if (widget.isAdmin == true) {
+                          Get.to(AdminNavigationBar());
+                          await FirebaseTable()
+                              .adminsTable
+                              .doc(FirebaseAuth.instance.currentUser!.uid)
+                              .set({
+                            "email": FirebaseAuth.instance.currentUser!.email,
+                            "username": "",
+                            "name": nameController.text,
+                            "image": "",
+                            "phone_number": 0
+                          });
+                        } else {
+                          Get.to(UserNavigationBar());
+                          await FirebaseTable()
+                              .usersTable
+                              .doc(FirebaseAuth.instance.currentUser!.uid)
+                              .set({
+                            "email": FirebaseAuth.instance.currentUser!.email,
+                            "username": "",
+                            "name": nameController.text,
+                            "image": "",
+                            "phone_number": 0
+                          });
                         }
-                      else if(e.code=="invalid-email"){
-                        Toast().errorMessage("The email entered is invalid");
-                      }
-                      else if(e.code=="weak-password")
-                        {
+                        Toast().successMessage("Account created successfully");
+                      } on FirebaseAuthException catch (e) {
+                        if (e.code == "email-already-in-use") {
+                          Toast().errorMessage("The email is already in use");
+                        } else if (e.code == "invalid-email") {
+                          Toast().errorMessage("The email entered is invalid");
+                        } else if (e.code == "weak-password") {
                           Toast().errorMessage("Weak password entered");
                         }
+                      }
 
-                    }
                   },
                   child: Container(
                     width: Get.width,
@@ -209,12 +205,14 @@ registerWithEmailAndPassword(nameController.text, passwordController.text , emai
                     ),
                     child: Center(
                         child: Text(
-                          widget.isAdmin==true?"Sign Up as Admin":"Sign up as User",
-                          style: const TextStyle(
-                              color: Color(0xffff5085),
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16),
-                        )),
+                      widget.isAdmin == true
+                          ? "Sign Up as Admin"
+                          : "Sign up as User",
+                      style: const TextStyle(
+                          color: Color(0xffff5085),
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16),
+                    )),
                   ),
                 ),
                 SizedBox(
