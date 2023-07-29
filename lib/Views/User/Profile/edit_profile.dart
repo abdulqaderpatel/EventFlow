@@ -45,19 +45,60 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
+
+   List<Map<String, dynamic>> items=[];
+  bool isLoaded = false;
+
+  void incrementCounter() async {
+    List<Map<String, dynamic>> temp = [];
+    var data = await FirebaseTable()
+        .usersTable
+        .where("email", isEqualTo: FirebaseAuth.instance.currentUser!.email)
+        .get();
+
+    for (var element in data.docs) {
+      setState(() {
+        temp.add(element.data());
+      });
+    }
+
+    setState(() {
+      items = temp;
+
+    });
+    nameController.text=items[0]["name"];
+    usernameController.text=items[0]["username"];
+    emailController.text=items[0]["email"];
+    phoneNumberController.text=items[0]["phone_number"].toString();
+    print(items);
+    setState(() {
+      isLoaded=true;
+    });
+
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    incrementCounter();
+
+
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body:isLoaded? Container(
         height: Get.height,
         color: Colors.redAccent,
-        child: Container(padding: EdgeInsets.all(20),
+        child: Container(padding: const EdgeInsets.all(20),
           margin: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
           child: SingleChildScrollView(
             child: Center(
               child: Column(
                 children: [
-                  Text("Edit Profile",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w600,fontSize: 25),),
+                  const Text("Edit Profile",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w600,fontSize: 25),),
                   InkWell(
                     onTap: () {
                       getImageGallery();
@@ -85,21 +126,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(70),
                         ),
-                        child: profileImage == null
-                            ? const CircleAvatar(
-                                radius: 56,
-                                backgroundColor: Colors.white,
-                                child: Icon(
-                                  Icons.camera_alt,
-                                  color: Colors.blue,
-                                  size: 50,
-                                ),
-                              )
+                        child: profileImage != null
+                            ? CircleAvatar(
+                          radius: 56,
+                          backgroundColor: Colors.white,
+                          backgroundImage: FileImage(
+                            profileImage!,
+                          ),
+                        )
                             : CircleAvatar(
                                 radius: 56,
                                 backgroundColor: Colors.white,
-                                backgroundImage: FileImage(
-                                  profileImage!,
+                                backgroundImage: NetworkImage(
+                                  items[0]["image"],
                                 ),
                               ),
                       ),
@@ -109,30 +148,36 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     height: 40,
                   ),
                   UserTextField(
-                      text: "Name",
+                      text: items[0]["name"],
                       controller: nameController,
-                      width: Get.width * 0.8),
+                      width: Get.width * 0.8,
+                    labelText: "Name",
+                ),
                   const SizedBox(
                     height: 30,
                   ),
                   UserTextField(
                       text: "Username",
                       controller: usernameController,
-                      width: Get.width * 0.8),
+                      width: Get.width * 0.8,
+                  labelText: "Username",),
                   const SizedBox(
                     height: 30,
                   ),
                   UserTextField(
                       text: "Email",
                       controller: emailController,
-                      width: Get.width * 0.8),
+                      width: Get.width * 0.8,
+                  labelText: "Email",
+                  enabled: false,),
                   const SizedBox(
                     height: 30,
                   ),
                   UserTextField(
                       text: "Phone number",
                       controller: phoneNumberController,
-                      width: Get.width * 0.8),
+                      width: Get.width * 0.8,labelText: "Phone number",),
+
                   const SizedBox(
                     height: 30,
                   ),
@@ -178,7 +223,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
           ),
         ),
-      ),
+      ):const Center(child: CircularProgressIndicator(),),
     );
   }
 }

@@ -1,22 +1,22 @@
 import 'package:eventflow/Controllers/Users/user_navigation_controller.dart';
-import 'package:eventflow/Views/Authentication/Login.dart';
+
 import 'package:eventflow/Views/User/display_events.dart';
 import 'package:eventflow/Views/User/search_friends.dart';
 import 'package:eventflow/Views/User/Profile/user_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+
 
 class UserNavigationBar extends StatelessWidget {
   UserNavigationBar({super.key});
 
-  List<Widget> userPages = [
+  final List<Widget> userPages = [
     DisplayEventsScreen(),
-    SearchFriendsScreen(),
-    UserProfileScreen(),
+    const SearchFriendsScreen(),
+    const UserProfileScreen(),
   ];
 
-  UserNavigationController controller = Get.put(UserNavigationController());
+  final UserNavigationController controller = Get.put(UserNavigationController());
 
   @override
   Widget build(BuildContext context) {

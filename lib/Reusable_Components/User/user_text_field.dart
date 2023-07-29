@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 
+
 class UserTextField extends StatelessWidget {
   final String text;
   final TextEditingController controller;
   final double width;
-  final bool? isIcon;
-  final IconData? icon;
+  final String labelText;
+
+  final bool enabled;
 
   const UserTextField(
       {super.key,
       required this.text,
       required this.controller,
       required this.width,
-      this.isIcon = false,
-      this.icon = null});
+        required this.labelText,
+
+      this.enabled=true});
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +24,16 @@ class UserTextField extends StatelessWidget {
         ? SizedBox(
             height: 50,
             width: width,
-            child: TextFormField(
+            child: TextFormField(enabled: enabled,
               controller: controller,
-              decoration: InputDecoration(
+              textAlignVertical: TextAlignVertical.center,
+              decoration: InputDecoration(labelText: labelText,labelStyle: TextStyle(color: Colors.white),alignLabelWithHint: true,
                 filled: true,
                 fillColor: Colors.red,
-                prefixIcon: isIcon == true ? Icon(icon) : null,
+
+
                 enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 0.5),
+                    borderSide: const BorderSide(color: Colors.white, width: 0.5),
                     borderRadius: BorderRadius.circular(8)),
                 contentPadding: const EdgeInsets.only(
                   top: 2,
@@ -51,7 +56,7 @@ class UserTextField extends StatelessWidget {
               controller: controller,
               decoration: InputDecoration(
                 enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
+                    borderSide: const BorderSide(
                       color: Colors.red,
                     ),
                     borderRadius: BorderRadius.circular(8)),

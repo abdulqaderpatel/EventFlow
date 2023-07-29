@@ -157,7 +157,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     isAdmin: widget.isAdmin == true ? true : false),
                 SizedBox(height: Get.height * 0.03),
                 AuthButton(
-                    name: "Password",
+                    name: "Email",
                     icon: Icons.email,
                     controller: emailController,
                     obscureText: false,
