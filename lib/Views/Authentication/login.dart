@@ -106,14 +106,20 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: 3,
                 color: Colors.black,
               ),
-              gradient: const LinearGradient(
+              gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xffff8a78),
-                    Color(0xffff6b74),
-                    Color(0xffff3f6f),
-                  ])),
+                  colors: widget.isAdmin == true
+                      ? [
+                          const Color(0xff6495ED),
+                          const Color(0xff0047AB),
+                          const Color(0xff1434A4),
+                        ]
+                      : [
+                          const Color(0xffff8a78),
+                          const Color(0xffff6b74),
+                          const Color(0xffff3f6f),
+                        ])),
           child: Center(
             child: Column(
               children: [
@@ -121,8 +127,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: Get.height * 0.17,
                   width: Get.height * 0.17,
                   decoration: BoxDecoration(
-                      color: const Color(
-                        0xffff8c85,
+                      color: Color(
+                        widget.isAdmin == true ? 0xff6495ED : 0xffff8c85,
                       ),
                       borderRadius: BorderRadius.circular(25)),
                   child: Image.asset(
@@ -155,9 +161,20 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: Get.height * 0.04,
                 ),
-                AuthButton("Email", Icons.email, emailController, false),
+                AuthButton(
+                  name: "Email",
+                  icon: Icons.email,
+                  controller: emailController,
+                  obscureText: false,
+                  isAdmin: widget.isAdmin == true ? true : false,
+                ),
                 SizedBox(height: Get.height * 0.03),
-                AuthButton("Password", Icons.key, passwordController, true),
+                AuthButton(
+                    name: "Password",
+                    icon: Icons.key,
+                    controller: passwordController,
+                    obscureText: false,
+                    isAdmin: widget.isAdmin == true ? true : false),
                 const SizedBox(height: 20),
                 InkWell(
                   onTap: () async {
@@ -173,7 +190,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       } else {
                         Toast().errorMessage(
                             "This email already exists as an admin");
-                      }} else {
+                      }
+                    } else {
                       try {
                         if (widget.isAdmin == true) {
                           await FirebaseAuth.instance
@@ -227,19 +245,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     Expanded(
                       child: Divider(
-                        color: Colors.red,
+                        color: Colors.black,
                       ),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       child: Text(
                         "Or",
-                        style: TextStyle(color: Colors.red),
+                        style: TextStyle(color: Colors.black),
                       ),
                     ),
                     Expanded(
                       child: Divider(
-                        color: Colors.red,
+                        color: Colors.black,
                       ),
                     )
                   ],

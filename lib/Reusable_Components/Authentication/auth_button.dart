@@ -6,8 +6,8 @@ class AuthButton extends StatelessWidget {
   final IconData icon;
   final TextEditingController controller;
   final bool obscureText;
-  const AuthButton(this.name, this.icon, this.controller, this.obscureText,
-      {super.key});
+  final bool? isAdmin;
+    AuthButton({required this.name,required  this.icon,required this.controller,required this.obscureText, this.isAdmin=false});
 
   @override
   Widget build(BuildContext context) {
@@ -24,21 +24,22 @@ class AuthButton extends StatelessWidget {
           margin: EdgeInsets.only(right: Get.width * 0.2),
           decoration: BoxDecoration(
               color: Colors.white, borderRadius: BorderRadius.circular(30)),
-          child: Icon(icon),
+          child: Icon(icon,color:isAdmin==true?Colors.blue:Colors.red,),
         ),
         hintText: name,
         hintStyle: const TextStyle(
             fontSize: 16, color: Colors.white, fontWeight: FontWeight.w400),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30.0),
-          borderSide: const BorderSide(
-            color: Color(0xffff8b94),
+          borderSide: BorderSide(
+
+            color: Color(isAdmin==true?0xff3F00FF:0xffff8b94),
             width: 1,
           ),
         ),
         filled: true,
         contentPadding: const EdgeInsets.all(16),
-        fillColor: const Color(0xffff6b7a),
+        fillColor:Color(isAdmin==true?0xff6495ED:0xffff6b7a),
       ),
       controller: controller,
     );

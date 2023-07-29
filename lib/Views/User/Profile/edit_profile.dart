@@ -51,12 +51,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       body: Container(
         height: Get.height,
         color: Colors.redAccent,
-        child: Container(
+        child: Container(padding: EdgeInsets.all(20),
           margin: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
           child: SingleChildScrollView(
             child: Center(
               child: Column(
                 children: [
+                  Text("Edit Profile",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w600,fontSize: 25),),
                   InkWell(
                     onTap: () {
                       getImageGallery();

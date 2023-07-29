@@ -37,7 +37,6 @@ class _SignupScreenState extends State<SignupScreen> {
     return user;
   }
 
-
   @override
   void dispose() {
     nameController.dispose();
@@ -45,8 +44,6 @@ class _SignupScreenState extends State<SignupScreen> {
     passwordController.dispose();
     super.dispose();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -64,13 +61,19 @@ class _SignupScreenState extends State<SignupScreen> {
                 width: 3,
                 color: Colors.black,
               ),
-              gradient: const LinearGradient(
+              gradient:  LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xffff8a78),
-                    Color(0xffff6b74),
-                    Color(0xffff3f6f),
+                  colors: widget.isAdmin == true
+                      ? [
+                    const Color(0xff6495ED),
+                    const Color(0xff0047AB),
+                    const Color(0xff1434A4),
+                  ]
+                      : [
+                    const Color(0xffff8a78),
+                    const Color(0xffff6b74),
+                    const Color(0xffff3f6f),
                   ])),
           child: Center(
             child: Column(
@@ -81,8 +84,8 @@ class _SignupScreenState extends State<SignupScreen> {
                       height: Get.height * 0.1,
                       width: Get.height * 0.1,
                       decoration: BoxDecoration(
-                          color: const Color(
-                            0xffff8c85,
+                          color:  Color(
+                            widget.isAdmin==true?0xff6495ED:0xffff8c85,
                           ),
                           borderRadius: BorderRadius.circular(25)),
                       child: Image.asset(
@@ -127,7 +130,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   height: Get.height * 0.17,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
-                    color: const Color(0xffff8a84),
+                    color:  Color(widget.isAdmin==true?0xff6495ED:0xffff8a84),
                   ),
                   child: Center(
                     child: Text(
@@ -146,55 +149,68 @@ class _SignupScreenState extends State<SignupScreen> {
                 SizedBox(
                   height: Get.height * 0.05,
                 ),
-                AuthButton("Name", Icons.person, nameController, false),
+                AuthButton(
+                    name: "Name",
+                    icon: Icons.person,
+                    controller: nameController,
+                    obscureText: false,
+                    isAdmin: widget.isAdmin == true ? true : false),
                 SizedBox(height: Get.height * 0.03),
-                AuthButton("Email", Icons.email, emailController, false),
+                AuthButton(
+                    name: "Password",
+                    icon: Icons.email,
+                    controller: emailController,
+                    obscureText: false,
+                    isAdmin: widget.isAdmin == true ? true : false),
                 SizedBox(height: Get.height * 0.03),
-                AuthButton("Password", Icons.key, passwordController, true),
+                AuthButton(
+                    name: "Password",
+                    icon: Icons.key,
+                    controller: passwordController,
+                    obscureText: true,
+                    isAdmin: widget.isAdmin == true ? true : false),
                 SizedBox(height: Get.height * 0.05),
                 InkWell(
                   onTap: () async {
+                    try {
+                      registerWithEmailAndPassword(nameController.text,
+                          passwordController.text, emailController.text);
 
-                      try {
-                        registerWithEmailAndPassword(nameController.text,
-                            passwordController.text, emailController.text);
-
-                        if (widget.isAdmin == true) {
-                          Get.to(AdminNavigationBar());
-                          await FirebaseTable()
-                              .adminsTable
-                              .doc(FirebaseAuth.instance.currentUser!.uid)
-                              .set({
-                            "email": FirebaseAuth.instance.currentUser!.email,
-                            "username": "",
-                            "name": nameController.text,
-                            "image": "",
-                            "phone_number": 0
-                          });
-                        } else {
-                          Get.to(UserNavigationBar());
-                          await FirebaseTable()
-                              .usersTable
-                              .doc(FirebaseAuth.instance.currentUser!.uid)
-                              .set({
-                            "email": FirebaseAuth.instance.currentUser!.email,
-                            "username": "",
-                            "name": nameController.text,
-                            "image": "",
-                            "phone_number": 0
-                          });
-                        }
-                        Toast().successMessage("Account created successfully");
-                      } on FirebaseAuthException catch (e) {
-                        if (e.code == "email-already-in-use") {
-                          Toast().errorMessage("The email is already in use");
-                        } else if (e.code == "invalid-email") {
-                          Toast().errorMessage("The email entered is invalid");
-                        } else if (e.code == "weak-password") {
-                          Toast().errorMessage("Weak password entered");
-                        }
+                      if (widget.isAdmin == true) {
+                        Get.to(AdminNavigationBar());
+                        await FirebaseTable()
+                            .adminsTable
+                            .doc(FirebaseAuth.instance.currentUser!.uid)
+                            .set({
+                          "email": FirebaseAuth.instance.currentUser!.email,
+                          "username": "",
+                          "name": nameController.text,
+                          "image": "",
+                          "phone_number": 0
+                        });
+                      } else {
+                        Get.to(UserNavigationBar());
+                        await FirebaseTable()
+                            .usersTable
+                            .doc(FirebaseAuth.instance.currentUser!.uid)
+                            .set({
+                          "email": FirebaseAuth.instance.currentUser!.email,
+                          "username": "",
+                          "name": nameController.text,
+                          "image": "",
+                          "phone_number": 0
+                        });
                       }
-
+                      Toast().successMessage("Account created successfully");
+                    } on FirebaseAuthException catch (e) {
+                      if (e.code == "email-already-in-use") {
+                        Toast().errorMessage("The email is already in use");
+                      } else if (e.code == "invalid-email") {
+                        Toast().errorMessage("The email entered is invalid");
+                      } else if (e.code == "weak-password") {
+                        Toast().errorMessage("Weak password entered");
+                      }
+                    }
                   },
                   child: Container(
                     width: Get.width,
@@ -231,7 +247,13 @@ class _SignupScreenState extends State<SignupScreen> {
                         )),
                     InkWell(
                       onTap: () {
-                        Get.to(const LoginScreen());
+                        Get.to(widget.isAdmin == true
+                            ? LoginScreen(
+                                isAdmin: true,
+                              )
+                            : LoginScreen(
+                                isUser: true,
+                              ));
                       },
                       child: const Text(
                         "Login",
