@@ -37,11 +37,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
     List<Map<String, dynamic>> userTemp = [];
 
-    userData.docs.forEach((element) {
+    for (var element in userData.docs) {
       setState(() {
         userTemp.add(element.data());
       });
-    });
+    }
 
     setState(() {
       users = userTemp;
@@ -64,11 +64,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
     List<Map<String, dynamic>> adminTemp = [];
 
-    adminData.docs.forEach((element) {
+    for (var element in adminData.docs) {
       setState(() {
         adminTemp.add(element.data());
       });
-    });
+    }
 
     setState(() {
       admins = adminTemp;
@@ -167,6 +167,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: emailController,
                   obscureText: false,
                   isAdmin: widget.isAdmin == true ? true : false,
+                  validator: (value){
+
+                  },
                 ),
                 SizedBox(height: Get.height * 0.03),
                 AuthButton(
@@ -174,47 +177,60 @@ class _LoginScreenState extends State<LoginScreen> {
                     icon: Icons.key,
                     controller: passwordController,
                     obscureText: false,
-                    isAdmin: widget.isAdmin == true ? true : false),
+                    isAdmin: widget.isAdmin == true ? true : false,
+                validator: (value){
+
+                },),
                 const SizedBox(height: 20),
                 InkWell(
                   onTap: () async {
-                    adminOrUser = widget.isAdmin == true
-                        ? await checkIfAdminLoggingIntoUser(
-                            emailController.text)
-                        : await checkIfUserLoggingIntoAdmin(
-                            emailController.text);
-                    if (adminOrUser) {
-                      if (widget.isAdmin == true) {
-                        Toast().errorMessage(
-                            "This email already exists as a user");
-                      } else {
-                        Toast().errorMessage(
-                            "This email already exists as an admin");
+                    if(emailController.text.isEmpty)
+                      {
+                        Toast().errorMessage("Email cannot be empty");
                       }
-                    } else {
-                      try {
+                    else if(passwordController.text.isEmpty)
+                      {
+                        Toast().errorMessage("Password cannot be empty");
+                      }
+                    else {
+                      adminOrUser = widget.isAdmin == true
+                          ? await checkIfAdminLoggingIntoUser(
+                          emailController.text)
+                          : await checkIfUserLoggingIntoAdmin(
+                          emailController.text);
+                      if (adminOrUser) {
                         if (widget.isAdmin == true) {
-                          await FirebaseAuth.instance
-                              .signInWithEmailAndPassword(
-                                  email: emailController.text,
-                                  password: passwordController.text);
-                          Get.to(AdminNavigationBar());
-                        } else {
-                          await FirebaseAuth.instance
-                              .signInWithEmailAndPassword(
-                                  email: emailController.text,
-                                  password: passwordController.text);
-                          Get.to(UserNavigationBar());
-                        }
-                        Toast().successMessage("Logged in successfully");
-                      } on FirebaseAuthException catch (e) {
-                        if (e.code == "invalid-email") {
-                          Toast().errorMessage("Invalid email entered");
-                        } else if (e.code == "user-not-found") {
                           Toast().errorMessage(
-                              "No user found with the corresponding email");
-                        } else if (e.code == "wrong-password") {
-                          Toast().errorMessage("Wrong password entered");
+                              "This email already exists as a user");
+                        } else {
+                          Toast().errorMessage(
+                              "This email already exists as an admin");
+                        }
+                      } else {
+                        try {
+                          if (widget.isAdmin == true) {
+                            await FirebaseAuth.instance
+                                .signInWithEmailAndPassword(
+                                email: emailController.text,
+                                password: passwordController.text);
+                            Get.to(AdminNavigationBar());
+                          } else {
+                            await FirebaseAuth.instance
+                                .signInWithEmailAndPassword(
+                                email: emailController.text,
+                                password: passwordController.text);
+                            Get.to(UserNavigationBar());
+                          }
+                          Toast().successMessage("Logged in successfully");
+                        } on FirebaseAuthException catch (e) {
+                          if (e.code == "invalid-email") {
+                            Toast().errorMessage("Invalid email entered");
+                          } else if (e.code == "user-not-found") {
+                            Toast().errorMessage(
+                                "No user found with the corresponding email");
+                          } else if (e.code == "wrong-password") {
+                            Toast().errorMessage("Wrong password entered");
+                          }
                         }
                       }
                     }
