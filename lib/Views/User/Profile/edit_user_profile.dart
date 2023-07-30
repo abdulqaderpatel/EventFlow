@@ -205,21 +205,41 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
                       onPressed: () async {
                         Reference ref = FirebaseStorage.instance.ref(
                             "/${FirebaseAuth.instance.currentUser!.uid}/profile_picture");
-                        UploadTask uploadTask =
-                            ref.putFile(profileImage!.absolute);
-                        Future.value(uploadTask).then((value) async {
-                          var newUrl = await ref.getDownloadURL();
-                          await FirebaseTable()
-                              .usersTable
-                              .doc(FirebaseAuth.instance.currentUser!.uid)
-                              .update({"image": newUrl.toString(),
-                            "username":usernameController.text,
-                            "name":nameController.text,
-                            "phone_number":int.parse(phoneNumberController.text)
+
+                        if(profileImage==null)
+                          {
+                            await FirebaseTable()
+                                .usersTable
+                                .doc(FirebaseAuth.instance.currentUser!.uid)
+                                .update({
+                              "username":usernameController.text,
+                              "name":nameController.text,
+                              "phone_number":phoneNumberController.text
+                            });
+                            Toast().successMessage(
+                                "Profile updated successfully");
+                            Get.to(UserNavigationBar());
+                          }
+                        else {
+                          UploadTask uploadTask =
+
+                          ref.putFile(profileImage!.absolute);
+                          Future.value(uploadTask).then((value) async {
+                            var newUrl = await ref.getDownloadURL();
+                            await FirebaseTable()
+                                .usersTable
+                                .doc(FirebaseAuth.instance.currentUser!.uid)
+                                .update({"image": newUrl.toString(),
+                              "username": usernameController.text,
+                              "name": nameController.text,
+                              "phone_number": phoneNumberController.text
+                            });
+
+                            Toast().successMessage(
+                                "Profile updated successfully");
+                            Get.to(UserNavigationBar());
                           });
-                          Toast().successMessage("Profile updated successfully");
-                          Get.to(UserNavigationBar());
-                        });
+                        }
                       },
                       child: const Text(
                         "Submit",

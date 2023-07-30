@@ -97,7 +97,7 @@ class _CreateAdminProfileScreenState extends State<CreateAdminProfileScreen> {
                     child: Column(
                       children: [
                         const Text(
-                          "Edit Profile",
+                          "Set up your Profile",
                           style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w600,

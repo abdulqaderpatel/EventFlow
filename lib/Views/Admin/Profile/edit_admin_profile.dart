@@ -1,9 +1,7 @@
 import 'dart:io';
 
-
 import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
 import 'package:eventflow/Views/Misc/toast/toast.dart';
-
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -47,7 +45,6 @@ class _EditAdminProfileScreenState extends State<EditAdminProfileScreen> {
     }
   }
 
-
   List<Map<String, dynamic>> items = [];
   bool isLoaded = false;
 
@@ -86,156 +83,190 @@ class _EditAdminProfileScreenState extends State<EditAdminProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: isLoaded ? Container(
-        height: Get.height,
-        color: const Color(0xff0047AB),
-        child: Container(padding: const EdgeInsets.all(20),
-          margin: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
-          child: SingleChildScrollView(
-            child: Center(
-              child: Column(
-                children: [
-                const Text("Edit Profile", style: TextStyle(color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 25),),
-              InkWell(
-                onTap: () {
-                  getImageGallery();
-                },
-                child: Container(
-                  width: 120,
-                  height: 120,
-                  margin: const EdgeInsets.only(top: 45, bottom: 30),
-                  padding: const EdgeInsets.all(2),
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(70),
-                    gradient: const LinearGradient(
-                      colors: [
-                        Color(0xff7DDCFB),
-                        Color(0xffBC67F2),
-                        Color(0xffACF6AF),
-                        Color(0xffF95549),
+      body: isLoaded
+          ? Container(
+              height: Get.height,
+              color: const Color(0xff0047AB),
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                margin: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
+                child: SingleChildScrollView(
+                  child: Center(
+                    child: Column(
+                      children: [
+                        const Text(
+                          "Edit Profile",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 25),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            getImageGallery();
+                          },
+                          child: Container(
+                            width: 120,
+                            height: 120,
+                            margin: const EdgeInsets.only(top: 45, bottom: 30),
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              color: Colors.blue,
+                              borderRadius: BorderRadius.circular(70),
+                              gradient: const LinearGradient(
+                                colors: [
+                                  Color(0xff7DDCFB),
+                                  Color(0xffBC67F2),
+                                  Color(0xffACF6AF),
+                                  Color(0xffF95549),
+                                ],
+                              ),
+                            ),
+                            child: Container(
+                              padding: const EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(70),
+                              ),
+                              child: profileImage != null
+                                  ? CircleAvatar(
+                                      radius: 56,
+                                      backgroundColor: Colors.white,
+                                      backgroundImage: FileImage(
+                                        profileImage!,
+                                      ),
+                                    )
+                                  : CircleAvatar(
+                                      radius: 56,
+                                      backgroundColor: Colors.white,
+                                      backgroundImage: NetworkImage(
+                                        items[0]["image"],
+                                      ),
+                                    ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 40,
+                        ),
+                        AdminTextField(
+                          text: items[0]["name"],
+                          controller: nameController,
+                          width: Get.width * 0.8,
+                          labelText: "Name",
+                          validator: (value) {
+                            return "";
+                          },
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        AdminTextField(
+                          text: "Username",
+                          controller: usernameController,
+                          width: Get.width * 0.8,
+                          labelText: "Username",
+                          validator: (value) {
+                            return "";
+                          },
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        AdminTextField(
+                          text: "Email",
+                          controller: emailController,
+                          width: Get.width * 0.8,
+                          labelText: "Email",
+                          enabled: false,
+                          validator: (value) {
+                            return "";
+                          },
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        AdminTextField(
+                          text: "Phone number",
+                          controller: phoneNumberController,
+                          width: Get.width * 0.8,
+                          labelText: "Phone number",
+                          validator: (value) {
+                            return "";
+                          },
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        SizedBox(
+                          width: Get.width * 0.8,
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  const Color(0xff0000ff)),
+                              foregroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.white),
+                            ),
+                            onPressed: () async {
+                              if(profileImage==null)
+                                {
+                                  await FirebaseTable()
+                                      .adminsTable
+                                      .doc(FirebaseAuth.instance.currentUser!.uid)
+                                      .update({
+
+                                    "username": usernameController.text,
+                                    "name": nameController.text,
+                                    "phone_number":
+                                    int.parse(phoneNumberController.text)
+                                  });
+                                  Toast().successMessage(
+                                      "Profile updated successfully");
+                                  Get.to(AdminNavigationBar());
+                                }
+                              else {
+                                Reference ref = FirebaseStorage.instance.ref(
+                                    "/${FirebaseAuth.instance.currentUser!
+                                        .uid}/profile_picture");
+                                UploadTask uploadTask =
+                                ref.putFile(profileImage!.absolute);
+                                Future.value(uploadTask).then((value) async {
+                                  var newUrl = await ref.getDownloadURL();
+                                  await FirebaseTable()
+                                      .adminsTable
+                                      .doc(
+                                      FirebaseAuth.instance.currentUser!.uid)
+                                      .update({
+                                    "image": newUrl.toString(),
+                                    "username": usernameController.text,
+                                    "name": nameController.text,
+                                    "phone_number":
+                                    int.parse(phoneNumberController.text)
+                                  });
+                                  Toast().successMessage(
+                                      "Profile updated successfully");
+                                  Get.to(AdminNavigationBar());
+                                });
+                              }
+                            },
+                            child: const Text(
+                              "Submit",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
-                    ),
-                  ),
-                  child: Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(70),
-                    ),
-                    child: profileImage != null
-                        ? CircleAvatar(
-                      radius: 56,
-                      backgroundColor: Colors.white,
-                      backgroundImage: FileImage(
-                        profileImage!,
-                      ),
-                    )
-                        : CircleAvatar(
-                      radius: 56,
-                      backgroundColor: Colors.white,
-                      backgroundImage: NetworkImage(
-                        items[0]["image"],
-                      ),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 40,
-              ),
-              AdminTextField(
-                text: items[0]["name"],
-                controller: nameController,
-                width: Get.width * 0.8,
-                labelText: "Name",
-                validator: (value) {
-                  return null;
-                },
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              AdminTextField(
-                  text: "Username",
-                  controller: usernameController,
-                  width: Get.width * 0.8,
-                  labelText: "Username",
-                  validator: (value){
-            return null;
-            },),
-            const SizedBox(
-              height: 30,
+            )
+          : const Center(
+              child: CircularProgressIndicator(),
             ),
-            AdminTextField(
-                text: "Email",
-                controller: emailController,
-                width: Get.width * 0.8,
-                labelText: "Email",
-                enabled: false,
-                validator: (value){
-          return null;
-          },),
-          const SizedBox(
-            height: 30,
-          ),
-          AdminTextField(
-              text: "Phone number",
-              controller: phoneNumberController,
-              width: Get.width * 0.8, labelText: "Phone number",
-
-              validator: (value){
-          return null;
-          },),
-
-        const SizedBox(
-          height: 30,
-        ),
-        SizedBox(
-          width: Get.width * 0.8,
-          child: ElevatedButton(
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(
-                  const Color(0xff0000ff)),
-              foregroundColor:
-              MaterialStateProperty.all<Color>(Colors.white),
-            ),
-            onPressed: () async {
-              Reference ref = FirebaseStorage.instance.ref(
-                  "/${FirebaseAuth.instance.currentUser!.uid}/profile_picture");
-              UploadTask uploadTask =
-              ref.putFile(profileImage!.absolute);
-              Future.value(uploadTask).then((value) async {
-                var newUrl = await ref.getDownloadURL();
-                await FirebaseTable()
-                    .adminsTable
-                    .doc(FirebaseAuth.instance.currentUser!.uid)
-                    .update({"image": newUrl.toString(),
-                  "username": usernameController.text,
-                  "name": nameController.text,
-                  "phone_number": int.parse(phoneNumberController.text)
-                });
-                Toast().successMessage("Profile updated successfully");
-                Get.to(AdminNavigationBar());
-              });
-            },
-            child: const Text(
-              "Submit",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ),
-        ],
-      ),
-    ),
-    ),
-    ),
-    ):const Center(child: CircularProgressIndicator(),),
     );
-    }
+  }
 }
