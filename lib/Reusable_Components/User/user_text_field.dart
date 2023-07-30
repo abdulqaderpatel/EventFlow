@@ -8,6 +8,7 @@ class UserTextField extends StatelessWidget {
   final String labelText;
 
   final bool enabled;
+  final String? Function(String?)  validator;
 
   const UserTextField(
       {super.key,
@@ -15,6 +16,7 @@ class UserTextField extends StatelessWidget {
       required this.controller,
       required this.width,
         required this.labelText,
+        required this.validator,
 
       this.enabled=true});
 
@@ -24,7 +26,7 @@ class UserTextField extends StatelessWidget {
         ? SizedBox(
             height: 50,
             width: width,
-            child: TextFormField(enabled: enabled,
+            child: TextFormField(validator: validator,enabled: enabled,
               controller: controller,
               textAlignVertical: TextAlignVertical.center,
               decoration: InputDecoration(labelText: labelText,labelStyle: TextStyle(color: Colors.white),alignLabelWithHint: true,

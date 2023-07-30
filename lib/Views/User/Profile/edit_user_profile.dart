@@ -152,6 +152,9 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
                       controller: nameController,
                       width: Get.width * 0.8,
                     labelText: "Name",
+                    validator: (value){
+                        return null;
+                    },
                 ),
                   const SizedBox(
                     height: 30,
@@ -160,7 +163,10 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
                       text: "Username",
                       controller: usernameController,
                       width: Get.width * 0.8,
-                  labelText: "Username",),
+                  labelText: "Username",
+                    validator: (value){
+                      return null;
+                    },),
                   const SizedBox(
                     height: 30,
                   ),
@@ -169,6 +175,9 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
                       controller: emailController,
                       width: Get.width * 0.8,
                   labelText: "Email",
+                    validator: (value){
+                      return null;
+                    },
                   enabled: false,),
                   const SizedBox(
                     height: 30,
@@ -176,7 +185,10 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
                   UserTextField(
                       text: "Phone number",
                       controller: phoneNumberController,
-                      width: Get.width * 0.8,labelText: "Phone number",),
+                      width: Get.width * 0.8,labelText: "Phone number",
+                    validator: (value){
+                      return null;
+                    },),
 
                   const SizedBox(
                     height: 30,

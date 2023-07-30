@@ -8,6 +8,7 @@ class AdminTextField extends StatelessWidget {
   final String? labelText;
   final bool enabled;
   final bool isFilledColor;
+  final String? Function(String?)  validator;
 
   const AdminTextField(
       {super.key,
@@ -16,7 +17,7 @@ class AdminTextField extends StatelessWidget {
         required this.width,
         this.labelText=null,
         this.isFilledColor=true,
-        this.enabled=true});
+        this.enabled=true,required  this.validator});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +30,8 @@ class AdminTextField extends StatelessWidget {
         textAlignVertical: TextAlignVertical.center,
         decoration: InputDecoration(labelText: labelText,labelStyle: TextStyle(color: Colors.white),alignLabelWithHint: true,
           filled:isFilledColor? true:false,
-          fillColor: Colors.blue,
+          fillColor: Color
+            (0xff0096FF),
 
 
           enabledBorder: OutlineInputBorder(
@@ -49,7 +51,9 @@ class AdminTextField extends StatelessWidget {
         : SizedBox(
       height: 120,
       width: width,
-      child: TextFormField(
+      child: TextFormField(validator: validator,onChanged: (value){
+
+      },
         keyboardType: TextInputType.multiline,
         maxLines: null,
         minLines: 5,

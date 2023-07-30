@@ -16,7 +16,7 @@ class AdminNavigationBar extends StatelessWidget {
 
   List<Widget> userPages = [
     CreateEventScreen(),
-    AdminProfileScreen(),
+    const AdminProfileScreen(),
   ];
 
   File? eventImage;
@@ -26,25 +26,29 @@ class AdminNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: Obx(
-        () => BottomNavigationBar(backgroundColor: Colors.blue,fixedColor: Colors.white,
-          currentIndex: controller.index.value,
-          onTap: (value) => controller.index.value = value,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.add),
-              label: "Add Events",
-            ),
+    return WillPopScope(onWillPop:()async{
+      return false;
+    },
+      child: Scaffold(
+        bottomNavigationBar: Obx(
+          () => BottomNavigationBar(backgroundColor: Colors.blue,fixedColor: Colors.white,
+            currentIndex: controller.index.value,
+            onTap: (value) => controller.index.value = value,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.add),
+                label: "Add Events",
+              ),
 
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: "Profile",
-            ),
-          ],
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: "Profile",
+              ),
+            ],
+          ),
         ),
+        body: Obx(() => userPages[controller.index.value]),
       ),
-      body: Obx(() => userPages[controller.index.value]),
     );
   }
 }

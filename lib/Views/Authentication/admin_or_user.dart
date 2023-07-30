@@ -17,7 +17,7 @@ class AdminOrUserScreen extends StatelessWidget {
 
 
         Expanded(
-          child: InkWell(onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context){
+          child: InkWell(onTap: (){Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
             return const LoginScreen(isAdmin: true,);
     }));},
             child: Container(
@@ -36,7 +36,7 @@ class AdminOrUserScreen extends StatelessWidget {
         ),
         Expanded(
           child: InkWell(onTap: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context){
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
               return LoginScreen(isUser: true,);
     }));
     },

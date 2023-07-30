@@ -1,4 +1,5 @@
 import 'package:eventflow/Reusable_Components/Authentication/auth_button.dart';
+import 'package:eventflow/Views/Admin/Profile/create_admin_profile.dart';
 import 'package:eventflow/Views/Admin/admin_navigation_bar.dart';
 import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
 import 'package:eventflow/Views/Misc/toast/toast.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../User/Profile/create_user_profile.dart';
 import '../User/user_navigation_bar.dart';
 import 'Login.dart';
 
@@ -222,16 +224,19 @@ class _SignupScreenState extends State<SignupScreen> {
                         obscureText: false,
                         isAdmin: widget.isAdmin == true ? true : false,
                         validator: (value) {
-                          print(value);
-                          if (value == null||value.isEmpty||!RegExp(r"^[\p{L} ,.'-]*$",
-                              caseSensitive: false, unicode: true, dotAll: true)
-                              .hasMatch(value)) {
+
+                          if (value == null ||
+                              value.isEmpty ||
+                              !RegExp(r"^[\p{L} ,.'-]*$",
+                                      caseSensitive: false,
+                                      unicode: true,
+                                      dotAll: true)
+                                  .hasMatch(value)) {
                             Toast().errorMessage("Invalid name");
-                          return "";
+                            return "";
                           }
 
-                            return null;
-
+                          return null;
                         },
                       ),
                       SizedBox(height: Get.height * 0.03),
@@ -243,7 +248,9 @@ class _SignupScreenState extends State<SignupScreen> {
                         isAdmin: widget.isAdmin == true ? true : false,
                         validator: (value) {
                           print(value);
-                          if (value == null||value.isEmpty||!emailRegExp.hasMatch(value)) {
+                          if (value == null ||
+                              value.isEmpty ||
+                              !emailRegExp.hasMatch(value)) {
                             Toast().errorMessage("Invalid email");
                             return "";
                           }
@@ -258,7 +265,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         obscureText: true,
                         isAdmin: widget.isAdmin == true ? true : false,
                         validator: (value) {
-                          if (value == null||value.isEmpty) {
+                          if (value == null || value.isEmpty) {
                             return "password field cannot be empty";
                           }
 
@@ -294,7 +301,10 @@ class _SignupScreenState extends State<SignupScreen> {
                                     emailController.text);
 
                                 if (widget.isAdmin == true) {
-                                  Get.to(AdminNavigationBar());
+                                  Navigator.pushReplacement(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return CreateAdminProfileScreen();
+                                  }));
                                   await FirebaseTable()
                                       .adminsTable
                                       .doc(FirebaseAuth
@@ -308,7 +318,10 @@ class _SignupScreenState extends State<SignupScreen> {
                                     "phone_number": 0
                                   });
                                 } else {
-                                  Get.to(UserNavigationBar());
+                                  Navigator.pushReplacement(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return CreateUserProfileScreen();
+                                  }));
                                   await FirebaseTable()
                                       .usersTable
                                       .doc(FirebaseAuth

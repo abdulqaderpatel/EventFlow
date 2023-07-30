@@ -9,6 +9,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../Authentication/admin_or_user.dart';
+import '../../Misc/toast/toast.dart';
+
 
 
 class UserProfileScreen extends StatefulWidget {
@@ -83,9 +86,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                              Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const SizedBox(
-                                  width: 20,
-                                ),
+                                InkWell(onTap:()async{
+                                  await FirebaseAuth.instance.signOut();
+                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
+                                    return AdminOrUserScreen();
+                                  }));
+                                  Toast().successMessage("Logged out successfully");
+
+                                },
+                                  child: Icon(Icons.logout,color: Colors.white,),focusColor: Colors.blue,),
                                 const Text(
                                   "Profile",
                                   style: TextStyle(

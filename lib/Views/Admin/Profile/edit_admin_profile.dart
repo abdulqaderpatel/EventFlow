@@ -1,11 +1,10 @@
 import 'dart:io';
 
 
-import 'package:eventflow/Reusable_Components/User/user_text_field.dart';
 import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
 import 'package:eventflow/Views/Misc/toast/toast.dart';
 
-import 'package:eventflow/Views/User/user_navigation_bar.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +48,7 @@ class _EditAdminProfileScreenState extends State<EditAdminProfileScreen> {
   }
 
 
-  List<Map<String, dynamic>> items=[];
+  List<Map<String, dynamic>> items = [];
   bool isLoaded = false;
 
   void incrementCounter() async {
@@ -67,166 +66,176 @@ class _EditAdminProfileScreenState extends State<EditAdminProfileScreen> {
 
     setState(() {
       items = temp;
-
     });
-    nameController.text=items[0]["name"];
-    usernameController.text=items[0]["username"];
-    emailController.text=items[0]["email"];
-    phoneNumberController.text=items[0]["phone_number"].toString();
+    nameController.text = items[0]["name"];
+    usernameController.text = items[0]["username"];
+    emailController.text = items[0]["email"];
+    phoneNumberController.text = items[0]["phone_number"].toString();
 
     setState(() {
-      isLoaded=true;
+      isLoaded = true;
     });
-
   }
 
   @override
   void initState() {
     super.initState();
     incrementCounter();
-
-
-
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:isLoaded? Container(
+      body: isLoaded ? Container(
         height: Get.height,
-        color: Colors.redAccent,
+        color: const Color(0xff0047AB),
         child: Container(padding: const EdgeInsets.all(20),
           margin: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
           child: SingleChildScrollView(
             child: Center(
               child: Column(
                 children: [
-                  const Text("Edit Profile",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w600,fontSize: 25),),
-                  InkWell(
-                    onTap: () {
-                      getImageGallery();
-                    },
-                    child: Container(
-                      width: 120,
-                      height: 120,
-                      margin: const EdgeInsets.only(top: 45, bottom: 30),
-                      padding: const EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(70),
-                        gradient: const LinearGradient(
-                          colors: [
-                            Color(0xff7DDCFB),
-                            Color(0xffBC67F2),
-                            Color(0xffACF6AF),
-                            Color(0xffF95549),
-                          ],
-                        ),
+                const Text("Edit Profile", style: TextStyle(color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 25),),
+              InkWell(
+                onTap: () {
+                  getImageGallery();
+                },
+                child: Container(
+                  width: 120,
+                  height: 120,
+                  margin: const EdgeInsets.only(top: 45, bottom: 30),
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(70),
+                    gradient: const LinearGradient(
+                      colors: [
+                        Color(0xff7DDCFB),
+                        Color(0xffBC67F2),
+                        Color(0xffACF6AF),
+                        Color(0xffF95549),
+                      ],
+                    ),
+                  ),
+                  child: Container(
+                    padding: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(70),
+                    ),
+                    child: profileImage != null
+                        ? CircleAvatar(
+                      radius: 56,
+                      backgroundColor: Colors.white,
+                      backgroundImage: FileImage(
+                        profileImage!,
                       ),
-                      child: Container(
-                        padding: const EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(70),
-                        ),
-                        child: profileImage != null
-                            ? CircleAvatar(
-                          radius: 56,
-                          backgroundColor: Colors.white,
-                          backgroundImage: FileImage(
-                            profileImage!,
-                          ),
-                        )
-                            : CircleAvatar(
-                          radius: 56,
-                          backgroundColor: Colors.white,
-                          backgroundImage: NetworkImage(
-                            items[0]["image"],
-                          ),
-                        ),
+                    )
+                        : CircleAvatar(
+                      radius: 56,
+                      backgroundColor: Colors.white,
+                      backgroundImage: NetworkImage(
+                        items[0]["image"],
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  AdminTextField(
-                    text: items[0]["name"],
-                    controller: nameController,
-                    width: Get.width * 0.8,
-                    labelText: "Name",
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  AdminTextField(
-                    text: "Username",
-                    controller: usernameController,
-                    width: Get.width * 0.8,
-                    labelText: "Username",),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  AdminTextField(
-                    text: "Email",
-                    controller: emailController,
-                    width: Get.width * 0.8,
-                    labelText: "Email",
-                    enabled: false,),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  AdminTextField(
-                    text: "Phone number",
-                    controller: phoneNumberController,
-                    width: Get.width * 0.8,labelText: "Phone number",),
+                ),
+              ),
+              const SizedBox(
+                height: 40,
+              ),
+              AdminTextField(
+                text: items[0]["name"],
+                controller: nameController,
+                width: Get.width * 0.8,
+                labelText: "Name",
+                validator: (value) {
+                  return null;
+                },
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              AdminTextField(
+                  text: "Username",
+                  controller: usernameController,
+                  width: Get.width * 0.8,
+                  labelText: "Username",
+                  validator: (value){
+            return null;
+            },),
+            const SizedBox(
+              height: 30,
+            ),
+            AdminTextField(
+                text: "Email",
+                controller: emailController,
+                width: Get.width * 0.8,
+                labelText: "Email",
+                enabled: false,
+                validator: (value){
+          return null;
+          },),
+          const SizedBox(
+            height: 30,
+          ),
+          AdminTextField(
+              text: "Phone number",
+              controller: phoneNumberController,
+              width: Get.width * 0.8, labelText: "Phone number",
 
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  SizedBox(
-                    width: Get.width * 0.8,
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            const Color(0xffff0000)),
-                        foregroundColor:
-                        MaterialStateProperty.all<Color>(Colors.white),
-                      ),
-                      onPressed: () async {
-                        Reference ref = FirebaseStorage.instance.ref(
-                            "/${FirebaseAuth.instance.currentUser!.uid}/profile_picture");
-                        UploadTask uploadTask =
-                        ref.putFile(profileImage!.absolute);
-                        Future.value(uploadTask).then((value) async {
-                          var newUrl = await ref.getDownloadURL();
-                          await FirebaseTable()
-                              .adminsTable
-                              .doc(FirebaseAuth.instance.currentUser!.uid)
-                              .update({"image": newUrl.toString(),
-                            "username":usernameController.text,
-                            "name":nameController.text,
-                            "phone_number":int.parse(phoneNumberController.text)
-                          });
-                          Toast().successMessage("Profile updated successfully");
-                          Get.to(AdminNavigationBar());
-                        });
-                      },
-                      child: const Text(
-                        "Submit",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+              validator: (value){
+          return null;
+          },),
+
+        const SizedBox(
+          height: 30,
+        ),
+        SizedBox(
+          width: Get.width * 0.8,
+          child: ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(
+                  const Color(0xff0000ff)),
+              foregroundColor:
+              MaterialStateProperty.all<Color>(Colors.white),
+            ),
+            onPressed: () async {
+              Reference ref = FirebaseStorage.instance.ref(
+                  "/${FirebaseAuth.instance.currentUser!.uid}/profile_picture");
+              UploadTask uploadTask =
+              ref.putFile(profileImage!.absolute);
+              Future.value(uploadTask).then((value) async {
+                var newUrl = await ref.getDownloadURL();
+                await FirebaseTable()
+                    .adminsTable
+                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                    .update({"image": newUrl.toString(),
+                  "username": usernameController.text,
+                  "name": nameController.text,
+                  "phone_number": int.parse(phoneNumberController.text)
+                });
+                Toast().successMessage("Profile updated successfully");
+                Get.to(AdminNavigationBar());
+              });
+            },
+            child: const Text(
+              "Submit",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
         ),
-      ):const Center(child: CircularProgressIndicator(),),
+        ],
+      ),
+    ),
+    ),
+    ),
+    ):const Center(child: CircularProgressIndicator(),),
     );
-  }
+    }
 }

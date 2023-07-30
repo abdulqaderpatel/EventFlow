@@ -213,13 +213,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                 .signInWithEmailAndPassword(
                                 email: emailController.text,
                                 password: passwordController.text);
-                            Get.to(AdminNavigationBar());
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
+                              return AdminNavigationBar();
+                            }));
                           } else {
                             await FirebaseAuth.instance
                                 .signInWithEmailAndPassword(
                                 email: emailController.text,
                                 password: passwordController.text);
-                            Get.to(UserNavigationBar());
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
+                              return UserNavigationBar();
+                            }));
                           }
                           Toast().successMessage("Logged in successfully");
                         } on FirebaseAuthException catch (e) {

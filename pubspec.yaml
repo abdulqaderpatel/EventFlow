@@ -19,6 +19,7 @@ dependencies:
   image_picker:
   firebase_storage:
   dotted_border:
+  getwidget:
 
 dev_dependencies:
   flutter_test:

@@ -1,8 +1,10 @@
 
 
 import 'package:eventflow/Reusable_Components/Admin/admin_details_field.dart';
+import 'package:eventflow/Views/Authentication/admin_or_user.dart';
 
 import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
+import 'package:eventflow/Views/Misc/toast/toast.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -75,7 +77,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
               children: [
                 Container(
                   padding: const EdgeInsets.all(30),
-                  height: Get.height * 0.38,
+
                   decoration: BoxDecoration(
                       color: Colors.blue,
                       borderRadius: BorderRadius.circular(15)),
@@ -85,9 +87,15 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const SizedBox(
-                            width: 20,
-                          ),
+                         InkWell(onTap:()async{
+                           await FirebaseAuth.instance.signOut();
+                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
+                             return AdminOrUserScreen();
+                           }));
+                           Toast().successMessage("Logged out successfully");
+
+                         },
+                         child: Icon(Icons.logout,color: Colors.white,),focusColor: Colors.blue,),
                           const Text(
                             "Profile",
                             style: TextStyle(
