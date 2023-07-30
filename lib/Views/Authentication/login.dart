@@ -176,7 +176,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     name: "Password",
                     icon: Icons.key,
                     controller: passwordController,
-                    obscureText: false,
+                    obscureText: true,
                     isAdmin: widget.isAdmin == true ? true : false,
                 validator: (value){
 

@@ -1,6 +1,14 @@
 import 'dart:io';
 
 import 'package:eventflow/Reusable_Components/Admin/admin_text_field.dart';
+import 'package:eventflow/Reusable_Components/Admin/create_event_text_field.dart';
+import 'package:eventflow/Reusable_Components/Admin/create_event_text_field.dart';
+import 'package:eventflow/Reusable_Components/Admin/create_event_text_field.dart';
+import 'package:eventflow/Reusable_Components/Admin/create_event_text_field.dart';
+import 'package:eventflow/Reusable_Components/Admin/create_event_text_field.dart';
+import 'package:eventflow/Reusable_Components/Admin/create_event_text_field.dart';
+import 'package:eventflow/Reusable_Components/Admin/create_event_text_field.dart';
+import 'package:eventflow/Reusable_Components/Admin/create_event_text_field.dart';
 import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
 import 'package:eventflow/Views/Misc/toast/toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -94,7 +102,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             child: Center(
               child: Column(
                 children: [
-                  AdminTextField(
+                  CreateEventTextField(
                     text: "Event name",
                     controller: titleController,
                     width: Get.width,
@@ -104,12 +112,12 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   ),
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      AdminTextField(
+                      CreateEventTextField(
                         text: "Location",
                         controller: locationController,
                         width: Get.width*0.55,
                       ),
-                      AdminTextField(
+                      CreateEventTextField(
                         text: "Price",
                         controller: priceController,
                         width: Get.width*0.25,
@@ -154,20 +162,20 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      AdminTextField(
+                      CreateEventTextField(
                           text: "Event Date",
                           controller: dateController,
-                          width: Get.width * 0.37),
-                      AdminTextField(
+                          width: Get.width * 0.4),
+                      CreateEventTextField(
                           text: "Max participants",
                           controller: maxEntries,
-                          width: Get.width * 0.37),
+                          width: Get.width * 0.4),
                     ],
                   ),
                   SizedBox(
                     height: Get.height * 0.03,
                   ),
-                  AdminTextField(
+                  CreateEventTextField(
                     text: "Description",
                     controller: descriptionController,
                     width: Get.width,
@@ -178,18 +186,16 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      AdminTextField(
+                      CreateEventTextField(
                           text: "Start time",
                           controller: startTimeController,
-                          width: Get.width * 0.37,
-                          isIcon: true,
-                          icon: Icons.lock_clock_outlined),
-                      AdminTextField(
+                          width: Get.width * 0.4,
+                      ),
+                      CreateEventTextField(
                         text: "End time",
                         controller: endTimeController,
-                        width: Get.width * 0.37,
-                        isIcon: true,
-                        icon: Icons.lock_clock_rounded,
+                        width: Get.width * 0.4,
+
                       ),
                     ],
                   ),

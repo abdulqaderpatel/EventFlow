@@ -227,7 +227,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               caseSensitive: false, unicode: true, dotAll: true)
                               .hasMatch(value)) {
                             Toast().errorMessage("Invalid name");
-                          return "f;";
+                          return "";
                           }
 
                             return null;
@@ -245,7 +245,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           print(value);
                           if (value == null||value.isEmpty||!emailRegExp.hasMatch(value)) {
                             Toast().errorMessage("Invalid email");
-                            return "email field cannot be empty";
+                            return "";
                           }
                           return null;
                         },

@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:eventflow/Reusable_Components/User/user_details_field.dart';
+
 import 'package:eventflow/Reusable_Components/User/user_text_field.dart';
 import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
 import 'package:eventflow/Views/Misc/toast/toast.dart';
-import 'package:eventflow/Views/User/Profile/user_profile.dart';
+
 import 'package:eventflow/Views/User/user_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -12,14 +12,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({super.key});
+import '../../../Reusable_Components/Admin/admin_text_field.dart';
+import '../admin_navigation_bar.dart';
+
+class EditAdminProfileScreen extends StatefulWidget {
+  const EditAdminProfileScreen({super.key});
 
   @override
-  State<EditProfileScreen> createState() => _EditProfileScreenState();
+  State<EditAdminProfileScreen> createState() => _EditAdminProfileScreenState();
 }
 
-class _EditProfileScreenState extends State<EditProfileScreen> {
+class _EditAdminProfileScreenState extends State<EditAdminProfileScreen> {
   final usernameController = TextEditingController();
 
   final nameController = TextEditingController();
@@ -46,13 +49,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
 
-   List<Map<String, dynamic>> items=[];
+  List<Map<String, dynamic>> items=[];
   bool isLoaded = false;
 
   void incrementCounter() async {
     List<Map<String, dynamic>> temp = [];
     var data = await FirebaseTable()
-        .usersTable
+        .adminsTable
         .where("email", isEqualTo: FirebaseAuth.instance.currentUser!.email)
         .get();
 
@@ -70,7 +73,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     usernameController.text=items[0]["username"];
     emailController.text=items[0]["email"];
     phoneNumberController.text=items[0]["phone_number"].toString();
-    print(items);
+
     setState(() {
       isLoaded=true;
     });
@@ -135,48 +138,48 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ),
                         )
                             : CircleAvatar(
-                                radius: 56,
-                                backgroundColor: Colors.white,
-                                backgroundImage: NetworkImage(
-                                  items[0]["image"],
-                                ),
-                              ),
+                          radius: 56,
+                          backgroundColor: Colors.white,
+                          backgroundImage: NetworkImage(
+                            items[0]["image"],
+                          ),
+                        ),
                       ),
                     ),
                   ),
                   const SizedBox(
                     height: 40,
                   ),
-                  UserTextField(
-                      text: items[0]["name"],
-                      controller: nameController,
-                      width: Get.width * 0.8,
+                  AdminTextField(
+                    text: items[0]["name"],
+                    controller: nameController,
+                    width: Get.width * 0.8,
                     labelText: "Name",
-                ),
+                  ),
                   const SizedBox(
                     height: 30,
                   ),
-                  UserTextField(
-                      text: "Username",
-                      controller: usernameController,
-                      width: Get.width * 0.8,
-                  labelText: "Username",),
+                  AdminTextField(
+                    text: "Username",
+                    controller: usernameController,
+                    width: Get.width * 0.8,
+                    labelText: "Username",),
                   const SizedBox(
                     height: 30,
                   ),
-                  UserTextField(
-                      text: "Email",
-                      controller: emailController,
-                      width: Get.width * 0.8,
-                  labelText: "Email",
-                  enabled: false,),
+                  AdminTextField(
+                    text: "Email",
+                    controller: emailController,
+                    width: Get.width * 0.8,
+                    labelText: "Email",
+                    enabled: false,),
                   const SizedBox(
                     height: 30,
                   ),
-                  UserTextField(
-                      text: "Phone number",
-                      controller: phoneNumberController,
-                      width: Get.width * 0.8,labelText: "Phone number",),
+                  AdminTextField(
+                    text: "Phone number",
+                    controller: phoneNumberController,
+                    width: Get.width * 0.8,labelText: "Phone number",),
 
                   const SizedBox(
                     height: 30,
@@ -188,17 +191,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         backgroundColor: MaterialStateProperty.all<Color>(
                             const Color(0xffff0000)),
                         foregroundColor:
-                            MaterialStateProperty.all<Color>(Colors.white),
+                        MaterialStateProperty.all<Color>(Colors.white),
                       ),
                       onPressed: () async {
                         Reference ref = FirebaseStorage.instance.ref(
                             "/${FirebaseAuth.instance.currentUser!.uid}/profile_picture");
                         UploadTask uploadTask =
-                            ref.putFile(profileImage!.absolute);
+                        ref.putFile(profileImage!.absolute);
                         Future.value(uploadTask).then((value) async {
                           var newUrl = await ref.getDownloadURL();
                           await FirebaseTable()
-                              .usersTable
+                              .adminsTable
                               .doc(FirebaseAuth.instance.currentUser!.uid)
                               .update({"image": newUrl.toString(),
                             "username":usernameController.text,
@@ -206,7 +209,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             "phone_number":int.parse(phoneNumberController.text)
                           });
                           Toast().successMessage("Profile updated successfully");
-                          Get.to(UserNavigationBar());
+                          Get.to(AdminNavigationBar());
                         });
                       },
                       child: const Text(

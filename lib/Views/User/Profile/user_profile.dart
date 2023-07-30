@@ -1,15 +1,15 @@
-import 'dart:io';
 
 import 'package:eventflow/Reusable_Components/User/user_details_field.dart';
 import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
-import 'package:eventflow/Views/Misc/toast/toast.dart';
-import 'package:eventflow/Views/User/Profile/edit_profile.dart';
+import 'package:eventflow/Views/User/Profile/edit_user_profile.dart';
+
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:image_picker/image_picker.dart';
+
 
 class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key});
@@ -91,7 +91,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 22,fontWeight: FontWeight.w500),
                                 ),
-                                InkWell(onTap: ()=>Get.to(const EditProfileScreen()),
+                                InkWell(onTap: ()=>Get.to(const EditUserProfileScreen()),
                                   child: const Icon(
                                     Icons.edit,
                                     color: Colors.white,
