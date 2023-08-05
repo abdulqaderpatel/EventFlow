@@ -1,6 +1,7 @@
 import 'package:eventflow/Reusable_Components/Authentication/auth_button.dart';
 import 'package:eventflow/Views/Admin/admin_navigation_bar.dart';
 import 'package:eventflow/Views/Authentication/signup.dart';
+import 'package:eventflow/Views/Misc/Firebase/google_auth.dart';
 import 'package:eventflow/Views/Misc/toast/toast.dart';
 
 import 'package:eventflow/Views/User/user_navigation_bar.dart';
@@ -9,8 +10,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
+import '../Admin/Profile/create_admin_profile.dart';
 import '../Misc/Firebase/firebase_tables.dart';
+import '../User/Profile/create_user_profile.dart';
 
 class LoginScreen extends StatefulWidget {
   final bool? isAdmin;
@@ -285,7 +289,76 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: Get.height * 0.04,
                 ),
-                InkWell(
+                InkWell(onTap: ()async{
+
+                  try {
+                    final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
+
+                    final GoogleSignInAuthentication gAuth = await gUser!.authentication;
+
+                    final credential = GoogleAuthProvider.credential(
+                        accessToken: gAuth.accessToken, idToken: gAuth.idToken
+                    );
+
+
+
+                    return await FirebaseAuth.instance.signInWithCredential(credential).then((value) {
+                      if(widget.isAdmin==true)
+                        {
+                           FirebaseTable()
+                              .adminsTable
+                              .doc(FirebaseAuth
+                              .instance.currentUser!.uid)
+                              .set({
+                            "email": FirebaseAuth
+                                .instance.currentUser!.email,
+                            "username": "",
+                            "name": FirebaseAuth.instance.currentUser!.displayName,
+                            "image": "",
+                            "phone_number": 0
+                          }).then((value) =>  Navigator.pushReplacement(context,
+                               MaterialPageRoute(builder: (context) {
+                                 return CreateAdminProfileScreen();
+                               })));
+                        }
+                      else{
+                        
+                          FirebaseTable()
+                              .usersTable
+                              .doc(FirebaseAuth
+                              .instance.currentUser!.uid)
+                              .set({
+                          "email": FirebaseAuth
+                              .instance.currentUser!.email,
+                          "username": "",
+                          "name": FirebaseAuth.instance.currentUser!.displayName,
+                          "image": "",
+                          "phone_number": 0
+                          }).then((value) =>  Navigator.pushReplacement(context,
+                              MaterialPageRoute(builder: (context) {
+                                return CreateUserProfileScreen();
+                              })));
+                        
+                      }
+                    });
+
+
+                  }
+                  on FirebaseAuthException catch(e)
+                  {
+                    if(e.code=="account-exists-with-different-credential")
+                    {
+                      Toast().errorMessage("Account already exists with this email");
+                    }
+                    else if(e.code=="wrong-password")
+                    {
+                      Toast().successMessage("Wrong password entered");
+                    }
+                  }
+
+
+
+                },
                   child: Container(
                     width: Get.width,
                     height: Get.height * 0.07,

@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../User/Profile/create_user_profile.dart';
-import '../User/user_navigation_bar.dart';
+
 import 'Login.dart';
 
 class SignupScreen extends StatefulWidget {

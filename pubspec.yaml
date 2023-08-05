@@ -20,6 +20,7 @@ dependencies:
   firebase_storage:
   dotted_border:
   getwidget:
+  google_sign_in:
 
 dev_dependencies:
   flutter_test:
