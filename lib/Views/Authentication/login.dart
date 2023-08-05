@@ -33,6 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   late List<Map<String, dynamic>> users;
   late List<Map<String, dynamic>> admins;
+  final user = FirebaseAuth.instance.currentUser?.email;
 
   Future<bool> checkIfAdminLoggingIntoUser(String email) async {
     users = [];
@@ -63,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     var adminData = await FirebaseTable()
         .adminsTable
-        .where('email', isEqualTo: emailController.text)
+        .where('email', isEqualTo: email)
         .get();
 
     List<Map<String, dynamic>> adminTemp = [];
@@ -82,6 +83,68 @@ class _LoginScreenState extends State<LoginScreen> {
       return false;
     } else {
       return true;
+    }
+  }
+
+  Future<bool> checkIfUserCreatedProfile() async {
+    List<Map<String, dynamic>> users = [];
+    var userData = await FirebaseTable()
+        .usersTable
+        .where('email', isEqualTo: FirebaseAuth.instance.currentUser?.email)
+        .get();
+
+    List<Map<String, dynamic>> userTemp = [];
+
+    for (var element in userData.docs) {
+      setState(() {
+        userTemp.add(element.data());
+      });
+    }
+
+    setState(() {
+      users = userTemp;
+    });
+
+    print(users);
+
+    if (userTemp.isEmpty) {
+      return false;
+    }
+
+    if (users[0]["username"] != "") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> checkIfAdminCreatedProfile() async {
+    users = [];
+    var userData = await FirebaseTable()
+        .adminsTable
+        .where('email', isEqualTo: FirebaseAuth.instance.currentUser!.email)
+        .get();
+
+    List<Map<String, dynamic>> userTemp = [];
+
+    for (var element in userData.docs) {
+      setState(() {
+        userTemp.add(element.data());
+      });
+    }
+
+    setState(() {
+      users = userTemp;
+    });
+
+    if (userTemp.isEmpty) {
+      return false;
+    }
+
+    if (users[0]["username"] != "") {
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -171,37 +234,30 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: emailController,
                   obscureText: false,
                   isAdmin: widget.isAdmin == true ? true : false,
-                  validator: (value){
-
-                  },
+                  validator: (value) {},
                 ),
                 SizedBox(height: Get.height * 0.03),
                 AuthButton(
-                    name: "Password",
-                    icon: Icons.key,
-                    controller: passwordController,
-                    obscureText: true,
-                    isAdmin: widget.isAdmin == true ? true : false,
-                validator: (value){
-
-                },),
+                  name: "Password",
+                  icon: Icons.key,
+                  controller: passwordController,
+                  obscureText: true,
+                  isAdmin: widget.isAdmin == true ? true : false,
+                  validator: (value) {},
+                ),
                 const SizedBox(height: 20),
                 InkWell(
                   onTap: () async {
-                    if(emailController.text.isEmpty)
-                      {
-                        Toast().errorMessage("Email cannot be empty");
-                      }
-                    else if(passwordController.text.isEmpty)
-                      {
-                        Toast().errorMessage("Password cannot be empty");
-                      }
-                    else {
+                    if (emailController.text.isEmpty) {
+                      Toast().errorMessage("Email cannot be empty");
+                    } else if (passwordController.text.isEmpty) {
+                      Toast().errorMessage("Password cannot be empty");
+                    } else {
                       adminOrUser = widget.isAdmin == true
                           ? await checkIfAdminLoggingIntoUser(
-                          emailController.text)
+                              emailController.text)
                           : await checkIfUserLoggingIntoAdmin(
-                          emailController.text);
+                              emailController.text);
                       if (adminOrUser) {
                         if (widget.isAdmin == true) {
                           Toast().errorMessage(
@@ -215,17 +271,19 @@ class _LoginScreenState extends State<LoginScreen> {
                           if (widget.isAdmin == true) {
                             await FirebaseAuth.instance
                                 .signInWithEmailAndPassword(
-                                email: emailController.text,
-                                password: passwordController.text);
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
+                                    email: emailController.text,
+                                    password: passwordController.text);
+                            Navigator.pushReplacement(context,
+                                MaterialPageRoute(builder: (context) {
                               return AdminNavigationBar();
                             }));
                           } else {
                             await FirebaseAuth.instance
                                 .signInWithEmailAndPassword(
-                                email: emailController.text,
-                                password: passwordController.text);
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
+                                    email: emailController.text,
+                                    password: passwordController.text);
+                            Navigator.pushReplacement(context,
+                                MaterialPageRoute(builder: (context) {
                               return UserNavigationBar();
                             }));
                           }
@@ -289,76 +347,113 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: Get.height * 0.04,
                 ),
-                InkWell(onTap: ()async{
+                InkWell(
+                  onTap: () async {
+                    try {
+                      final GoogleSignInAccount? gUser =
+                          await GoogleSignIn().signIn();
 
-                  try {
-                    final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
+                      final GoogleSignInAuthentication gAuth =
+                          await gUser!.authentication;
 
-                    final GoogleSignInAuthentication gAuth = await gUser!.authentication;
+                      final credential = GoogleAuthProvider.credential(
+                          accessToken: gAuth.accessToken,
+                          idToken: gAuth.idToken);
 
-                    final credential = GoogleAuthProvider.credential(
-                        accessToken: gAuth.accessToken, idToken: gAuth.idToken
-                    );
+                      return await FirebaseAuth.instance
+                          .signInWithCredential(credential)
+                          .then((value) async {
+                        print(FirebaseAuth.instance.currentUser!.email
+                            .toString());
+                        if (widget.isAdmin == true) {
+                          adminOrUser = await checkIfAdminLoggingIntoUser(
+                              FirebaseAuth.instance.currentUser!.email!);
 
-
-
-                    return await FirebaseAuth.instance.signInWithCredential(credential).then((value) {
-                      if(widget.isAdmin==true)
-                        {
-                           FirebaseTable()
-                              .adminsTable
-                              .doc(FirebaseAuth
-                              .instance.currentUser!.uid)
-                              .set({
-                            "email": FirebaseAuth
-                                .instance.currentUser!.email,
-                            "username": "",
-                            "name": FirebaseAuth.instance.currentUser!.displayName,
-                            "image": "",
-                            "phone_number": 0
-                          }).then((value) =>  Navigator.pushReplacement(context,
-                               MaterialPageRoute(builder: (context) {
-                                 return CreateAdminProfileScreen();
-                               })));
+                          print(adminOrUser);
+                          if (adminOrUser) {
+                            Toast().errorMessage(
+                                "This email already exists as a user");
+                            await FirebaseAuth.instance.signOut();
+                          } else {
+                            if (await checkIfAdminCreatedProfile()) {
+                              Navigator.pushReplacement(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return AdminNavigationBar();
+                              }));
+                            } else {
+                              var isAdminProfile =
+                                  await checkIfAdminCreatedProfile();
+                              if (isAdminProfile) {
+                                Navigator.pushReplacement(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return AdminNavigationBar();
+                                }));
+                              } else {
+                                FirebaseTable()
+                                    .adminsTable
+                                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                                    .set({
+                                  "email":
+                                      FirebaseAuth.instance.currentUser!.email,
+                                  "username": "",
+                                  "name": FirebaseAuth
+                                      .instance.currentUser!.displayName,
+                                  "image": "",
+                                  "phone_number": 0
+                                }).then((value) => Navigator.pushReplacement(
+                                            context, MaterialPageRoute(
+                                                builder: (context) {
+                                          return CreateAdminProfileScreen();
+                                        })));
+                              }
+                            }
+                          }
+                        } else {
+                          adminOrUser = await checkIfUserLoggingIntoAdmin(
+                              FirebaseAuth.instance.currentUser!.email!);
+                          if (adminOrUser) {
+                            Toast().errorMessage(
+                                "Account already exists as an Admin");
+                            await FirebaseAuth.instance.signOut();
+                          } else {
+                            var isUserProfile =
+                                await checkIfUserCreatedProfile();
+                            if (isUserProfile) {
+                              Navigator.pushReplacement(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return UserNavigationBar();
+                              }));
+                            } else {
+                              FirebaseTable()
+                                  .usersTable
+                                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                                  .set({
+                                "email":
+                                    FirebaseAuth.instance.currentUser!.email,
+                                "username": "",
+                                "name": FirebaseAuth
+                                    .instance.currentUser!.displayName,
+                                "image": "",
+                                "phone_number": 0
+                              }).then((value) =>
+                                      Navigator.pushReplacement(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return CreateUserProfileScreen();
+                                      })));
+                            }
+                          }
                         }
-                      else{
-                        
-                          FirebaseTable()
-                              .usersTable
-                              .doc(FirebaseAuth
-                              .instance.currentUser!.uid)
-                              .set({
-                          "email": FirebaseAuth
-                              .instance.currentUser!.email,
-                          "username": "",
-                          "name": FirebaseAuth.instance.currentUser!.displayName,
-                          "image": "",
-                          "phone_number": 0
-                          }).then((value) =>  Navigator.pushReplacement(context,
-                              MaterialPageRoute(builder: (context) {
-                                return CreateUserProfileScreen();
-                              })));
-                        
+                      });
+                    } on FirebaseAuthException catch (e) {
+                      if (e.code ==
+                          "account-exists-with-different-credential") {
+                        Toast().errorMessage(
+                            "Account already exists with this email");
+                      } else if (e.code == "wrong-password") {
+                        Toast().successMessage("Wrong password entered");
                       }
-                    });
-
-
-                  }
-                  on FirebaseAuthException catch(e)
-                  {
-                    if(e.code=="account-exists-with-different-credential")
-                    {
-                      Toast().errorMessage("Account already exists with this email");
                     }
-                    else if(e.code=="wrong-password")
-                    {
-                      Toast().successMessage("Wrong password entered");
-                    }
-                  }
-
-
-
-                },
+                  },
                   child: Container(
                     width: Get.width,
                     height: Get.height * 0.07,

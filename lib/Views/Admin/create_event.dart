@@ -1,14 +1,7 @@
 import 'dart:io';
 
-import 'package:eventflow/Reusable_Components/Admin/admin_text_field.dart';
 import 'package:eventflow/Reusable_Components/Admin/create_event_text_field.dart';
-import 'package:eventflow/Reusable_Components/Admin/create_event_text_field.dart';
-import 'package:eventflow/Reusable_Components/Admin/create_event_text_field.dart';
-import 'package:eventflow/Reusable_Components/Admin/create_event_text_field.dart';
-import 'package:eventflow/Reusable_Components/Admin/create_event_text_field.dart';
-import 'package:eventflow/Reusable_Components/Admin/create_event_text_field.dart';
-import 'package:eventflow/Reusable_Components/Admin/create_event_text_field.dart';
-import 'package:eventflow/Reusable_Components/Admin/create_event_text_field.dart';
+
 import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
 import 'package:eventflow/Views/Misc/toast/toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -87,7 +80,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,17 +102,18 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   SizedBox(
                     height: Get.height * 0.03,
                   ),
-                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       CreateEventTextField(
                         text: "Location",
                         controller: locationController,
-                        width: Get.width*0.55,
+                        width: Get.width * 0.55,
                       ),
                       CreateEventTextField(
                         text: "Price",
                         controller: priceController,
-                        width: Get.width*0.25,
+                        width: Get.width * 0.25,
                       ),
                     ],
                   ),
@@ -187,15 +180,14 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       CreateEventTextField(
-                          text: "Start time",
-                          controller: startTimeController,
-                          width: Get.width * 0.4,
+                        text: "Start time",
+                        controller: startTimeController,
+                        width: Get.width * 0.4,
                       ),
                       CreateEventTextField(
                         text: "End time",
                         controller: endTimeController,
                         width: Get.width * 0.4,
-
                       ),
                     ],
                   ),
@@ -224,17 +216,18 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                   .millisecondsSinceEpoch
                                   .toString())
                               .set({
-                            "event_creator":FirebaseAuth.instance.currentUser!.displayName,
-                            "name":titleController.text.toString(),
-                            "description":descriptionController.text.toString(),
-                            "price":int.parse(priceController.text.toString()),
-                            "image":newUrl.toString(),
-                            "date":dateController.text.toString(),
-                            "max_participants":maxEntries.text.toString(),
-                            "start_time":startTimeController.text.toString(),
-                            "end_time":endTimeController.text.toString(),
-                            "location":locationController.text.toString(),
-
+                            "event_creator":
+                                FirebaseAuth.instance.currentUser!.displayName,
+                            "name": titleController.text.toString(),
+                            "description":
+                                descriptionController.text.toString(),
+                            "price": int.parse(priceController.text.toString()),
+                            "image": newUrl.toString(),
+                            "date": dateController.text.toString(),
+                            "max_participants": maxEntries.text.toString(),
+                            "start_time": startTimeController.text.toString(),
+                            "end_time": endTimeController.text.toString(),
+                            "location": locationController.text.toString(),
                           });
                           Toast().successMessage("Event successfully created");
                         });
