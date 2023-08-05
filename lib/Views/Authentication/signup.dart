@@ -210,168 +210,149 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                   ),
                 ),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: Get.height * 0.05,
-                      ),
-                      AuthButton(
-                        name: "Name",
-                        icon: Icons.person,
-                        controller: nameController,
-                        obscureText: false,
-                        isAdmin: widget.isAdmin == true ? true : false,
-                        validator: (value) {
-
-                          if (value == null ||
-                              value.isEmpty ||
-                              !RegExp(r"^[\p{L} ,.'-]*$",
-                                      caseSensitive: false,
-                                      unicode: true,
-                                      dotAll: true)
-                                  .hasMatch(value)) {
-                            Toast().errorMessage("Invalid name");
-                            return "";
+                Column(
+                  children: [
+                    SizedBox(
+                      height: Get.height * 0.05,
+                    ),
+                    AuthButton(
+                      name: "Name",
+                      icon: Icons.person,
+                      controller: nameController,
+                      obscureText: false,
+                      isAdmin: widget.isAdmin == true ? true : false,
+                      validator: (value) {},
+                    ),
+                    SizedBox(height: Get.height * 0.03),
+                    AuthButton(
+                      name: "Email",
+                      icon: Icons.email,
+                      controller: emailController,
+                      obscureText: false,
+                      isAdmin: widget.isAdmin == true ? true : false,
+                      validator: (value) {},
+                    ),
+                    SizedBox(height: Get.height * 0.03),
+                    AuthButton(
+                      name: "Password",
+                      icon: Icons.key,
+                      controller: passwordController,
+                      obscureText: true,
+                      isAdmin: widget.isAdmin == true ? true : false,
+                      validator: (value) {},
+                    ),
+                    SizedBox(height: Get.height * 0.05),
+                    InkWell(
+                      onTap: () async {
+                        if (nameController.text.isEmpty) {
+                          Toast().errorMessage("Name cannot be empty");
+                        } else if (emailController.text.isEmpty) {
+                          Toast().errorMessage("Email cannot be empty");
+                        } else if (passwordController.text.isEmpty) {
+                          Toast().errorMessage("password cannot be empty");
+                        }
+                        else if(!RegExp(r'^[a-zA-Z0-9]+$')
+                            .hasMatch(nameController.text))
+                          {
+                            Toast().errorMessage("Invalid name entered");
                           }
-
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: Get.height * 0.03),
-                      AuthButton(
-                        name: "Email",
-                        icon: Icons.email,
-                        controller: emailController,
-                        obscureText: false,
-                        isAdmin: widget.isAdmin == true ? true : false,
-                        validator: (value) {
-                          print(value);
-                          if (value == null ||
-                              value.isEmpty ||
-                              !emailRegExp.hasMatch(value)) {
-                            Toast().errorMessage("Invalid email");
-                            return "";
+                        else if(!emailRegExp.hasMatch(emailController.text)){
+                          Toast().errorMessage("Invalid email entered");
+                        }
+                        else if(passwordController.text.length<6)
+                          {
+                            Toast().errorMessage("Password length should be more than 6 characters");
                           }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: Get.height * 0.03),
-                      AuthButton(
-                        name: "Password",
-                        icon: Icons.key,
-                        controller: passwordController,
-                        obscureText: true,
-                        isAdmin: widget.isAdmin == true ? true : false,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "password field cannot be empty";
-                          }
-
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: Get.height * 0.05),
-                      InkWell(
-                        onTap: () async {
-                          print(_formKey.currentState!.validate());
-                          if (!_formKey.currentState!.validate()) {
-                            print("error");
-                            return;
-                          } else {
-                            adminOrUser = widget.isAdmin == true
-                                ? await checkIfAdminLoggingIntoUser(
-                                    emailController.text)
-                                : await checkIfUserLoggingIntoAdmin(
-                                    emailController.text);
-                            if (adminOrUser) {
-                              if (widget.isAdmin == true) {
-                                Toast().errorMessage(
-                                    "This email already exists as a user");
-                              } else {
-                                Toast().errorMessage(
-                                    "This email already exists as an admin");
-                              }
+                        else {
+                          adminOrUser = widget.isAdmin == true
+                              ? await checkIfAdminLoggingIntoUser(
+                                  emailController.text)
+                              : await checkIfUserLoggingIntoAdmin(
+                                  emailController.text);
+                          if (adminOrUser) {
+                            if (widget.isAdmin == true) {
+                              Toast().errorMessage(
+                                  "This email already exists as a user");
                             } else {
-                              try {
-                                await registerWithEmailAndPassword(
-                                    nameController.text,
-                                    passwordController.text,
-                                    emailController.text);
+                              Toast().errorMessage(
+                                  "This email already exists as an admin");
+                            }
+                          } else {
+                            try {
+                              await registerWithEmailAndPassword(
+                                  nameController.text,
+                                  passwordController.text,
+                                  emailController.text);
 
-                                if (widget.isAdmin == true) {
-                                  Navigator.pushReplacement(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return CreateAdminProfileScreen();
-                                  }));
-                                  await FirebaseTable()
-                                      .adminsTable
-                                      .doc(FirebaseAuth
-                                          .instance.currentUser!.uid)
-                                      .set({
-                                    "email": FirebaseAuth
-                                        .instance.currentUser!.email,
-                                    "username": "",
-                                    "name": nameController.text,
-                                    "image": "",
-                                    "phone_number": 0
-                                  });
-                                } else {
-                                  Navigator.pushReplacement(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return CreateUserProfileScreen();
-                                  }));
-                                  await FirebaseTable()
-                                      .usersTable
-                                      .doc(FirebaseAuth
-                                          .instance.currentUser!.uid)
-                                      .set({
-                                    "email": FirebaseAuth
-                                        .instance.currentUser!.email,
-                                    "username": "",
-                                    "name": nameController.text,
-                                    "image": "",
-                                    "phone_number": 0
-                                  });
-                                }
-                                Toast().successMessage(
-                                    "Account created successfully");
-                              } on FirebaseAuthException catch (e) {
-                                if (e.code == "email-already-in-use") {
-                                  Toast().errorMessage(
-                                      "The email is already in use");
-                                } else if (e.code == "invalid-email") {
-                                  Toast().errorMessage(
-                                      "The email entered is invalid");
-                                } else if (e.code == "weak-password") {
-                                  Toast().errorMessage("Weak password entered");
-                                }
+                              if (widget.isAdmin == true) {
+                                Navigator.pushReplacement(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return CreateAdminProfileScreen();
+                                }));
+                                await FirebaseTable()
+                                    .adminsTable
+                                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                                    .set({
+                                  "email":
+                                      FirebaseAuth.instance.currentUser!.email,
+                                  "username": "",
+                                  "name": nameController.text,
+                                  "image": "",
+                                  "phone_number": 0
+                                });
+                              } else {
+                                Navigator.pushReplacement(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return CreateUserProfileScreen();
+                                }));
+                                await FirebaseTable()
+                                    .usersTable
+                                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                                    .set({
+                                  "email":
+                                      FirebaseAuth.instance.currentUser!.email,
+                                  "username": "",
+                                  "name": nameController.text,
+                                  "image": "",
+                                  "phone_number": 0
+                                });
+                              }
+                              Toast().successMessage(
+                                  "Account created successfully");
+                            } on FirebaseAuthException catch (e) {
+                              if (e.code == "email-already-in-use") {
+                                Toast().errorMessage(
+                                    "The email is already in use");
+                              } else if (e.code == "invalid-email") {
+                                Toast().errorMessage(
+                                    "The email entered is invalid");
+                              } else if (e.code == "weak-password") {
+                                Toast().errorMessage("Weak password entered");
                               }
                             }
                           }
-                        },
-                        child: Container(
-                          width: Get.width,
-                          height: Get.height * 0.07,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: Center(
-                              child: Text(
-                            widget.isAdmin == true
-                                ? "Sign Up as Admin"
-                                : "Sign up as User",
-                            style: const TextStyle(
-                                color: Color(0xffff5085),
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16),
-                          )),
+                        }
+                      },
+                      child: Container(
+                        width: Get.width,
+                        height: Get.height * 0.07,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(30),
                         ),
+                        child: Center(
+                            child: Text(
+                          widget.isAdmin == true
+                              ? "Sign Up as Admin"
+                              : "Sign up as User",
+                          style: const TextStyle(
+                              color: Color(0xffff5085),
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16),
+                        )),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 SizedBox(
                   height: Get.height * 0.05,

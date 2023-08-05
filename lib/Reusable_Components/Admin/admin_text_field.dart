@@ -9,6 +9,7 @@ class AdminTextField extends StatelessWidget {
   final bool enabled;
   final bool isFilledColor;
   final String? Function(String?)  validator;
+  final TextInputType textInputType;
 
   const AdminTextField(
       {super.key,
@@ -17,7 +18,7 @@ class AdminTextField extends StatelessWidget {
         required this.width,
         this.labelText=null,
         this.isFilledColor=true,
-        this.enabled=true,required  this.validator});
+        this.enabled=true,required  this.validator,this.textInputType=TextInputType.text});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ class AdminTextField extends StatelessWidget {
         ? SizedBox(
       height: 50,
       width: width,
-      child: TextFormField(enabled: enabled,
+      child: TextFormField(keyboardType:textInputType,enabled: enabled,
         controller: controller,
         textAlignVertical: TextAlignVertical.center,
         decoration: InputDecoration(labelText: labelText,labelStyle: TextStyle(color: Colors.white),alignLabelWithHint: true,

@@ -76,6 +76,37 @@ class _CreateAdminProfileScreenState extends State<CreateAdminProfileScreen> {
 
   final _formKey = GlobalKey<FormState>();
 
+  Future<bool> checkIfUsernameIsUnique(String username) async {
+    var adminData = await FirebaseTable()
+        .adminsTable
+        .where('username', isEqualTo: username)
+        .get();
+    var userData = await FirebaseTable()
+        .usersTable
+        .where('username', isEqualTo: username)
+        .get();
+
+    List<Map<String, dynamic>> adminTemp = [];
+    List<Map<String, dynamic>> userTemp = [];
+
+    for (var element in adminData.docs) {
+      setState(() {
+        adminTemp.add(element.data());
+      });
+    }
+    for (var element in userData.docs) {
+      setState(() {
+        userTemp.add(element.data());
+      });
+    }
+
+    if (adminTemp.isEmpty && userTemp.isEmpty) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -203,6 +234,7 @@ class _CreateAdminProfileScreenState extends State<CreateAdminProfileScreen> {
                                 validator: (value) {
                                   return null;
                                 },
+                                textInputType: TextInputType.number,
                               ),
                               const SizedBox(
                                 height: 30,
@@ -234,12 +266,16 @@ class _CreateAdminProfileScreenState extends State<CreateAdminProfileScreen> {
                                         .hasMatch(usernameController.text)) {
                                       Toast().errorMessage(
                                           "please enter a valid username");
-                                    }
-                                    else if(phoneNumberController.text.length!=10)
-                                      {
-                                        Toast().errorMessage("Invalid phone number");
-                                      }
-                                    else {
+                                    } else if (!await checkIfUsernameIsUnique(
+                                        usernameController.text)) {
+                                      Toast().errorMessage(
+                                          "This username has already been taken");
+                                    } else if (phoneNumberController
+                                            .text.length !=
+                                        10||phoneNumberController.text.contains(".")||phoneNumberController.text.contains(",")) {
+                                      Toast()
+                                          .errorMessage("Invalid phone number");
+                                    } else {
                                       Reference ref = FirebaseStorage.instance.ref(
                                           "/${FirebaseAuth.instance.currentUser!.uid}/profile_picture");
                                       UploadTask uploadTask =

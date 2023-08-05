@@ -74,6 +74,37 @@ class _EditAdminProfileScreenState extends State<EditAdminProfileScreen> {
     });
   }
 
+  Future<bool> checkIfUsernameIsUnique(String username) async {
+    var adminData = await FirebaseTable()
+        .adminsTable
+        .where('username', isEqualTo: username)
+        .get();
+    var userData = await FirebaseTable()
+        .usersTable
+        .where('username', isEqualTo: username)
+        .get();
+
+    List<Map<String, dynamic>> adminTemp = [];
+    List<Map<String, dynamic>> userTemp = [];
+
+    for (var element in adminData.docs) {
+      setState(() {
+        adminTemp.add(element.data());
+      });
+    }
+    for (var element in userData.docs) {
+      setState(() {
+        userTemp.add(element.data());
+      });
+    }
+
+    if (adminTemp.isEmpty && userTemp.isEmpty) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -208,36 +239,42 @@ class _EditAdminProfileScreenState extends State<EditAdminProfileScreen> {
                                   Colors.white),
                             ),
                             onPressed: () async {
-                              if(profileImage==null)
+                              if(nameController.text.isEmpty)
                                 {
-                                  await FirebaseTable()
-                                      .adminsTable
-                                      .doc(FirebaseAuth.instance.currentUser!.uid)
-                                      .update({
-
-                                    "username": usernameController.text,
-                                    "name": nameController.text,
-                                    "phone_number":
-                                    int.parse(phoneNumberController.text)
-                                  });
-                                  Toast().successMessage(
-                                      "Profile updated successfully");
-                                  Get.to(AdminNavigationBar());
+                                  Toast().errorMessage("Name cannot be empty");
                                 }
+                              else if (usernameController.text.isEmpty) {
+                                Toast().errorMessage("Username cannot be empty");
+                              } else if (phoneNumberController.text.isEmpty) {
+                                Toast().errorMessage(
+                                    "Phone number cannot be empty");
+                              }
+                              else if (!RegExp(r'^[a-zA-Z0-9]+$')
+                                  .hasMatch(nameController.text)) {
+                                Toast().errorMessage(
+                                    "please enter a valid name");
+                              }
+                              else if (!RegExp(r'^[a-zA-Z0-9]+$')
+                                  .hasMatch(usernameController.text)) {
+                                Toast().errorMessage(
+                                    "please enter a valid username");
+                              } else if (!await checkIfUsernameIsUnique(
+                                  usernameController.text)&&items[0]["username"]!=usernameController.text) {
+                                Toast().errorMessage(
+                                    "This username has already been taken");
+                              } else if (phoneNumberController.text.length !=
+                                      10 ||
+                                  phoneNumberController.text.contains(".") ||
+                                  phoneNumberController.text.contains(",")) {
+                                Toast().errorMessage("Invalid phone number");
+                              }
                               else {
-                                Reference ref = FirebaseStorage.instance.ref(
-                                    "/${FirebaseAuth.instance.currentUser!
-                                        .uid}/profile_picture");
-                                UploadTask uploadTask =
-                                ref.putFile(profileImage!.absolute);
-                                Future.value(uploadTask).then((value) async {
-                                  var newUrl = await ref.getDownloadURL();
+                                if (profileImage == null) {
                                   await FirebaseTable()
                                       .adminsTable
                                       .doc(
                                       FirebaseAuth.instance.currentUser!.uid)
                                       .update({
-                                    "image": newUrl.toString(),
                                     "username": usernameController.text,
                                     "name": nameController.text,
                                     "phone_number":
@@ -246,7 +283,30 @@ class _EditAdminProfileScreenState extends State<EditAdminProfileScreen> {
                                   Toast().successMessage(
                                       "Profile updated successfully");
                                   Get.to(AdminNavigationBar());
-                                });
+                                } else {
+                                  Reference ref = FirebaseStorage.instance.ref(
+                                      "/${FirebaseAuth.instance.currentUser!
+                                          .uid}/profile_picture");
+                                  UploadTask uploadTask =
+                                  ref.putFile(profileImage!.absolute);
+                                  Future.value(uploadTask).then((value) async {
+                                    var newUrl = await ref.getDownloadURL();
+                                    await FirebaseTable()
+                                        .adminsTable
+                                        .doc(FirebaseAuth
+                                        .instance.currentUser!.uid)
+                                        .update({
+                                      "image": newUrl.toString(),
+                                      "username": usernameController.text,
+                                      "name": nameController.text,
+                                      "phone_number":
+                                      int.parse(phoneNumberController.text)
+                                    });
+                                    Toast().successMessage(
+                                        "Profile updated successfully");
+                                    Get.to(AdminNavigationBar());
+                                  });
+                                }
                               }
                             },
                             child: const Text(
