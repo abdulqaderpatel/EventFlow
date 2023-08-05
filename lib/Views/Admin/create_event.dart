@@ -114,6 +114,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                         text: "Price",
                         controller: priceController,
                         width: Get.width * 0.25,
+                        textInputType: TextInputType.number,
                       ),
                     ],
                   ),
@@ -162,7 +163,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                       CreateEventTextField(
                           text: "Max participants",
                           controller: maxEntries,
-                          width: Get.width * 0.4),
+                          width: Get.width * 0.4,textInputType: TextInputType.number,),
                     ],
                   ),
                   SizedBox(
@@ -204,33 +205,84 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                             MaterialStateProperty.all<Color>(Colors.white),
                       ),
                       onPressed: () async {
-                        Reference ref = FirebaseStorage.instance.ref(
-                            "/${FirebaseAuth.instance.currentUser!.uid}/events/${titleController.text}");
-                        UploadTask uploadTask =
-                            ref.putFile(eventImage!.absolute);
-                        Future.value(uploadTask).then((value) async {
-                          var newUrl = await ref.getDownloadURL();
-                          await FirebaseTable()
-                              .eventsTable
-                              .doc(DateTime.now()
-                                  .millisecondsSinceEpoch
-                                  .toString())
-                              .set({
-                            "event_creator":
-                                FirebaseAuth.instance.currentUser!.displayName,
-                            "name": titleController.text.toString(),
-                            "description":
-                                descriptionController.text.toString(),
-                            "price": int.parse(priceController.text.toString()),
-                            "image": newUrl.toString(),
-                            "date": dateController.text.toString(),
-                            "max_participants": maxEntries.text.toString(),
-                            "start_time": startTimeController.text.toString(),
-                            "end_time": endTimeController.text.toString(),
-                            "location": locationController.text.toString(),
+                        if(titleController.text.isEmpty)
+                          {
+                            Toast().errorMessage("Event name cannot be empty");
+                          }
+                        else if(locationController.text.isEmpty)
+                          {
+                            Toast().errorMessage("Location cannot be empty");
+                          }
+                        else if(priceController.text.isEmpty)
+                        {
+                          Toast().errorMessage("Price cannot be empty");
+                        }
+                        else if(eventImage==null)
+                        {
+                          Toast().errorMessage("Image cannot be empty");
+                        }
+
+                        else if(dateController.text.isEmpty)
+                        {
+                          Toast().errorMessage("Event Date cannot be empty");
+                        }
+                        else if(maxEntries.text.isEmpty)
+                        {
+                          Toast().errorMessage("max participants cannot be empty");
+                        }
+                        else if(descriptionController.text.isEmpty)
+                        {
+                          Toast().errorMessage("Description cannot be empty");
+                        }
+                        else if(startTimeController.text.isEmpty)
+                        {
+                          Toast().errorMessage("start time cannot be empty");
+                        }
+                        else if(endTimeController.text.isEmpty)
+                        {
+                          Toast().errorMessage("End time cannot be empty");
+                        }
+                        else if(priceController.text.contains(".")||priceController.text.contains("."))
+                          {
+                            Toast().errorMessage("Price should be a valid number");
+                          }
+                        else if(maxEntries.text.contains(".")||maxEntries.text.contains("."))
+                        {
+                          Toast().errorMessage("max participants should be a valid number");
+                        }
+                        else {
+                          Reference ref = FirebaseStorage.instance.ref(
+                              "/${FirebaseAuth.instance.currentUser!
+                                  .uid}/events/${titleController.text}");
+                          UploadTask uploadTask =
+                          ref.putFile(eventImage!.absolute);
+                          Future.value(uploadTask).then((value) async {
+                            var newUrl = await ref.getDownloadURL();
+                            await FirebaseTable()
+                                .eventsTable
+                                .doc(DateTime
+                                .now()
+                                .millisecondsSinceEpoch
+                                .toString())
+                                .set({
+                              "event_creator":
+                              FirebaseAuth.instance.currentUser!.displayName,
+                              "name": titleController.text.toString(),
+                              "description":
+                              descriptionController.text.toString(),
+                              "price": int.parse(
+                                  priceController.text.toString()),
+                              "image": newUrl.toString(),
+                              "date": dateController.text.toString(),
+                              "max_participants": maxEntries.text.toString(),
+                              "start_time": startTimeController.text.toString(),
+                              "end_time": endTimeController.text.toString(),
+                              "location": locationController.text.toString(),
+                            });
+                            Toast().successMessage(
+                                "Event successfully created");
                           });
-                          Toast().successMessage("Event successfully created");
-                        });
+                        }
                       },
                       child: const Text(
                         "Submit",

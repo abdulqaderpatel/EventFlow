@@ -5,12 +5,14 @@ class CreateEventTextField extends StatelessWidget {
   final TextEditingController controller;
   final double width;
   final String? labelText;
+  final TextInputType textInputType;
 
   const CreateEventTextField({
     super.key,
     required this.text,
     required this.controller,
     required this.width,
+    this.textInputType=TextInputType.text,
     this.labelText = null,
   });
 
@@ -20,7 +22,7 @@ class CreateEventTextField extends StatelessWidget {
         ? SizedBox(
             height: 50,
             width: width,
-            child: TextFormField(
+            child: TextFormField(keyboardType: textInputType,
               controller: controller,
               textAlignVertical: TextAlignVertical.center,
               decoration: InputDecoration(
