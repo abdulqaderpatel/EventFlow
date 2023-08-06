@@ -79,6 +79,36 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       Toast().errorMessage("Please choose an image");
     }
   }
+ List<Map<String,dynamic>> items=[];
+  void getUsernameAndUserImage() async {
+    List<Map<String, dynamic>> temp = [];
+    var data = await FirebaseTable()
+        .adminsTable
+        .where("email", isEqualTo: FirebaseAuth.instance.currentUser!.email)
+        .get();
+
+
+
+    for (var element in data.docs) {
+      setState(() {
+        temp.add(element.data());
+      });
+    }
+
+    print(temp);
+
+    setState(() {
+      items=temp;
+    });
+
+
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getUsernameAndUserImage();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -253,7 +283,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                         else {
                           Reference ref = FirebaseStorage.instance.ref(
                               "/${FirebaseAuth.instance.currentUser!
-                                  .uid}/events/${titleController.text}");
+                                  .uid}/${DateTime.now().millisecondsSinceEpoch.toString()}");
                           UploadTask uploadTask =
                           ref.putFile(eventImage!.absolute);
                           Future.value(uploadTask).then((value) async {
@@ -268,6 +298,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                               "event_creator":
                               FirebaseAuth.instance.currentUser!.displayName,
                               "name": titleController.text.toString(),
+                              "username":items[0]["username"],
+                              "admin_image":items[0]["image"],
                               "description":
                               descriptionController.text.toString(),
                               "price": int.parse(

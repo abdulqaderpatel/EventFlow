@@ -76,7 +76,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     children: [
                       Container(
                         padding: const EdgeInsets.all(30),
-                        height: Get.height * 0.38,
+
                         decoration: BoxDecoration(
                             color: Colors.red,
                             borderRadius: BorderRadius.circular(15)),
