@@ -35,6 +35,9 @@ class _LoginScreenState extends State<LoginScreen> {
   late List<Map<String, dynamic>> admins;
   final user = FirebaseAuth.instance.currentUser?.email;
 
+  bool buttonLoader = false;
+  bool googleLoader = false;
+
   Future<bool> checkIfAdminLoggingIntoUser(String email) async {
     users = [];
     var userData =
@@ -248,10 +251,19 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 20),
                 InkWell(
                   onTap: () async {
+                    setState(() {
+                      buttonLoader = true;
+                    });
                     if (emailController.text.isEmpty) {
                       Toast().errorMessage("Email cannot be empty");
+                      setState(() {
+                        buttonLoader = false;
+                      });
                     } else if (passwordController.text.isEmpty) {
                       Toast().errorMessage("Password cannot be empty");
+                      setState(() {
+                        buttonLoader = false;
+                      });
                     } else {
                       adminOrUser = widget.isAdmin == true
                           ? await checkIfAdminLoggingIntoUser(
@@ -262,9 +274,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         if (widget.isAdmin == true) {
                           Toast().errorMessage(
                               "This email already exists as a user");
+                          setState(() {
+                            buttonLoader = false;
+                          });
                         } else {
                           Toast().errorMessage(
                               "This email already exists as an admin");
+                          setState(() {
+                            buttonLoader = false;
+                          });
                         }
                       } else {
                         try {
@@ -273,6 +291,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 .signInWithEmailAndPassword(
                                     email: emailController.text,
                                     password: passwordController.text);
+                            setState(() {
+                              buttonLoader = false;
+                            });
                             Navigator.pushReplacement(context,
                                 MaterialPageRoute(builder: (context) {
                               return AdminNavigationBar();
@@ -282,6 +303,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 .signInWithEmailAndPassword(
                                     email: emailController.text,
                                     password: passwordController.text);
+                            setState(() {
+                              buttonLoader = false;
+                            });
                             Navigator.pushReplacement(context,
                                 MaterialPageRoute(builder: (context) {
                               return UserNavigationBar();
@@ -291,11 +315,20 @@ class _LoginScreenState extends State<LoginScreen> {
                         } on FirebaseAuthException catch (e) {
                           if (e.code == "invalid-email") {
                             Toast().errorMessage("Invalid email entered");
+                            setState(() {
+                              buttonLoader = false;
+                            });
                           } else if (e.code == "user-not-found") {
                             Toast().errorMessage(
                                 "No user found with the corresponding email");
+                            setState(() {
+                              buttonLoader = false;
+                            });
                           } else if (e.code == "wrong-password") {
                             Toast().errorMessage("Wrong password entered");
+                            setState(() {
+                              buttonLoader = false;
+                            });
                           }
                         }
                       }
@@ -309,15 +342,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: BorderRadius.circular(30),
                     ),
                     child: Center(
-                        child: Text(
-                      widget.isAdmin == true
-                          ? "Login as Admin"
-                          : "Login as User",
-                      style: const TextStyle(
-                          color: Color(0xffff5085),
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16),
-                    )),
+                        child: buttonLoader == false
+                            ? Text(
+                                widget.isAdmin == true
+                                    ? "Login as Admin"
+                                    : "Login as User",
+                                style: const TextStyle(
+                                    color: Color(0xffff5085),
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16),
+                              )
+                            : CircularProgressIndicator()),
                   ),
                 ),
                 SizedBox(
@@ -349,6 +384,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 InkWell(
                   onTap: () async {
+                    setState(() {
+                      googleLoader = true;
+                    });
                     try {
                       final GoogleSignInAccount? gUser =
                           await GoogleSignIn().signIn();
@@ -373,9 +411,15 @@ class _LoginScreenState extends State<LoginScreen> {
                           if (adminOrUser) {
                             Toast().errorMessage(
                                 "This email already exists as a user");
+                            setState(() {
+                              googleLoader = false;
+                            });
                             await FirebaseAuth.instance.signOut();
                           } else {
                             if (await checkIfAdminCreatedProfile()) {
+                              setState(() {
+                                googleLoader = false;
+                              });
                               Navigator.pushReplacement(context,
                                   MaterialPageRoute(builder: (context) {
                                 return AdminNavigationBar();
@@ -384,6 +428,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               var isAdminProfile =
                                   await checkIfAdminCreatedProfile();
                               if (isAdminProfile) {
+                                setState(() {
+                                  googleLoader = false;
+                                });
                                 Navigator.pushReplacement(context,
                                     MaterialPageRoute(builder: (context) {
                                   return AdminNavigationBar();
@@ -400,11 +447,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                       .instance.currentUser!.displayName,
                                   "image": "",
                                   "phone_number": 0
-                                }).then((value) => Navigator.pushReplacement(
-                                            context, MaterialPageRoute(
-                                                builder: (context) {
-                                          return CreateAdminProfileScreen();
-                                        })));
+                                }).then((value) {
+                                  setState(() {
+                                    googleLoader = false;
+                                  });
+                                  Navigator.pushReplacement(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return CreateAdminProfileScreen();
+                                  }));
+                                });
                               }
                             }
                           }
@@ -414,11 +465,18 @@ class _LoginScreenState extends State<LoginScreen> {
                           if (adminOrUser) {
                             Toast().errorMessage(
                                 "Account already exists as an Admin");
+                            setState(() {
+                              googleLoader = false;
+                            });
                             await FirebaseAuth.instance.signOut();
                           } else {
                             var isUserProfile =
                                 await checkIfUserCreatedProfile();
+
                             if (isUserProfile) {
+                              setState(() {
+                                googleLoader = false;
+                              });
                               Navigator.pushReplacement(context,
                                   MaterialPageRoute(builder: (context) {
                                 return UserNavigationBar();
@@ -435,11 +493,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                     .instance.currentUser!.displayName,
                                 "image": "",
                                 "phone_number": 0
-                              }).then((value) =>
-                                      Navigator.pushReplacement(context,
-                                          MaterialPageRoute(builder: (context) {
-                                        return CreateUserProfileScreen();
-                                      })));
+                              }).then((value) {
+                                setState(() {
+                                  googleLoader = false;
+                                });
+                                Navigator.pushReplacement(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return CreateUserProfileScreen();
+                                }));
+                              });
                             }
                           }
                         }
@@ -449,8 +511,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           "account-exists-with-different-credential") {
                         Toast().errorMessage(
                             "Account already exists with this email");
+                        setState(() {
+                          googleLoader = false;
+                        });
                       } else if (e.code == "wrong-password") {
                         Toast().successMessage("Wrong password entered");
+                        setState(() {
+                          googleLoader = false;
+                        });
                       }
                     }
                   },
@@ -462,21 +530,24 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: BorderRadius.circular(30),
                     ),
                     child: Center(
-                        child: Row(
-                      children: [
-                        Image.asset("assets/images/google-logo.png"),
-                        Container(
-                          margin: EdgeInsets.only(left: Get.width * 0.1),
-                          child: const Text(
-                            "Sign In with Google",
-                            style: TextStyle(
-                                color: Color(0xff000000),
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16),
-                          ),
-                        ),
-                      ],
-                    )),
+                        child: googleLoader == false
+                            ? Row(
+                                children: [
+                                  Image.asset("assets/images/google-logo.png"),
+                                  Container(
+                                    margin:
+                                        EdgeInsets.only(left: Get.width * 0.1),
+                                    child: const Text(
+                                      "Sign In with Google",
+                                      style: TextStyle(
+                                          color: Color(0xff000000),
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 16),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : CircularProgressIndicator()),
                   ),
                 ),
                 SizedBox(
@@ -494,14 +565,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         )),
                     InkWell(
-                      onTap: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
+                      onTap: () => Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) {
                         return SignupScreen(
                           isAdmin: widget.isAdmin,
                           isUser: widget.isUser,
                         );
-                      })
-
-                      ),
+                      })),
                       child: const Text(
                         "Sign up now",
                         style: TextStyle(

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:eventflow/Reusable_Components/User/user_profile_submit_button.dart';
 import 'package:eventflow/Reusable_Components/User/user_text_field.dart';
 import 'package:eventflow/Reusable_Components/User/user_text_field.dart';
 import 'package:eventflow/Reusable_Components/User/user_text_field.dart';
@@ -49,6 +50,8 @@ class _CreateUserProfileScreenState extends State<CreateUserProfileScreen> {
       Toast().errorMessage("Please choose an image");
     }
   }
+
+  bool buttonLoader=false;
 
   List<Map<String, dynamic>> items = [];
   bool isLoaded = false;
@@ -246,75 +249,82 @@ class _CreateUserProfileScreenState extends State<CreateUserProfileScreen> {
                                 ),
                                 SizedBox(
                                   width: Get.width * 0.8,
-                                  child: ElevatedButton(
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                              const Color(0xffff0000)),
-                                      foregroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                              Colors.white),
-                                    ),
-                                    onPressed: () async {
-                                      if (profileImage == null) {
-                                        Toast().errorMessage(
-                                            "Please choose a profile image");
-                                      } else if (usernameController
-                                          .text.isEmpty) {
-                                        Toast().errorMessage(
-                                            "Username cannot be empty");
-                                      } else if (phoneNumberController
-                                              .text.isEmpty ) {
-                                        Toast().errorMessage(
-                                            "Phone number cannot be empty");
-                                      } else if (!RegExp(r'^[a-zA-Z0-9]+$')
-                                          .hasMatch(usernameController.text)) {
-                                        Toast().errorMessage(
-                                            "please enter a valid username");
-                                      } else if (!await checkIfUsernameIsUnique(
-                                          usernameController.text)) {
-                                        Toast().errorMessage(
-                                            "This username has already been taken");
-                                      } else if (phoneNumberController
-                                              .text.length !=
-                                          10||phoneNumberController.text.contains(".")||phoneNumberController.text.contains(",")) {
+                                  child: UserProfileSubmitButton(text: "Submit",isLoading: buttonLoader,voidCallback: () async {
+                                    setState(() {
+                                      buttonLoader=true;
+                                    });
+                                    if (profileImage == null) {
+                                      Toast().errorMessage(
+                                          "Please choose a profile image");
+                                      setState(() {
+                                        buttonLoader=false;
+                                      });
+                                    } else if (usernameController
+                                        .text.isEmpty) {
+                                      Toast().errorMessage(
+                                          "Username cannot be empty");
+                                      setState(() {
+                                        buttonLoader=false;
+                                      });
+                                    } else if (phoneNumberController
+                                        .text.isEmpty ) {
+                                      Toast().errorMessage(
+                                          "Phone number cannot be empty");
+                                      setState(() {
+                                        buttonLoader=false;
+                                      });
+                                    } else if (!RegExp(r'^[a-zA-Z0-9]+$')
+                                        .hasMatch(usernameController.text)) {
+                                      Toast().errorMessage(
+                                          "please enter a valid username");
+                                      setState(() {
+                                        buttonLoader=false;
+                                      });
+                                    } else if (!await checkIfUsernameIsUnique(
+                                        usernameController.text)) {
+                                      Toast().errorMessage(
+                                          "This username has already been taken");
+                                      setState(() {
+                                        buttonLoader=false;
+                                      });
+                                    } else if (phoneNumberController
+                                        .text.length !=
+                                        10||phoneNumberController.text.contains(".")||phoneNumberController.text.contains(",")) {
 
-                                        Toast()
-                                            .errorMessage("Invalid phone number");
-                                      } else {
-                                        Reference ref = FirebaseStorage.instance.ref(
-                                            "/${FirebaseAuth.instance.currentUser!.uid}/profile_picture");
-                                        UploadTask uploadTask =
-                                            ref.putFile(profileImage!.absolute);
-                                        Future.value(uploadTask)
-                                            .then((value) async {
-                                          var newUrl = await ref.getDownloadURL();
-                                          await FirebaseTable()
-                                              .usersTable
-                                              .doc(FirebaseAuth
-                                                  .instance.currentUser!.uid)
-                                              .update({
-                                            "image": newUrl.toString(),
-                                            "username": usernameController.text,
-                                            "phone_number":
-                                                phoneNumberController.text
-                                          });
-                                          Toast().successMessage(
-                                              "Profile created successfully");
-                                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
-                                            return UserNavigationBar();
-                                          }));
+                                      Toast()
+                                          .errorMessage("Invalid phone number");
+                                      setState(() {
+                                        buttonLoader=false;
+                                      });
+                                    } else {
+                                      Reference ref = FirebaseStorage.instance.ref(
+                                          "/${FirebaseAuth.instance.currentUser!.uid}/profile_picture");
+                                      UploadTask uploadTask =
+                                      ref.putFile(profileImage!.absolute);
+                                      Future.value(uploadTask)
+                                          .then((value) async {
+                                        var newUrl = await ref.getDownloadURL();
+                                        await FirebaseTable()
+                                            .usersTable
+                                            .doc(FirebaseAuth
+                                            .instance.currentUser!.uid)
+                                            .update({
+                                          "image": newUrl.toString(),
+                                          "username": usernameController.text,
+                                          "phone_number":
+                                          phoneNumberController.text
                                         });
-                                      }
-                                    },
-                                    child: const Text(
-                                      "Submit",
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
+                                        Toast().successMessage(
+                                            "Profile created successfully");
+                                        setState(() {
+                                          buttonLoader=false;
+                                        });
+                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
+                                          return UserNavigationBar();
+                                        }));
+                                      });
+                                    }
+                                  },),
                                 ),
                               ],
                             ),
