@@ -370,13 +370,10 @@ class _SignupScreenState extends State<SignupScreen> {
                         )),
                     InkWell(
                       onTap: () {
-                        Get.to(widget.isAdmin == true
-                            ? LoginScreen(
-                                isAdmin: true,
-                              )
-                            : LoginScreen(
-                                isUser: true,
-                              ));
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder:(context){
+                          return widget.isAdmin==true?LoginScreen(isAdmin:true):LoginScreen(isUser:true);
+                        }),);
+
                       },
                       child: const Text(
                         "Login",

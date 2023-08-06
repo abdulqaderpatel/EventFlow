@@ -20,28 +20,30 @@ class UserNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: Obx(
-        () => BottomNavigationBar(backgroundColor: Colors.red,
-          currentIndex: controller.index.value,
-          onTap: (value) => controller.index.value = value,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.event),
-              label: "Events",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.search),
-              label: "Search",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: "Profile",
-            ),
-          ],
+    return WillPopScope(onWillPop: ()async=>false,
+      child: Scaffold(
+        bottomNavigationBar: Obx(
+          () => BottomNavigationBar(backgroundColor: Colors.red,
+            currentIndex: controller.index.value,
+            onTap: (value) => controller.index.value = value,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.event),
+                label: "Events",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.search),
+                label: "Search",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: "Profile",
+              ),
+            ],
+          ),
         ),
+        body: Obx(() => userPages[controller.index.value]),
       ),
-      body: Obx(() => userPages[controller.index.value]),
     );
   }
 }

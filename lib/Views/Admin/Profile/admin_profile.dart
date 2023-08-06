@@ -101,7 +101,11 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                             style: TextStyle(
                                 color: Colors.white, fontSize: 22,fontWeight: FontWeight.w500),
                           ),
-                          InkWell(onTap: ()=>Get.to(const EditAdminProfileScreen()),
+                          InkWell(onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context){
+                              return EditAdminProfileScreen();
+                            }));
+                          },
                             child: const Icon(
                               Icons.edit,
                               color: Colors.white,

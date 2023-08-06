@@ -1,8 +1,6 @@
-
 import 'package:eventflow/Reusable_Components/User/user_details_field.dart';
 import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
 import 'package:eventflow/Views/User/Profile/edit_user_profile.dart';
-
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -11,8 +9,6 @@ import 'package:get/get.dart';
 
 import '../../Authentication/admin_or_user.dart';
 import '../../Misc/toast/toast.dart';
-
-
 
 class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key});
@@ -31,10 +27,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   final phoneNumberController = TextEditingController();
 
   FirebaseStorage storage = FirebaseStorage.instance;
-
-
-
-
 
   late List<Map<String, dynamic>> items;
   bool isLoaded = false;
@@ -56,7 +48,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       items = temp;
       isLoaded = true;
     });
-
   }
 
   @override
@@ -76,31 +67,45 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     children: [
                       Container(
                         padding: const EdgeInsets.all(30),
-
                         decoration: BoxDecoration(
                             color: Colors.red,
                             borderRadius: BorderRadius.circular(15)),
                         width: Get.width,
                         child: Column(
                           children: [
-                             Row(
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                InkWell(onTap:()async{
-                                  await FirebaseAuth.instance.signOut();
-                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
-                                    return AdminOrUserScreen();
-                                  }));
-                                  Toast().successMessage("Logged out successfully");
-
-                                },
-                                  child: Icon(Icons.logout,color: Colors.white,),focusColor: Colors.blue,),
+                                InkWell(
+                                  onTap: () async {
+                                    await FirebaseAuth.instance.signOut();
+                                    Navigator.pushReplacement(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return AdminOrUserScreen();
+                                    }));
+                                    Toast().successMessage(
+                                        "Logged out successfully");
+                                  },
+                                  child: Icon(
+                                    Icons.logout,
+                                    color: Colors.white,
+                                  ),
+                                  focusColor: Colors.blue,
+                                ),
                                 const Text(
                                   "Profile",
                                   style: TextStyle(
-                                      color: Colors.white, fontSize: 22,fontWeight: FontWeight.w500),
+                                      color: Colors.white,
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w500),
                                 ),
-                                InkWell(onTap: ()=>Get.to(const EditUserProfileScreen()),
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return EditUserProfileScreen();
+                                    }));
+                                  },
                                   child: const Icon(
                                     Icons.edit,
                                     color: Colors.white,
@@ -126,7 +131,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                       radius: 56,
                                       backgroundColor: Colors.white,
                                       backgroundImage: NetworkImage(
-                                        items[0]["image"] ,
+                                        items[0]["image"],
                                       ),
                                     ),
                             ),

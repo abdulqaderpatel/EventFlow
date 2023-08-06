@@ -66,7 +66,7 @@ class _SearchFriendsScreenState extends State<SearchFriendsScreen> {
                             child: ListView.builder(
                                 itemCount: items.length,
                                 itemBuilder: (context, index) {
-                                  return Card(margin: EdgeInsets.only(bottom: 20),color: Colors.red,
+                                  return Card(surfaceTintColor: Colors.greenAccent,shadowColor: Colors.blue,margin: EdgeInsets.only(bottom: 20),color: Colors.red,
                                     shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10),
                                         side: const BorderSide(

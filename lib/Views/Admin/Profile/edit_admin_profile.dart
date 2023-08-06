@@ -304,7 +304,9 @@ class _EditAdminProfileScreenState extends State<EditAdminProfileScreen> {
                                     });
                                     Toast().successMessage(
                                         "Profile updated successfully");
-                                    Get.to(AdminNavigationBar());
+                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
+                                      return AdminNavigationBar();
+                                    }));
                                   });
                                 }
                               }
