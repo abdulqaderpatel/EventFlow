@@ -44,11 +44,11 @@ class _SearchFriendsScreenState extends State<SearchFriendsScreen> {
         following.add(true);
       }
     }
-
-    setState(() {
-      isLoaded = true;
-      print(following);
-    });
+    if (this.mounted) {
+      setState(() {
+        isLoaded = true;
+      });
+    }
   }
 
   @override
@@ -144,7 +144,7 @@ class _SearchFriendsScreenState extends State<SearchFriendsScreen> {
                                                     .doc(items[index]["email"])
                                                     .collection("userFollower")
                                                     .doc(FirebaseAuth.instance
-                                                    .currentUser!.email)
+                                                        .currentUser!.email)
                                                     .set({});
                                                 FirebaseTable()
                                                     .followingTable
@@ -152,7 +152,7 @@ class _SearchFriendsScreenState extends State<SearchFriendsScreen> {
                                                         .currentUser!.email)
                                                     .collection("userFollowing")
                                                     .doc(items[index]["email"])
-                                                    .set({}).then((value) {
+                                                    .set(items[index]).then((value) {
                                                   setState(() {
                                                     following[index] = false;
                                                   });

@@ -32,6 +32,8 @@ class _SignupScreenState extends State<SignupScreen> {
 
   final _formKey = GlobalKey<FormState>();
 
+  bool buttonLoader=false;
+
   Future registerWithEmailAndPassword(
       String name, String password, String email) async {
     UserCredential result = await FirebaseAuth.instance
@@ -244,24 +246,45 @@ class _SignupScreenState extends State<SignupScreen> {
                     SizedBox(height: Get.height * 0.05),
                     InkWell(
                       onTap: () async {
+                        setState(() {
+                          buttonLoader=true;
+                        });
                         if (nameController.text.isEmpty) {
                           Toast().errorMessage("Name cannot be empty");
+                          setState(() {
+                            buttonLoader=false;
+                          });
                         } else if (emailController.text.isEmpty) {
                           Toast().errorMessage("Email cannot be empty");
+                          setState(() {
+                            buttonLoader=false;
+                          });
                         } else if (passwordController.text.isEmpty) {
                           Toast().errorMessage("password cannot be empty");
+                          setState(() {
+                            buttonLoader=false;
+                          });
                         }
                         else if(!RegExp(r'^[a-zA-Z0-9]+$')
                             .hasMatch(nameController.text))
                           {
                             Toast().errorMessage("Invalid name entered");
+                            setState(() {
+                              buttonLoader=false;
+                            });
                           }
                         else if(!emailRegExp.hasMatch(emailController.text)){
                           Toast().errorMessage("Invalid email entered");
+                          setState(() {
+                            buttonLoader=false;
+                          });
                         }
                         else if(passwordController.text.length<6)
                           {
                             Toast().errorMessage("Password length should be more than 6 characters");
+                            setState(() {
+                              buttonLoader=false;
+                            });
                           }
                         else {
                           adminOrUser = widget.isAdmin == true
@@ -273,9 +296,15 @@ class _SignupScreenState extends State<SignupScreen> {
                             if (widget.isAdmin == true) {
                               Toast().errorMessage(
                                   "This email already exists as a user");
+                              setState(() {
+                                buttonLoader=false;
+                              });
                             } else {
                               Toast().errorMessage(
                                   "This email already exists as an admin");
+                              setState(() {
+                                buttonLoader=false;
+                              });
                             }
                           } else {
                             try {
@@ -285,6 +314,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                   emailController.text);
 
                               if (widget.isAdmin == true) {
+                                setState(() {
+                                  buttonLoader=false;
+                                });
                                 Navigator.pushReplacement(context,
                                     MaterialPageRoute(builder: (context) {
                                   return CreateAdminProfileScreen();
@@ -301,6 +333,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                   "phone_number": 0
                                 });
                               } else {
+                                setState(() {
+                                  buttonLoader=false;
+                                });
                                 Navigator.pushReplacement(context,
                                     MaterialPageRoute(builder: (context) {
                                   return CreateUserProfileScreen();
@@ -319,15 +354,27 @@ class _SignupScreenState extends State<SignupScreen> {
                               }
                               Toast().successMessage(
                                   "Account created successfully");
+                              setState(() {
+                                buttonLoader=false;
+                              });
                             } on FirebaseAuthException catch (e) {
                               if (e.code == "email-already-in-use") {
                                 Toast().errorMessage(
                                     "The email is already in use");
+                                setState(() {
+                                  buttonLoader=false;
+                                });
                               } else if (e.code == "invalid-email") {
                                 Toast().errorMessage(
                                     "The email entered is invalid");
+                                setState(() {
+                                  buttonLoader=false;
+                                });
                               } else if (e.code == "weak-password") {
                                 Toast().errorMessage("Weak password entered");
+                                setState(() {
+                                  buttonLoader=false;
+                                });
                               }
                             }
                           }
@@ -341,7 +388,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           borderRadius: BorderRadius.circular(30),
                         ),
                         child: Center(
-                            child: Text(
+                            child:buttonLoader==false? Text(
                           widget.isAdmin == true
                               ? "Sign Up as Admin"
                               : "Sign up as User",
@@ -349,7 +396,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               color: Color(0xffff5085),
                               fontWeight: FontWeight.w600,
                               fontSize: 16),
-                        )),
+                        ):CircularProgressIndicator()),
                       ),
                     ),
                   ],
