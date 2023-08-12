@@ -17,7 +17,7 @@ class UserFollowerPageScreen extends StatelessWidget {
           child: Column(
             children: [
               const SizedBox(height: 20,),
-              const Text("Following",style: TextStyle(color: Colors.white,fontSize: 24,fontWeight: FontWeight.bold),),
+              const Text("Followers",style: TextStyle(color: Colors.white,fontSize: 24,fontWeight: FontWeight.bold),),
               const SizedBox(
                 height: 20,
               ),

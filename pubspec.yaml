@@ -21,6 +21,7 @@ dependencies:
   dotted_border:
   getwidget:
   google_sign_in:
+  intl:
 
 dev_dependencies:
   flutter_test:

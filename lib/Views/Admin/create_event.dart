@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 class CreateEventScreen extends StatefulWidget {
   CreateEventScreen({super.key});
@@ -42,8 +43,95 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   TextEditingController frequencyEventController = TextEditingController();
 
   TimeOfDay startTime = const TimeOfDay(hour: 0, minute: 0);
-
+  bool isStartPicked = false;
   TimeOfDay endTime = const TimeOfDay(hour: 0, minute: 0);
+  bool isEndPicked = false;
+  DateTime selectedDate = DateTime.now();
+  bool isDatePicked = false;
+
+  late DateTime eventStart;
+  late DateTime eventEnd;
+
+  Future<void> _startTime(BuildContext context) async {
+    final TimeOfDay? picked_s =
+        await showTimePicker(context: context, initialTime: startTime);
+
+    if (picked_s != null && picked_s != startTime) {
+      setState(() {
+        startTime = picked_s;
+        isStartPicked = true;
+      });
+    }
+    eventStart = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+      startTime.hour,
+      startTime.minute,
+    );
+    eventEnd = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+      endTime.hour,
+      endTime.minute,
+    );
+  }
+
+  Future<void> _endTime(BuildContext context) async {
+    final TimeOfDay? picked_s =
+        await showTimePicker(context: context, initialTime: endTime);
+
+    if (picked_s != null && picked_s != endTime) {
+      setState(() {
+        endTime = picked_s;
+        isEndPicked = true;
+      });
+    }
+    eventStart = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+      startTime.hour,
+      startTime.minute,
+    );
+    eventEnd = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+      endTime.hour,
+      endTime.minute,
+    );
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+        print(DateFormat('yyyy-MM-dd').format(selectedDate));
+        isDatePicked = true;
+      });
+    }
+    eventStart = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+      startTime.hour,
+      startTime.minute,
+    );
+    eventEnd = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+      endTime.hour,
+      endTime.minute,
+    );
+  }
 
   var selectedFrequency = -2;
 
@@ -79,7 +167,9 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       Toast().errorMessage("Please choose an image");
     }
   }
- List<Map<String,dynamic>> items=[];
+
+  List<Map<String, dynamic>> items = [];
+
   void getUsernameAndUserImage() async {
     List<Map<String, dynamic>> temp = [];
     var data = await FirebaseTable()
@@ -87,25 +177,20 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         .where("email", isEqualTo: FirebaseAuth.instance.currentUser!.email)
         .get();
 
-
-
     for (var element in data.docs) {
       setState(() {
         temp.add(element.data());
       });
     }
 
-    print(temp);
-
     setState(() {
-      items=temp;
+      items = temp;
     });
-
-
   }
 
   @override
   void initState() {
+    super.initState();
     // TODO: implement initState
     getUsernameAndUserImage();
   }
@@ -186,14 +271,17 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
+                      InkWell(
+                          onTap: () => _selectDate(context),
+                          child: Text(!isDatePicked
+                              ? "Please select a date"
+                              : DateFormat('dd-MM-yyyy').format(selectedDate))),
                       CreateEventTextField(
-                          text: "Event Date",
-                          controller: dateController,
-                          width: Get.width * 0.4),
-                      CreateEventTextField(
-                          text: "Max participants",
-                          controller: maxEntries,
-                          width: Get.width * 0.4,textInputType: TextInputType.number,),
+                        text: "Max participants",
+                        controller: maxEntries,
+                        width: Get.width * 0.4,
+                        textInputType: TextInputType.number,
+                      ),
                     ],
                   ),
                   SizedBox(
@@ -210,15 +298,17 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      CreateEventTextField(
-                        text: "Start time",
-                        controller: startTimeController,
-                        width: Get.width * 0.4,
+                      InkWell(
+                        onTap: () => _startTime(context),
+                        child: Text(!isStartPicked
+                            ? "Select a time"
+                            : startTime.format(context)),
                       ),
-                      CreateEventTextField(
-                        text: "End time",
-                        controller: endTimeController,
-                        width: Get.width * 0.4,
+                      InkWell(
+                        onTap: () => _endTime(context),
+                        child: Text(!isEndPicked
+                            ? "Select a time"
+                            : endTime.format(context)),
                       ),
                     ],
                   ),
@@ -235,84 +325,63 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                             MaterialStateProperty.all<Color>(Colors.white),
                       ),
                       onPressed: () async {
-                        if(titleController.text.isEmpty)
-                          {
-                            Toast().errorMessage("Event name cannot be empty");
-                          }
-                        else if(locationController.text.isEmpty)
-                          {
-                            Toast().errorMessage("Location cannot be empty");
-                          }
-                        else if(priceController.text.isEmpty)
-                        {
+                        if (titleController.text.isEmpty) {
+                          Toast().errorMessage("Event name cannot be empty");
+                        } else if (locationController.text.isEmpty) {
+                          Toast().errorMessage("Location cannot be empty");
+                        } else if (priceController.text.isEmpty) {
                           Toast().errorMessage("Price cannot be empty");
-                        }
-                        else if(eventImage==null)
-                        {
+                        } else if (eventImage == null) {
                           Toast().errorMessage("Image cannot be empty");
-                        }
-
-                        else if(dateController.text.isEmpty)
-                        {
+                        } else if (!isDatePicked) {
                           Toast().errorMessage("Event Date cannot be empty");
-                        }
-                        else if(maxEntries.text.isEmpty)
-                        {
-                          Toast().errorMessage("max participants cannot be empty");
-                        }
-                        else if(descriptionController.text.isEmpty)
-                        {
+                        } else if (maxEntries.text.isEmpty) {
+                          Toast()
+                              .errorMessage("max participants cannot be empty");
+                        } else if (descriptionController.text.isEmpty) {
                           Toast().errorMessage("Description cannot be empty");
-                        }
-                        else if(startTimeController.text.isEmpty)
-                        {
+                        } else if (!isStartPicked) {
                           Toast().errorMessage("start time cannot be empty");
-                        }
-                        else if(endTimeController.text.isEmpty)
-                        {
+                        } else if (!isEndPicked) {
                           Toast().errorMessage("End time cannot be empty");
-                        }
-                        else if(priceController.text.contains(".")||priceController.text.contains("."))
-                          {
-                            Toast().errorMessage("Price should be a valid number");
-                          }
-                        else if(maxEntries.text.contains(".")||maxEntries.text.contains("."))
-                        {
-                          Toast().errorMessage("max participants should be a valid number");
-                        }
-                        else {
+                        } else if (priceController.text.contains(".") ||
+                            priceController.text.contains(".")) {
+                          Toast()
+                              .errorMessage("Price should be a valid number");
+                        } else if (maxEntries.text.contains(".") ||
+                            maxEntries.text.contains(".")) {
+                          Toast().errorMessage(
+                              "max participants should be a valid number");
+                        } else {
                           Reference ref = FirebaseStorage.instance.ref(
-                              "/${FirebaseAuth.instance.currentUser!
-                                  .uid}/${DateTime.now().millisecondsSinceEpoch.toString()}");
+                              "/${FirebaseAuth.instance.currentUser!.uid}/${DateTime.now().millisecondsSinceEpoch.toString()}");
                           UploadTask uploadTask =
-                          ref.putFile(eventImage!.absolute);
+                              ref.putFile(eventImage!.absolute);
                           Future.value(uploadTask).then((value) async {
                             var newUrl = await ref.getDownloadURL();
                             await FirebaseTable()
                                 .eventsTable
-                                .doc(DateTime
-                                .now()
-                                .millisecondsSinceEpoch
-                                .toString())
+                                .doc(DateTime.now()
+                                    .millisecondsSinceEpoch
+                                    .toString())
                                 .set({
-                              "event_creator":
-                              FirebaseAuth.instance.currentUser!.displayName,
+                              "event_creator": FirebaseAuth
+                                  .instance.currentUser!.displayName,
                               "name": titleController.text.toString(),
-                              "username":items[0]["username"],
-                              "admin_image":items[0]["image"],
+                              "username": items[0]["username"],
+                              "admin_image": items[0]["image"],
                               "description":
-                              descriptionController.text.toString(),
-                              "price": int.parse(
-                                  priceController.text.toString()),
+                                  descriptionController.text.toString(),
+                              "price":
+                                  int.parse(priceController.text.toString()),
                               "image": newUrl.toString(),
-                              "date": dateController.text.toString(),
                               "max_participants": maxEntries.text.toString(),
-                              "start_time": startTimeController.text.toString(),
-                              "end_time": endTimeController.text.toString(),
+                              "start_time": eventStart.toIso8601String(),
+                              "end_time": eventEnd.toIso8601String(),
                               "location": locationController.text.toString(),
                             });
-                            Toast().successMessage(
-                                "Event successfully created");
+                            Toast()
+                                .successMessage("Event successfully created");
                           });
                         }
                       },
