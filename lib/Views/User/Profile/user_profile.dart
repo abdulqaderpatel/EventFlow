@@ -1,6 +1,7 @@
 import 'package:eventflow/Reusable_Components/User/user_details_field.dart';
 import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
 import 'package:eventflow/Views/User/Profile/edit_user_profile.dart';
+import 'package:eventflow/Views/User/Profile/user_follower_page.dart';
 import 'package:eventflow/Views/User/Profile/user_following_page.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -33,9 +34,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   bool isLoaded = false;
 
   late List<Map<String, dynamic>> followingItems;
+  late List<Map<String, dynamic>> followerItems;
 
   void incrementCounter() async {
     List<Map<String, dynamic>> followingTemp = [];
+    List<Map<String, dynamic>> followerTemp = [];
 
     var followingData = await FirebaseTable()
         .followingTable
@@ -43,11 +46,24 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         .collection("userFollowing")
         .get();
 
+    var followerData = await FirebaseTable()
+        .followerTable
+        .doc(FirebaseAuth.instance.currentUser!.email)
+        .collection("userFollower")
+        .get();
+
     for (var element in followingData.docs) {
       followingTemp.add(element.data());
-      print(followingTemp);
+
     }
     followingItems = followingTemp;
+
+    for(var element in followerData.docs)
+      {
+        followerTemp.add(element.data());
+      }
+
+    followerItems=followerTemp;
 
     List<Map<String, dynamic>> temp = [];
     var data = await FirebaseTable()
@@ -57,7 +73,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
     for (var element in data.docs) {
       temp.add(element.data());
-
     }
     items = temp;
 
@@ -154,21 +169,30 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                           ),
                                         ),
                                 ),
-                                const Column(
+                                 Column(
                                   children: [
-                                    Text(
+                                    const Text(
                                       "Followers",
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 22,
                                           fontWeight: FontWeight.w500),
                                     ),
-                                    Text(
-                                      "0",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w400),
+                                    InkWell(onTap: (){
+                                      Navigator.push(context,
+                                          MaterialPageRoute(
+                                              builder: (context) {
+                                                return UserFollowerPageScreen(
+                                                    followerItems);
+                                              }));
+                                    },
+                                      child: Text(
+                                        followerItems.length.toString(),
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w400),
+                                      ),
                                     )
                                   ],
                                 ),
@@ -186,7 +210,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                         Navigator.push(context,
                                             MaterialPageRoute(
                                                 builder: (context) {
-                                          return UserFollowingPageScreen(followingItems);
+                                          return UserFollowingPageScreen(
+                                              followingItems);
                                         }));
                                       },
                                       child: Text(
