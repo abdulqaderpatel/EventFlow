@@ -84,19 +84,23 @@ class _MyAppState extends State<MyApp> {
     return GetMaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
-        theme: ThemeData(
-          useMaterial3: true,
+        theme: ThemeData(colorScheme: ColorScheme.fromSwatch().copyWith(
+          primary: const Color(0xff0F1A20),
+
+        ),
+
+
         ),
         home: isLoaded
             ? user == null
-                ? AdminOrUserScreen()
+                ? const AdminOrUserScreen()
                 : loggedInUser.isNotEmpty
                     ? (loggedInUser[0]["username"] == ""
-                        ? CreateUserProfileScreen()
+                        ? const CreateUserProfileScreen()
                         : UserNavigationBar())
                     : loggedInAdmin[0]["username"] == ""
-                        ? CreateAdminProfileScreen()
+                        ? const CreateAdminProfileScreen()
                         : AdminNavigationBar()
-            : SplashScreen());
+            : const SplashScreen());
   }
 }
