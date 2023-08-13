@@ -22,6 +22,7 @@ dependencies:
   getwidget:
   google_sign_in:
   intl:
+  percent_indicator:
 
 dev_dependencies:
   flutter_test:

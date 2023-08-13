@@ -375,7 +375,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                               "price":
                                   int.parse(priceController.text.toString()),
                               "image": newUrl.toString(),
-                              "max_participants": maxEntries.text.toString(),
+                              "max_participants": int.parse(maxEntries.text.toString()),
                               "start_time": eventStart.toIso8601String(),
                               "end_time": eventEnd.toIso8601String(),
                               "location": locationController.text.toString(),

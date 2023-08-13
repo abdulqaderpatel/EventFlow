@@ -13,10 +13,12 @@ import 'package:get/get.dart';
 import 'firebase_options.dart';
 
 void main() async {
+  Paint.enableDithering=true;
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
 
   runApp(MyApp());
 }
