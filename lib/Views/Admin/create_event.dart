@@ -359,11 +359,12 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                               ref.putFile(eventImage!.absolute);
                           Future.value(uploadTask).then((value) async {
                             var newUrl = await ref.getDownloadURL();
+                            var id=DateTime.now()
+                                .millisecondsSinceEpoch
+                                .toString();
                             await FirebaseTable()
                                 .eventsTable
-                                .doc(DateTime.now()
-                                    .millisecondsSinceEpoch
-                                    .toString())
+                                .doc(id)
                                 .set({
                               "event_creator": FirebaseAuth
                                   .instance.currentUser!.displayName,
@@ -379,6 +380,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                               "start_time": eventStart.toIso8601String(),
                               "end_time": eventEnd.toIso8601String(),
                               "location": locationController.text.toString(),
+                              "participants":[],
+                              "id":id,
                             });
                             Toast()
                                 .successMessage("Event successfully created");

@@ -35,7 +35,8 @@ class _DisplayEventsScreenState extends State<DisplayEventsScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    super.initState();
+
     incrementCounter();
   }
 
@@ -70,7 +71,7 @@ class _DisplayEventsScreenState extends State<DisplayEventsScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) {
-                                  return EventDetailsScreen(items[index]);
+                                  return EventDetailsScreen(items[index]["id"]);
                                 }),
                               );
                             },
@@ -105,7 +106,7 @@ class _DisplayEventsScreenState extends State<DisplayEventsScreen> {
                                 Card(
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
-                                    side: BorderSide(
+                                    side: const BorderSide(
                                       color: Colors.red,
                                     ),
                                   ),
@@ -216,7 +217,7 @@ class _DisplayEventsScreenState extends State<DisplayEventsScreen> {
               )
             : Container(
                 height: Get.height,
-                child: Center(
+                child: const Center(
                   child: CircularProgressIndicator(),
                 ),
               ));
