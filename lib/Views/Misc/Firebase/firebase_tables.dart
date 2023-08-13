@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
   final eventsTable=FirebaseFirestore.instance.collection("events");
   final followingTable=FirebaseFirestore.instance.collection("following");
   final followerTable=FirebaseFirestore.instance.collection("follower");
+  final chatTable=FirebaseFirestore.instance.collection("chat");
 
   FirebaseTable({super.key});
 

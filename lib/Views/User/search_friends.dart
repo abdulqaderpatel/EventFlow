@@ -48,14 +48,15 @@ class _SearchFriendsScreenState extends State<SearchFriendsScreen> {
 
     temp = [];
 
-    var userData = await FirebaseTable().usersTable.where(
-        "email", isEqualTo: FirebaseAuth.instance.currentUser!.email).get();
+    var userData = await FirebaseTable()
+        .usersTable
+        .where("email", isEqualTo: FirebaseAuth.instance.currentUser!.email)
+        .get();
     for (var element in userData.docs) {
       temp.add(element.data());
     }
 
     user = temp;
-
 
     if (this.mounted) {
       setState(() {
@@ -75,120 +76,120 @@ class _SearchFriendsScreenState extends State<SearchFriendsScreen> {
     return Scaffold(
         body: isLoaded
             ? Container(
-          color: Colors.redAccent,
-          child: Container(
-            margin: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
-            child: Center(
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  const Text(
-                    "Add Friends",
-                    style: TextStyle(
-                        fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  Expanded(
-                      child: ListView.builder(
-                          itemCount: items.length,
-                          itemBuilder: (context, index) {
-                            return Card(
-                                surfaceTintColor: Colors.greenAccent,
-                                shadowColor: Colors.blue,
-                                margin: EdgeInsets.only(bottom: 20),
-                                color: Colors.red,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                    BorderRadius.circular(10),
-                                    side: const BorderSide(
-                                        width: 2, color: Colors.white)),
-                                elevation: 5,
-                                child: ListTile(
-                                  leading: CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                        items[index]["image"]),
-                                  ),
-                                  title: Text(
-                                    items[index]["username"],
-                                    style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  subtitle: Text(
-                                    items[index]["name"],
-                                    style: const TextStyle(
-                                        color: Colors.grey,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  trailing: ElevatedButton(
-                                    onPressed: () {
-                                      FirebaseTable()
-                                          .followingTable
-                                          .doc(FirebaseAuth.instance
-                                          .currentUser!.email)
-                                          .collection("userFollowing")
-                                          .doc(items[index]["email"])
-                                          .get()
-                                          .then((value) {
-                                        if (value.exists) {
-                                          FirebaseTable()
-                                              .followerTable
-                                              .doc(items[index]["email"])
-                                              .collection("userFollower")
-                                              .doc(FirebaseAuth.instance
-                                              .currentUser!.email)
-                                              .delete();
-                                          FirebaseTable()
-                                              .followingTable
-                                              .doc(FirebaseAuth.instance
-                                              .currentUser!.email)
-                                              .collection("userFollowing")
-                                              .doc(items[index]["email"])
-                                              .delete()
-                                              .then((value) {
-                                            setState(() {
-                                              following[index] = true;
+                color: Colors.redAccent,
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
+                  child: Center(
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        const Text(
+                          "Add Friends",
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold),
+                        ),
+                        Expanded(
+                            child: ListView.builder(
+                                itemCount: items.length,
+                                itemBuilder: (context, index) {
+                                  return Card(
+                                      surfaceTintColor: Colors.greenAccent,
+                                      shadowColor: Colors.blue,
+                                      margin: EdgeInsets.only(bottom: 20),
+                                      color: Colors.red,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          side: const BorderSide(
+                                              width: 2, color: Colors.white)),
+                                      elevation: 5,
+                                      child: ListTile(
+                                        leading: CircleAvatar(
+                                          backgroundImage: NetworkImage(
+                                              items[index]["image"]),
+                                        ),
+                                        title: Text(
+                                          items[index]["username"],
+                                          style: const TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                        subtitle: Text(
+                                          items[index]["name"],
+                                          style: const TextStyle(
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        trailing: ElevatedButton(
+                                          onPressed: () {
+                                            FirebaseTable()
+                                                .followingTable
+                                                .doc(FirebaseAuth.instance
+                                                    .currentUser!.email)
+                                                .collection("userFollowing")
+                                                .doc(items[index]["email"])
+                                                .get()
+                                                .then((value) {
+                                              if (value.exists) {
+                                                FirebaseTable()
+                                                    .followerTable
+                                                    .doc(items[index]["email"])
+                                                    .collection("userFollower")
+                                                    .doc(FirebaseAuth.instance
+                                                        .currentUser!.email)
+                                                    .delete();
+                                                FirebaseTable()
+                                                    .followingTable
+                                                    .doc(FirebaseAuth.instance
+                                                        .currentUser!.email)
+                                                    .collection("userFollowing")
+                                                    .doc(items[index]["email"])
+                                                    .delete()
+                                                    .then((value) {
+                                                  setState(() {
+                                                    following[index] = true;
+                                                  });
+                                                });
+                                              } else {
+                                                FirebaseTable()
+                                                    .followerTable
+                                                    .doc(items[index]["email"])
+                                                    .collection("userFollower")
+                                                    .doc(FirebaseAuth.instance
+                                                        .currentUser!.email)
+                                                    .set(user[0])
+                                                    .then((value) => null);
+                                                FirebaseTable()
+                                                    .followingTable
+                                                    .doc(FirebaseAuth.instance
+                                                        .currentUser!.email)
+                                                    .collection("userFollowing")
+                                                    .doc(items[index]["email"])
+                                                    .set(items[index])
+                                                    .then((value) {
+                                                  setState(() {
+                                                    following[index] = false;
+                                                  });
+                                                });
+                                              }
                                             });
-                                          });
-                                        } else {
-                                          FirebaseTable()
-                                              .followerTable
-                                              .doc(items[index]["email"])
-                                              .collection("userFollower")
-                                              .doc(FirebaseAuth.instance
-                                              .currentUser!.email)
-                                              .set(user[0]).then((
-                                              value) => null);
-                                          FirebaseTable()
-                                              .followingTable
-                                              .doc(FirebaseAuth.instance
-                                              .currentUser!.email)
-                                              .collection("userFollowing")
-                                              .doc(items[index]["email"])
-                                              .set(items[index])
-                                              .then((value) {
-                                            setState(() {
-                                              following[index] = false;
-                                            });
-                                          });
-                                        }
-                                      });
-                                    },
-                                    child: Text(
-                                      following[index]
-                                          ? "Follow"
-                                          : "Unfollow",
-                                      style: TextStyle(color: Colors.red),
-                                    ),
-                                  ),
-                                ));
-                          }))
-                ],
-              ),
-            ),
-          ),
-        )
+                                          },
+                                          child: Text(
+                                            following[index]
+                                                ? "Follow"
+                                                : "Unfollow",
+                                            style: TextStyle(color: Colors.red),
+                                          ),
+                                        ),
+                                      ));
+                                }))
+                      ],
+                    ),
+                  ),
+                ),
+              )
             : const Center(child: CircularProgressIndicator()));
   }
 }

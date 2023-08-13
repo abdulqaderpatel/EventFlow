@@ -330,7 +330,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                   "username": "",
                                   "name": nameController.text,
                                   "image": "",
-                                  "phone_number": 0
+                                  "phone_number": 0,
+                                  "id":FirebaseAuth.instance.currentUser!.uid,
                                 });
                               } else {
                                 setState(() {
@@ -349,7 +350,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                   "username": "",
                                   "name": nameController.text,
                                   "image": "",
-                                  "phone_number": 0
+                                  "phone_number": 0,
+                                  "id":FirebaseAuth.instance.currentUser!.uid
                                 });
                               }
                               Toast().successMessage(

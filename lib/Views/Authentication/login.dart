@@ -492,7 +492,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 "name": FirebaseAuth
                                     .instance.currentUser!.displayName,
                                 "image": "",
-                                "phone_number": 0
+                                "phone_number": 0,
+                                "id":FirebaseAuth.instance.currentUser!.uid,
                               }).then((value) {
                                 setState(() {
                                   googleLoader = false;
