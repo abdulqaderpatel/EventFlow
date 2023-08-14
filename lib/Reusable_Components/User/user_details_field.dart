@@ -1,63 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
 class UserDetailField extends StatelessWidget {
   final IconData icon;
   final String placeholder;
   final String details;
 
   const UserDetailField(
-      {super.key, required this.icon, required this.placeholder, required this.details});
+      {super.key,
+      required this.icon,
+      required this.placeholder,
+      required this.details});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(10),
-      height: Get.height * 0.12,
-
+      height: Get.height * 0.15,
+      width: Get.width * 0.45,
+      padding: const EdgeInsets.all(
+        8,
+      ),
+      decoration: BoxDecoration(
+        color: const Color(0xff1C1C1E),
+        borderRadius: BorderRadius.circular(
+          20,
+        ),
+      ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(
-                icon,size: 25,color: Colors.redAccent,
+
+              Text(
+               placeholder,
+                style: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w500),
               ),
-              const SizedBox(
-                width: 5,
-              ),
-              Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(left: 3),
-                      child: Text(
-                        placeholder,
-                        style: const TextStyle(
-                            color: Colors.redAccent,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500),
-                      )),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    details,
-                    style: const TextStyle(
-                        color: Colors.red,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600),
-                  )
-                ],
-              ),
+              Icon(icon,color: Colors.blueGrey,),
             ],
           ),
-          SizedBox(height: 12,),
-          const Expanded(
-            child: Divider(
-              color: Colors.redAccent,
-            ),
+          Row(mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                details,
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 19,
+                    fontWeight: FontWeight.w600),
+              )
+            ],
           )
         ],
       ),

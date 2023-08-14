@@ -42,7 +42,7 @@ class UserNavigationBar extends StatelessWidget {
 
                 color: Colors.white,
                 tabBackgroundColor: Colors.grey.shade900,
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(5),
 
                  tabs:const [ GButton(
                    icon: Icons.event,
