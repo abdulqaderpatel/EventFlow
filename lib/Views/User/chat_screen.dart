@@ -20,42 +20,41 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor:Colors.grey,
-      appBar: AppBar(automaticallyImplyLeading: false,title:Row(
-        children: [
-          InkWell(onTap: ()=>Navigator.pop(context),child:Icon(Icons.arrow_back) ,),
-          SizedBox(
-            width: 200,
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(widget.oppUser["image"]),
-              ),
-              title: Text(
-                widget.oppUser["name"],
-                style:
-                const TextStyle(color: Colors.white, fontSize: 20),
+    return Scaffold(
+      backgroundColor: Colors.grey,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Row(
+          children: [
+            InkWell(
+              onTap: () => Navigator.pop(context),
+              child: Icon(Icons.arrow_back),
+            ),
+            SizedBox(
+              width: 200,
+              child: ListTile(
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage(widget.oppUser["image"]),
+                ),
+                title: Text(
+                  widget.oppUser["name"],
+                  style: const TextStyle(color: Colors.white, fontSize: 20),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          height: Get.height,
-          color: const Color(0xff0F1A20),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 15,
-              ),
+      body: Container(
+        height: Get.height,
+        color: const Color(0xff0F1A20),
+        child: Stack(
+          children: [
 
-              const SizedBox(
-                height: 20,
-              ),
-              SingleChildScrollView(
+            Positioned(
+              child: SingleChildScrollView(
                 child: Container(
-                  height: Get.height * 0.75,
+height: Get.height*0.8,
                   margin: EdgeInsets.only(
                       left: Get.width * 0.05, right: Get.width * 0.05),
                   child: SingleChildScrollView(
@@ -139,7 +138,9 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 ),
               ),
-              Container(
+            ),
+            Positioned(bottom: 0,
+              child: Container(height: 100,
                 margin: EdgeInsets.only(
                   left: Get.width * 0.05,
                   right: Get.width * 0.05,
@@ -147,7 +148,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 child: Row(
                   children: [
                     SizedBox(
-                        width: Get.width * 0.7,
+                        width: Get.width * 0.75,
                         child: TextFormField(
                           style: const TextStyle(color: Colors.white),
                           decoration: const InputDecoration(
@@ -160,32 +161,44 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                     InkWell(
                         onTap: () async {
-                          String time =
-                              DateTime.now().millisecondsSinceEpoch.toString();
-                          await FirebaseTable()
-                              .chatTable
-                              .doc(widget.ids)
-                              .collection("messages")
-                              .doc(time)
-                              .set({
-                            "sender": FirebaseAuth.instance.currentUser!.email,
-                            "reciever": widget.oppUser["email"],
-                            "time": time,
-                            "message": messageController.text
-                          });
-                          messageController.clear();
-                          scrollController.jumpTo(
-                              scrollController.position.maxScrollExtent);
+                          if(messageController.text!="") {
+                            FocusManager.instance.primaryFocus?.unfocus();
+                            String message=messageController.text;
+                            messageController.clear();
+                            String time =
+                            DateTime
+                                .now()
+                                .millisecondsSinceEpoch
+                                .toString();
+                            await FirebaseTable()
+                                .chatTable
+                                .doc(widget.ids)
+                                .collection("messages")
+                                .doc(time)
+                                .set({
+                              "sender": FirebaseAuth.instance.currentUser!
+                                  .email,
+                              "reciever": widget.oppUser["email"],
+                              "time": time,
+                              "message": message
+                            });
+
+                            scrollController.jumpTo(
+                                scrollController.position.maxScrollExtent);
+
+                          }
                         },
                         child: const Icon(
-                          Icons.send,
+                          Icons.send,size: 32,
                           color: Colors.white,
                         )),
                   ],
                 ),
-              )
-            ],
-          ),
+              ),
+            ),
+
+
+          ],
         ),
       ),
     );

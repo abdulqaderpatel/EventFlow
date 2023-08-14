@@ -76,7 +76,7 @@ class _SearchFriendsScreenState extends State<SearchFriendsScreen> {
     return Scaffold(
         body: isLoaded
             ? Container(
-                color: Colors.redAccent,
+                color: Color(0xff0A171F),
                 child: Container(
                   margin: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
                   child: Center(
@@ -95,16 +95,11 @@ class _SearchFriendsScreenState extends State<SearchFriendsScreen> {
                                 itemCount: items.length,
                                 itemBuilder: (context, index) {
                                   return Card(
-                                      surfaceTintColor: Colors.greenAccent,
-                                      shadowColor: Colors.blue,
+
                                       margin: EdgeInsets.only(bottom: 20),
-                                      color: Colors.red,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          side: const BorderSide(
-                                              width: 2, color: Colors.white)),
-                                      elevation: 5,
+                                      color: Color(0xff0A171F),
+
+
                                       child: ListTile(
                                         leading: CircleAvatar(
                                           backgroundImage: NetworkImage(

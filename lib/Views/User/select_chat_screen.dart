@@ -56,7 +56,6 @@ class _SelectChatScreenState extends State<SelectChatScreen> {
       followerItems.add(element.data());
     }
 
-
     for (int i = 0; i < items.length; i++) {
       for (int j = 0; j < followingItems.length; j++) {
         if (items[i]["email"] == followingItems[j]["email"]) {
@@ -101,51 +100,50 @@ class _SelectChatScreenState extends State<SelectChatScreen> {
     return Scaffold(
         body: isLoaded
             ? Container(
-                color: Colors.redAccent,
+                color: const Color(0xff0A171F),
                 child: Container(
                   margin: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
                   child: Center(
                     child: Column(
                       children: [
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        const Text(
-                          "Select Chat",
-                          style: TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
-                        ),
                         Expanded(
                             child: ListView.builder(
                                 itemCount: chatItems.length,
                                 itemBuilder: (context, index) {
-                                  return InkWell(onTap: (){
-                                    List<String> ids=[FirebaseAuth.instance.currentUser!.uid,chatItems[index]["id"]];
-                                    ids.sort();
+                                  return InkWell(
+                                    onTap: () {
+                                      List<String> ids = [
+                                        FirebaseAuth.instance.currentUser!.uid,
+                                        chatItems[index]["id"]
+                                      ];
+                                      ids.sort();
 
-                                    Navigator.push(context, MaterialPageRoute(builder: (context){
-                                      return ChatScreen(ids.join("_"),chatItems[index]);
-                                    }));
-                                  },
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return ChatScreen(
+                                            ids.join("_"), chatItems[index]);
+                                      }));
+                                    },
                                     child: Card(
-                                        surfaceTintColor: Colors.greenAccent,
-                                        shadowColor: Colors.blue,
-                                        margin: EdgeInsets.only(bottom: 20),
-                                        color: Colors.red,
+                                        margin:
+                                            const EdgeInsets.only(bottom: 20),
+                                        color: const Color(0xff0A171F),
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             side: const BorderSide(
-                                                width: 2, color: Colors.white)),
-                                        elevation: 5,
+                                              width: 2,
+                                              color: Color(0xff0A171F),
+                                            )),
                                         child: ListTile(
                                           leading: CircleAvatar(
                                             backgroundImage: NetworkImage(
                                                 chatItems[index]["image"]),
                                           ),
                                           title: Text(
-                                            chatItems[index]["username"],
+                                            chatItems[index]["name"],
                                             style: const TextStyle(
+                                                color: Colors.white,
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.w600),
                                           ),

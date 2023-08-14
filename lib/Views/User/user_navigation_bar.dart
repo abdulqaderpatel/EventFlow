@@ -6,6 +6,7 @@ import 'package:eventflow/Views/User/Profile/user_profile.dart';
 import 'package:eventflow/Views/User/select_chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 
 class UserNavigationBar extends StatelessWidget {
   UserNavigationBar({super.key});
@@ -26,28 +27,41 @@ class UserNavigationBar extends StatelessWidget {
       onWillPop: () async => false,
       child: Scaffold(
         bottomNavigationBar: Obx(
-          () => BottomNavigationBar(type: BottomNavigationBarType.fixed,
-            backgroundColor: Colors.red,
-            currentIndex: controller.index.value,
-            onTap: (value) => controller.index.value = value,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.event),
-                label: "Events",
+          () => Container(color: Color(0xff060E11),
+
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 20),
+              child: GNav(selectedIndex: controller.index.value,
+                onTabChange: (value)
+                {
+                  controller.index.value=value;
+                },
+                backgroundColor:Color(0xff060E11),
+                gap: 8,
+                activeColor: Colors.white,
+
+                color: Colors.white,
+                tabBackgroundColor: Colors.grey.shade900,
+                padding: const EdgeInsets.all(8),
+
+                 tabs:const [ GButton(
+                   icon: Icons.event,
+                  text: "Events",
+                 ),
+                   GButton(
+                     icon: Icons.search,
+                    text: "Search",
+                   ),
+                   GButton(
+                     icon: Icons.chat,
+                    text: "Chat",
+                   ),
+                   GButton(
+                     icon: Icons.person,
+                    text: "Profile",
+                   ),],
               ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.search),
-                label: "Search",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.chat),
-                label: "Chat",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: "Profile",
-              ),
-            ],
+            ),
           ),
         ),
         body: Obx(() => userPages[controller.index.value]),
