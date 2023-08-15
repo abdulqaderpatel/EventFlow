@@ -76,7 +76,7 @@ class _SearchFriendsScreenState extends State<SearchFriendsScreen> {
     return Scaffold(
         body: isLoaded
             ? Container(
-                color: Color(0xff0A171F),
+                color: const Color(0xff0A171F),
                 child: Container(
                   margin: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
                   child: Center(
@@ -96,8 +96,8 @@ class _SearchFriendsScreenState extends State<SearchFriendsScreen> {
                                 itemBuilder: (context, index) {
                                   return Card(
 
-                                      margin: EdgeInsets.only(bottom: 20),
-                                      color: Color(0xff0A171F),
+                                      margin: const EdgeInsets.only(bottom: 20),
+                                      color: const Color(0xff0A171F),
 
 
                                       child: ListTile(
@@ -175,7 +175,7 @@ class _SearchFriendsScreenState extends State<SearchFriendsScreen> {
                                             following[index]
                                                 ? "Follow"
                                                 : "Unfollow",
-                                            style: TextStyle(color: Colors.red),
+                                            style: const TextStyle(color: Colors.red),
                                           ),
                                         ),
                                       ));

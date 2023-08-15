@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class UserTextField extends StatelessWidget {
   final String text;
   final TextEditingController controller;
@@ -9,17 +8,17 @@ class UserTextField extends StatelessWidget {
   final TextInputType textInputType;
 
   final bool enabled;
-  final String? Function(String?)  validator;
+  final String? Function(String?) validator;
 
   const UserTextField(
       {super.key,
       required this.text,
       required this.controller,
       required this.width,
-        required this.labelText,
-        required this.validator,
-      this.textInputType=TextInputType.text,
-      this.enabled=true});
+      required this.labelText,
+      required this.validator,
+      this.textInputType = TextInputType.text,
+      this.enabled = true});
 
   @override
   Widget build(BuildContext context) {
@@ -27,24 +26,23 @@ class UserTextField extends StatelessWidget {
         ? SizedBox(
             height: 50,
             width: width,
-            child: TextFormField(keyboardType: textInputType,validator: validator,enabled: enabled,
+            child: TextFormField(style: TextStyle(color: Colors.white),
+              keyboardType: textInputType,
+              validator: validator,
+              enabled: enabled,
               controller: controller,
               textAlignVertical: TextAlignVertical.center,
-              decoration: InputDecoration(labelText: labelText,labelStyle: TextStyle(color: Colors.white),alignLabelWithHint: true,
-                filled: true,
-                fillColor: Colors.red,
-
-
-                enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.white, width: 0.5),
-                    borderRadius: BorderRadius.circular(8)),
+              decoration: InputDecoration(border: InputBorder.none,
+                labelText: labelText,
+                labelStyle: const TextStyle(color: Colors.grey),
+                alignLabelWithHint: true,
                 contentPadding: const EdgeInsets.only(
                   top: 2,
                   left: 5,
                 ),
                 errorStyle: const TextStyle(fontSize: 0),
                 hintStyle: const TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.bold),
+                    color: Colors.grey, fontWeight: FontWeight.w400),
                 hintText: text,
               ),
             ),
@@ -53,22 +51,17 @@ class UserTextField extends StatelessWidget {
             height: 120,
             width: width,
             child: TextFormField(
+              style: const TextStyle(color: Colors.white),
               keyboardType: TextInputType.multiline,
               maxLines: null,
               minLines: 5,
               controller: controller,
               decoration: InputDecoration(
-                enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(
-                      color: Colors.red,
-                    ),
-                    borderRadius: BorderRadius.circular(8)),
+                enabledBorder:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                 contentPadding: const EdgeInsets.only(top: 2, left: 3),
-                errorStyle: const TextStyle(fontSize: 0),
-                hintStyle: const TextStyle(
-                  color: Colors.redAccent,
-                ),
                 hintText: text,
+                hintStyle: const TextStyle(color: Colors.white),
               ),
             ),
           );

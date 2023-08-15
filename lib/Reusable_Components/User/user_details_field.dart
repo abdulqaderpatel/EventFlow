@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -17,8 +18,8 @@ class UserDetailField extends StatelessWidget {
     return Container(
       height: Get.height * 0.15,
       width: Get.width * 0.45,
-      padding: const EdgeInsets.all(
-        8,
+      padding: const EdgeInsets.only(top: 8,left: 8,right: 8,bottom: 20,
+
       ),
       decoration: BoxDecoration(
         color: const Color(0xff1C1C1E),
@@ -32,7 +33,7 @@ class UserDetailField extends StatelessWidget {
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
 
-              Text(
+              AutoSizeText(
                placeholder,
                 style: const TextStyle(
                     color: Colors.grey,
@@ -44,11 +45,11 @@ class UserDetailField extends StatelessWidget {
           ),
           Row(mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                details,
+              AutoSizeText(
+                details,maxLines: 1,minFontSize: 13,
                 style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 19,
+                    fontSize: 14,
                     fontWeight: FontWeight.w600),
               )
             ],

@@ -8,6 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
+
+
+
 class UserNavigationBar extends StatelessWidget {
   UserNavigationBar({super.key});
 
@@ -27,7 +30,7 @@ class UserNavigationBar extends StatelessWidget {
       onWillPop: () async => false,
       child: Scaffold(
         bottomNavigationBar: Obx(
-          () => Container(color: Color(0xff060E11),
+          () => Container(color: Color(0xff0A171F),
 
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 20),
@@ -36,29 +39,37 @@ class UserNavigationBar extends StatelessWidget {
                 {
                   controller.index.value=value;
                 },
-                backgroundColor:Color(0xff060E11),
+                backgroundColor:Color(0xff0A171F),
                 gap: 8,
                 activeColor: Colors.white,
 
+
+
                 color: Colors.white,
-                tabBackgroundColor: Colors.grey.shade900,
+
                 padding: const EdgeInsets.all(5),
 
                  tabs:const [ GButton(
-                   icon: Icons.event,
-                  text: "Events",
+                   icon: Icons.home_filled,
+                 iconActiveColor: Color(0xffFB5188),
+
+
                  ),
                    GButton(
+                     active: true,
                      icon: Icons.search,
-                    text: "Search",
+                   iconActiveColor: Color(0xffFB5188),
+
                    ),
                    GButton(
-                     icon: Icons.chat,
-                    text: "Chat",
+                     icon:Icons.chat_bubble,
+                   iconActiveColor: Color(0xffFB5188),
+
                    ),
                    GButton(
                      icon: Icons.person,
-                    text: "Profile",
+                   iconActiveColor: Color(0xffFB5188),
+
                    ),],
               ),
             ),

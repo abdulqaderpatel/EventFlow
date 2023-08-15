@@ -34,7 +34,8 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
 
   final picker = ImagePicker();
 
-  bool buttonLoader=false;
+  bool buttonLoader = false;
+
   Future getImageGallery() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
@@ -116,228 +117,231 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: isLoaded
-          ? Container(
+          ? Container(color: Color(0xff404354),
               height: Get.height,
-              color: Colors.redAccent,
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                margin: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
-                child: SingleChildScrollView(
-                  child: Center(
-                    child: Column(
-                      children: [
-                        const Text(
-                          "Edit Profile",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 25),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            getImageGallery();
-                          },
-                          child: Container(
-                            width: 120,
-                            height: 120,
-                            margin: const EdgeInsets.only(top: 45, bottom: 30),
-                            padding: const EdgeInsets.all(2),
-                            decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(70),
-                              gradient: const LinearGradient(
-                                colors: [
-                                  Color(0xff7DDCFB),
-                                  Color(0xffBC67F2),
-                                  Color(0xffACF6AF),
-                                  Color(0xffF95549),
-                                ],
-                              ),
-                            ),
-                            child: Container(
-                              padding: const EdgeInsets.all(2),
-                              decoration: BoxDecoration(
+
+              child: SingleChildScrollView(
+                child: Center(
+                  child: Column(
+                    children: [
+
+
+                      Container(padding: EdgeInsets.all(10),width: Get.width,color: Color(0xff373A49),
+                        child: Column(
+                          children:[ const Text(
+                            "Edit Profile",
+                            style: TextStyle(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(70),
-                              ),
-                              child: profileImage != null
-                                  ? CircleAvatar(
-                                      radius: 56,
-                                      backgroundColor: Colors.white,
-                                      backgroundImage: FileImage(
-                                        profileImage!,
-                                      ),
-                                    )
-                                  : CircleAvatar(
-                                      radius: 56,
-                                      backgroundColor: Colors.white,
-                                      backgroundImage: NetworkImage(
-                                        items[0]["image"],
-                                      ),
-                                    ),
-                            ),
+                                fontWeight: FontWeight.w600,
+                                fontSize: 25),
                           ),
+                            InkWell(
+                              onTap: () {
+                                getImageGallery();
+                              },
+                              child: Container(
+                                width: 120,
+                                height: 120,
+                                margin: const EdgeInsets.only(top: 45, bottom: 30),
+                                padding: const EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.circular(70),
+                                  gradient: const LinearGradient(
+                                    colors: [
+                                      Color(0xff7DDCFB),
+                                      Color(0xffBC67F2),
+                                      Color(0xffACF6AF),
+                                      Color(0xffF95549),
+                                    ],
+                                  ),
+                                ),
+                                child: Container(
+                                  padding: const EdgeInsets.all(2),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(70),
+                                  ),
+                                  child: profileImage != null
+                                      ? CircleAvatar(
+                                    radius: 56,
+                                    backgroundColor: Colors.white,
+                                    backgroundImage: FileImage(
+                                      profileImage!,
+                                    ),
+                                  )
+                                      : CircleAvatar(
+                                    radius: 56,
+                                    backgroundColor: Colors.white,
+                                    backgroundImage: NetworkImage(
+                                      items[0]["image"],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),],
                         ),
-                        const SizedBox(
-                          height: 40,
-                        ),
-                        UserTextField(
-                          text: items[0]["name"],
-                          controller: nameController,
+                      ),
+
+                      const SizedBox(
+                        height: 40,
+                      ),
+                      UserTextField(
+                        text: "Name",
+                        controller: nameController,
+                        width: Get.width * 0.8,
+                        labelText: "Name",
+                        validator: (value) {
+                          return null;
+                        },
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      UserTextField(
+                        text: "Username",
+                        controller: usernameController,
+                        width: Get.width * 0.8,
+                        labelText: "Username",
+                        validator: (value) {
+                          return null;
+                        },
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      UserTextField(
+                        text: "Email",
+                        controller: emailController,
+                        width: Get.width * 0.8,
+                        labelText: "Email",
+                        validator: (value) {
+                          return null;
+                        },
+                        enabled: false,
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      UserTextField(
+                        text: "Phone number",
+                        controller: phoneNumberController,
+                        width: Get.width * 0.8,
+                        labelText: "Phone number",
+                        textInputType: TextInputType.number,
+                        validator: (value) {
+                          return null;
+                        },
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      SizedBox(
                           width: Get.width * 0.8,
-                          labelText: "Name",
-                          validator: (value) {
-                            return null;
-                          },
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        UserTextField(
-                          text: "Username",
-                          controller: usernameController,
-                          width: Get.width * 0.8,
-                          labelText: "Username",
-                          validator: (value) {
-                            return null;
-                          },
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        UserTextField(
-                          text: "Email",
-                          controller: emailController,
-                          width: Get.width * 0.8,
-                          labelText: "Email",
-                          validator: (value) {
-                            return null;
-                          },
-                          enabled: false,
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        UserTextField(
-                          text: "Phone number",
-                          controller: phoneNumberController,
-                          width: Get.width * 0.8,
-                          labelText: "Phone number",
-                          textInputType: TextInputType.number,
-                          validator: (value) {
-                            return null;
-                          },
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        SizedBox(
-                            width: Get.width * 0.8,
-                            child: UserProfileSubmitButton(
-                              text: "Submit",
-                              isLoading:buttonLoader,
-                              voidCallback: () async {
+                          child: UserProfileSubmitButton(
+                            text: "Submit",
+                            isLoading: buttonLoader,
+                            voidCallback: () async {
+                              setState(() {
+                                buttonLoader = true;
+                              });
+                              if (nameController.text.isEmpty) {
+                                Toast().errorMessage("Name cannot be empty");
                                 setState(() {
-                                  buttonLoader=true;
+                                  buttonLoader = false;
                                 });
-                                if (nameController.text.isEmpty) {
-                                  Toast().errorMessage("Name cannot be empty");
-                                  setState(() {
-                                    buttonLoader=false;
+                              } else if (usernameController.text.isEmpty) {
+                                Toast()
+                                    .errorMessage("Username cannot be empty");
+                                setState(() {
+                                  buttonLoader = false;
+                                });
+                              } else if (phoneNumberController.text.isEmpty) {
+                                Toast().errorMessage(
+                                    "Phone number cannot be empty");
+                                setState(() {
+                                  buttonLoader = false;
+                                });
+                              } else if (!RegExp(r'^[a-zA-Z0-9]+$')
+                                  .hasMatch(nameController.text)) {
+                                Toast().errorMessage(
+                                    "please enter a valid name");
+                                setState(() {
+                                  buttonLoader = false;
+                                });
+                              } else if (!RegExp(r'^[a-zA-Z0-9]+$')
+                                  .hasMatch(usernameController.text)) {
+                                Toast().errorMessage(
+                                    "please enter a valid username");
+                                setState(() {
+                                  buttonLoader = false;
+                                });
+                              } else if (!await checkIfUsernameIsUnique(
+                                      usernameController.text) &&
+                                  items[0]["username"] !=
+                                      usernameController.text) {
+                                Toast().errorMessage(
+                                    "This username has already been taken");
+                                setState(() {
+                                  buttonLoader = false;
+                                });
+                              } else if (phoneNumberController.text.length !=
+                                      10 ||
+                                  phoneNumberController.text.contains(".") ||
+                                  phoneNumberController.text.contains(",")) {
+                                Toast().errorMessage("Invalid phone number");
+                                setState(() {
+                                  buttonLoader = false;
+                                });
+                              } else {
+                                if (profileImage == null) {
+                                  await FirebaseTable()
+                                      .usersTable
+                                      .doc(FirebaseAuth
+                                          .instance.currentUser!.uid)
+                                      .update({
+                                    "username": usernameController.text,
+                                    "name": nameController.text,
+                                    "phone_number": phoneNumberController.text
                                   });
-                                } else if (usernameController.text.isEmpty) {
-                                  Toast()
-                                      .errorMessage("Username cannot be empty");
+                                  Toast().successMessage(
+                                      "Profile updated successfully");
                                   setState(() {
-                                    buttonLoader=false;
+                                    buttonLoader = false;
                                   });
-                                } else if (phoneNumberController.text.isEmpty) {
-                                  Toast().errorMessage(
-                                      "Phone number cannot be empty");
-                                  setState(() {
-                                    buttonLoader=false;
-                                  });
-                                } else if (!RegExp(r'^[a-zA-Z0-9]+$')
-                                    .hasMatch(nameController.text)) {
-                                  Toast().errorMessage(
-                                      "please enter a valid name");
-                                  setState(() {
-                                    buttonLoader=false;
-                                  });
-                                } else if (!RegExp(r'^[a-zA-Z0-9]+$')
-                                    .hasMatch(usernameController.text)) {
-                                  Toast().errorMessage(
-                                      "please enter a valid username");
-                                  setState(() {
-                                    buttonLoader=false;
-                                  });
-                                } else if (!await checkIfUsernameIsUnique(
-                                        usernameController.text) &&
-                                    items[0]["username"] !=
-                                        usernameController.text) {
-                                  Toast().errorMessage(
-                                      "This username has already been taken");
-                                  setState(() {
-                                    buttonLoader=false;
-                                  });
-                                } else if (phoneNumberController.text.length !=
-                                        10 ||
-                                    phoneNumberController.text.contains(".") ||
-                                    phoneNumberController.text.contains(",")) {
-                                  Toast().errorMessage("Invalid phone number");
-                                  setState(() {
-                                    buttonLoader=false;
-                                  });
+                                  Get.to(UserNavigationBar());
                                 } else {
-                                  if (profileImage == null) {
+                                  Reference ref = FirebaseStorage.instance.ref(
+                                      "/${FirebaseAuth.instance.currentUser!.uid}/profile_picture");
+                                  UploadTask uploadTask =
+                                      ref.putFile(profileImage!.absolute);
+                                  Future.value(uploadTask)
+                                      .then((value) async {
+                                    var newUrl = await ref.getDownloadURL();
                                     await FirebaseTable()
                                         .usersTable
                                         .doc(FirebaseAuth
                                             .instance.currentUser!.uid)
                                         .update({
+                                      "image": newUrl.toString(),
                                       "username": usernameController.text,
                                       "name": nameController.text,
-                                      "phone_number": phoneNumberController.text
+                                      "phone_number":
+                                          phoneNumberController.text
                                     });
+
                                     Toast().successMessage(
                                         "Profile updated successfully");
                                     setState(() {
-                                      buttonLoader=false;
+                                      buttonLoader = false;
                                     });
                                     Get.to(UserNavigationBar());
-                                  } else {
-                                    Reference ref = FirebaseStorage.instance.ref(
-                                        "/${FirebaseAuth.instance.currentUser!.uid}/profile_picture");
-                                    UploadTask uploadTask =
-                                        ref.putFile(profileImage!.absolute);
-                                    Future.value(uploadTask)
-                                        .then((value) async {
-                                      var newUrl = await ref.getDownloadURL();
-                                      await FirebaseTable()
-                                          .usersTable
-                                          .doc(FirebaseAuth
-                                              .instance.currentUser!.uid)
-                                          .update({
-                                        "image": newUrl.toString(),
-                                        "username": usernameController.text,
-                                        "name": nameController.text,
-                                        "phone_number":
-                                            phoneNumberController.text
-                                      });
-
-                                      Toast().successMessage(
-                                          "Profile updated successfully");
-                                      setState(() {
-                                        buttonLoader=false;
-                                      });
-                                      Get.to(UserNavigationBar());
-                                    });
-                                  }
+                                  });
                                 }
-                              },
-                            )),
-                      ],
-                    ),
+                              }
+                            },
+                          )),
+                    ],
                   ),
                 ),
               ),

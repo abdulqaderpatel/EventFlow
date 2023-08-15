@@ -15,7 +15,7 @@ class UserProfileSubmitButton extends StatelessWidget {
     return ElevatedButton(
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all<Color>(
-            const Color(0xffff0000)),
+            const Color(0xff383A48)),
         foregroundColor: MaterialStateProperty.all<Color>(
             Colors.white),
       ),
