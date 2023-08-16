@@ -117,7 +117,7 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: isLoaded
-          ? Container(color: Color(0xff404354),
+          ? Container(color: const Color(0xff404354),
               height: Get.height,
 
               child: SingleChildScrollView(
@@ -126,7 +126,7 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
                     children: [
 
 
-                      Container(padding: EdgeInsets.all(15),width: Get.width,color: Color(0xff373A49),
+                      Container(padding: const EdgeInsets.all(15),width: Get.width,color: const Color(0xff373A49),
                         child: Column(
                           children:[ const Text(
                             "Edit Profile",

@@ -16,7 +16,7 @@ class AdminTextField extends StatelessWidget {
         required this.text,
         required this.controller,
         required this.width,
-        this.labelText=null,
+        this.labelText,
         this.isFilledColor=true,
         this.enabled=true,required  this.validator,this.textInputType=TextInputType.text});
 
@@ -29,9 +29,9 @@ class AdminTextField extends StatelessWidget {
       child: TextFormField(keyboardType:textInputType,enabled: enabled,
         controller: controller,
         textAlignVertical: TextAlignVertical.center,
-        decoration: InputDecoration(labelText: labelText,labelStyle: TextStyle(color: Colors.white),alignLabelWithHint: true,
+        decoration: InputDecoration(labelText: labelText,labelStyle: const TextStyle(color: Colors.white),alignLabelWithHint: true,
           filled:isFilledColor? true:false,
-          fillColor: Color
+          fillColor: const Color
             (0xff0096FF),
 
 

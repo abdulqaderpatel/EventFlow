@@ -58,7 +58,7 @@ class _SearchFriendsScreenState extends State<SearchFriendsScreen> {
 
     user = temp;
 
-    if (this.mounted) {
+    if (mounted) {
       setState(() {
         isLoaded = true;
       });

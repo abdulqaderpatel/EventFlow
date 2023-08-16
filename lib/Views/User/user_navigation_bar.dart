@@ -30,7 +30,7 @@ class UserNavigationBar extends StatelessWidget {
       onWillPop: () async => false,
       child: Scaffold(
         bottomNavigationBar: Obx(
-          () => Container(color: Color(0xff0A171F),
+          () => Container(color: const Color(0xff0A171F),
 
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 20),
@@ -39,7 +39,7 @@ class UserNavigationBar extends StatelessWidget {
                 {
                   controller.index.value=value;
                 },
-                backgroundColor:Color(0xff0A171F),
+                backgroundColor:const Color(0xff0A171F),
                 gap: 8,
                 activeColor: Colors.white,
 

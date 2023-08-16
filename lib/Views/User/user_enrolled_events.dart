@@ -1,8 +1,8 @@
-import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
+
 import 'package:eventflow/Views/User/event_details.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:intl/intl.dart';
 
 class UserEnrolledEventsScreen extends StatefulWidget {
@@ -91,7 +91,7 @@ class _UserEnrolledEventsScreenState extends State<UserEnrolledEventsScreen> {
                                           )),
                                     ),
                                     Positioned(top: Get.height*0.025,right: Get.width*0.076,
-                                      child: Container(height:60,width: 60,decoration: BoxDecoration(shape: BoxShape.circle,color: Color(0xff65696E).withOpacity(0.4),),
+                                      child: Container(height:60,width: 60,decoration: BoxDecoration(shape: BoxShape.circle,color: const Color(0xff65696E).withOpacity(0.4),),
                                         child: Center(
                                           child: Column(mainAxisAlignment:MainAxisAlignment.center,
                                             children: [
@@ -100,13 +100,13 @@ class _UserEnrolledEventsScreenState extends State<UserEnrolledEventsScreen> {
                                                   widget.userEvents[index]
                                                   ["start_time"],
                                                 ),
-                                              ),style: TextStyle(color: Colors.white,fontWeight: FontWeight.w600),),
+                                              ),style: const TextStyle(color: Colors.white,fontWeight: FontWeight.w600),),
                                               Text(DateFormat("MMMM").format(
                                                 DateTime.parse(
                                                   widget.userEvents[index]
                                                   ["start_time"],
                                                 ),
-                                              ),style: TextStyle(color: Colors.white,fontWeight: FontWeight.w600),),
+                                              ),style: const TextStyle(color: Colors.white,fontWeight: FontWeight.w600),),
                                             ],
                                           ),
                                         ),

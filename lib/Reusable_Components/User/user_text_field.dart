@@ -26,13 +26,15 @@ class UserTextField extends StatelessWidget {
         ? SizedBox(
             height: 50,
             width: width,
-            child: TextFormField(style: TextStyle(color: Colors.white),
+            child: TextFormField(
+              style: const TextStyle(color: Colors.white),
               keyboardType: textInputType,
               validator: validator,
               enabled: enabled,
               controller: controller,
               textAlignVertical: TextAlignVertical.center,
-              decoration: InputDecoration(border: InputBorder.none,
+              decoration: InputDecoration(
+                border: InputBorder.none,
                 labelText: labelText,
                 labelStyle: const TextStyle(color: Colors.grey),
                 alignLabelWithHint: true,

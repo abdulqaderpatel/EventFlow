@@ -76,7 +76,6 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           for (int k = 0; k < followerItems.length; k++) {
             if (items[i]["email"] == followerItems[k]["email"]) {
               chatItems.add(items[i]);
-
             }
           }
         }
@@ -348,69 +347,91 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                 showModalBottomSheet<void>(
                                   context: context,
                                   builder: (BuildContext context) {
-                                    return Container(padding: EdgeInsets.all(10),
+                                    return Container(
+                                      padding: EdgeInsets.all(10),
                                       height: 200,
-                                      
-                                      child: ListView.builder(itemCount: chatItems.length,itemBuilder: (context,index){
-                                        return InkWell(
-                                          onTap: ()async {
-                                            List<String> ids = [
-                                              FirebaseAuth.instance.currentUser!.uid,
-                                              chatItems[index]["id"]
-                                            ];
-                                            ids.sort();
-                                            String time=DateTime.now().millisecondsSinceEpoch.toString();
-                                            await FirebaseTable().chatTable.doc(ids.join("_")).collection("messages").doc(time).set(
-                                                {
-                                                  "sender":FirebaseAuth.instance.currentUser!.email,
-                                                  "reciever":chatItems[index]["email"],
-                                                  "isText":false,
-                                                  "name":eventData[index]["name"],
-                                                  "price":eventData[index]["price"],
-                                                  "start_time":eventData[index]["start_time"],
-                                                  "location":eventData[index]["location"],
-                                                  "image":eventData[index]["image"],
-                                                  "id":eventData[index]["id"],
-
-
+                                      child: ListView.builder(
+                                          itemCount: chatItems.length,
+                                          itemBuilder: (context, index) {
+                                            return InkWell(
+                                              onTap: () async {
+                                                List<String> ids = [
+                                                  FirebaseAuth.instance
+                                                      .currentUser!.uid,
+                                                  chatItems[index]["id"]
+                                                ];
+                                                ids.sort();
+                                                String time = DateTime.now()
+                                                    .millisecondsSinceEpoch
+                                                    .toString();
+                                                await FirebaseTable()
+                                                    .chatTable
+                                                    .doc(ids.join("_"))
+                                                    .collection("messages")
+                                                    .doc(time)
+                                                    .set({
+                                                  "sender": FirebaseAuth
+                                                      .instance
+                                                      .currentUser!
+                                                      .email,
+                                                  "reciever": chatItems[index]
+                                                      ["email"],
+                                                  "isText": false,
+                                                  "name": eventData[index]
+                                                      ["name"],
+                                                  "price": eventData[index]
+                                                      ["price"],
+                                                  "start_time": eventData[index]
+                                                      ["start_time"],
+                                                  "location": eventData[index]
+                                                      ["location"],
+                                                  "image": eventData[index]
+                                                      ["image"],
+                                                  "id": eventData[index]["id"],
                                                 });
-                                            Toast().successMessage("Event shared successfully");
-                                            Navigator.pop(context);
-
-
-                                          },
-                                          child: Card(
-                                              margin:
-                                              const EdgeInsets.only(bottom: 20),
-                                              color: const Color(0xff0A171F),
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                  BorderRadius.circular(10),
-                                                  side: const BorderSide(
-                                                    width: 2,
-                                                    color: Color(0xff0A171F),
+                                                Toast().successMessage(
+                                                    "Event shared successfully");
+                                                Navigator.pop(context);
+                                              },
+                                              child: Card(
+                                                  margin: const EdgeInsets.only(
+                                                      bottom: 20),
+                                                  color:
+                                                      const Color(0xff0A171F),
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      side: const BorderSide(
+                                                        width: 2,
+                                                        color:
+                                                            Color(0xff0A171F),
+                                                      )),
+                                                  child: ListTile(
+                                                    leading: CircleAvatar(
+                                                      backgroundImage:
+                                                          NetworkImage(
+                                                              chatItems[index]
+                                                                  ["image"]),
+                                                    ),
+                                                    title: Text(
+                                                      chatItems[index]["name"],
+                                                      style: const TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 20,
+                                                          fontWeight:
+                                                              FontWeight.w600),
+                                                    ),
+                                                    subtitle: Text(
+                                                      chatItems[index]["name"],
+                                                      style: const TextStyle(
+                                                          color: Colors.grey,
+                                                          fontWeight:
+                                                              FontWeight.w500),
+                                                    ),
                                                   )),
-                                              child: ListTile(
-                                                leading: CircleAvatar(
-                                                  backgroundImage: NetworkImage(
-                                                      chatItems[index]["image"]),
-                                                ),
-                                                title: Text(
-                                                  chatItems[index]["name"],
-                                                  style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 20,
-                                                      fontWeight: FontWeight.w600),
-                                                ),
-                                                subtitle: Text(
-                                                  chatItems[index]["name"],
-                                                  style: const TextStyle(
-                                                      color: Colors.grey,
-                                                      fontWeight: FontWeight.w500),
-                                                ),
-                                              )),
-                                        );
-                                      }),
+                                            );
+                                          }),
                                     );
                                   },
                                 );

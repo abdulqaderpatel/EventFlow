@@ -1,17 +1,13 @@
 import 'package:eventflow/Reusable_Components/Authentication/auth_button.dart';
 import 'package:eventflow/Views/Admin/admin_navigation_bar.dart';
 import 'package:eventflow/Views/Authentication/signup.dart';
-import 'package:eventflow/Views/Misc/Firebase/google_auth.dart';
 import 'package:eventflow/Views/Misc/toast/toast.dart';
-
 import 'package:eventflow/Views/User/user_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
 import '../Admin/Profile/create_admin_profile.dart';
 import '../Misc/Firebase/firebase_tables.dart';
 import '../User/Profile/create_user_profile.dart';
@@ -107,8 +103,6 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       users = userTemp;
     });
-
-    print(users);
 
     if (userTemp.isEmpty) {
       return false;
@@ -237,7 +231,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: emailController,
                   obscureText: false,
                   isAdmin: widget.isAdmin == true ? true : false,
-                  validator: (value) {},
+                  validator: (value) {
+                    return null;
+                  },
                 ),
                 SizedBox(height: Get.height * 0.03),
                 AuthButton(
@@ -246,7 +242,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: passwordController,
                   obscureText: true,
                   isAdmin: widget.isAdmin == true ? true : false,
-                  validator: (value) {},
+                  validator: (value) {
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 20),
                 InkWell(
@@ -352,7 +350,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     fontWeight: FontWeight.w600,
                                     fontSize: 16),
                               )
-                            : CircularProgressIndicator()),
+                            : const CircularProgressIndicator()),
                   ),
                 ),
                 SizedBox(
@@ -401,13 +399,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       return await FirebaseAuth.instance
                           .signInWithCredential(credential)
                           .then((value) async {
-                        print(FirebaseAuth.instance.currentUser!.email
-                            .toString());
                         if (widget.isAdmin == true) {
                           adminOrUser = await checkIfAdminLoggingIntoUser(
                               FirebaseAuth.instance.currentUser!.email!);
 
-                          print(adminOrUser);
                           if (adminOrUser) {
                             Toast().errorMessage(
                                 "This email already exists as a user");
@@ -453,7 +448,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   });
                                   Navigator.pushReplacement(context,
                                       MaterialPageRoute(builder: (context) {
-                                    return CreateAdminProfileScreen();
+                                    return const CreateAdminProfileScreen();
                                   }));
                                 });
                               }
@@ -493,14 +488,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                     .instance.currentUser!.displayName,
                                 "image": "",
                                 "phone_number": 0,
-                                "id":FirebaseAuth.instance.currentUser!.uid,
+                                "id": FirebaseAuth.instance.currentUser!.uid,
                               }).then((value) {
                                 setState(() {
                                   googleLoader = false;
                                 });
                                 Navigator.pushReplacement(context,
                                     MaterialPageRoute(builder: (context) {
-                                  return CreateUserProfileScreen();
+                                  return const CreateUserProfileScreen();
                                 }));
                               });
                             }
@@ -548,7 +543,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ],
                               )
-                            : CircularProgressIndicator()),
+                            : const CircularProgressIndicator()),
                   ),
                 ),
                 SizedBox(

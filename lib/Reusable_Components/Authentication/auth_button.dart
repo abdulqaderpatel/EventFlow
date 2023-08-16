@@ -10,8 +10,8 @@ class AuthButton extends StatelessWidget {
 
   final String? Function(String?)  validator;
 
-  AuthButton(
-      {required this.name,
+  const AuthButton(
+      {super.key, required this.name,
       required this.icon,
       required this.controller,
       required this.obscureText,

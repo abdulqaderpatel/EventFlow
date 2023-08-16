@@ -2,7 +2,7 @@ import 'package:eventflow/Views/Admin/Profile/create_admin_profile.dart';
 import 'package:eventflow/Views/Admin/admin_navigation_bar.dart';
 import 'package:eventflow/Views/Authentication/admin_or_user.dart';
 import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
-import 'package:eventflow/Views/Misc/SplashScreen.dart';
+import 'package:eventflow/Views/Misc/splash_screen.dart';
 import 'package:eventflow/Views/User/Profile/create_user_profile.dart';
 import 'package:eventflow/Views/User/user_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';

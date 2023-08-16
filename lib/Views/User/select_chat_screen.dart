@@ -68,7 +68,7 @@ class _SelectChatScreenState extends State<SelectChatScreen> {
       }
     }
 
-    print(chatItems);
+
 
     temp = [];
 
@@ -82,7 +82,7 @@ class _SelectChatScreenState extends State<SelectChatScreen> {
 
     user = temp;
 
-    if (this.mounted) {
+    if (mounted) {
       setState(() {
         isLoaded = true;
       });

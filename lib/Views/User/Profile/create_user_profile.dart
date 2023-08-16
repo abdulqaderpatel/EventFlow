@@ -2,9 +2,6 @@ import 'dart:io';
 
 import 'package:eventflow/Reusable_Components/User/user_profile_submit_button.dart';
 import 'package:eventflow/Reusable_Components/User/user_text_field.dart';
-import 'package:eventflow/Reusable_Components/User/user_text_field.dart';
-import 'package:eventflow/Reusable_Components/User/user_text_field.dart';
-import 'package:eventflow/Reusable_Components/User/user_text_field.dart';
 import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
 import 'package:eventflow/Views/Misc/toast/toast.dart';
 
@@ -127,12 +124,12 @@ class _CreateUserProfileScreenState extends State<CreateUserProfileScreen> {
         body: isLoaded
             ? Container(
                 height: Get.height,
-                color: Color(0xff404354),
+                color: const Color(0xff404354),
                 child: SingleChildScrollView(
                   child: Center(
                     child: Column(
                       children: [
-                        Container(padding: EdgeInsets.all(15),width: Get.width,color:Color(0xff373A49),child:Column(children:[
+                        Container(padding: const EdgeInsets.all(15),width: Get.width,color:const Color(0xff373A49),child:Column(children:[
                         const Text(
                           "Set up your Profile",
                           style: TextStyle(

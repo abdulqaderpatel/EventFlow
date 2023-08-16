@@ -1,7 +1,5 @@
 import 'package:eventflow/Views/Authentication/Login.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
 
 class AdminOrUserScreen extends StatelessWidget {
   const AdminOrUserScreen({super.key});
@@ -11,16 +9,20 @@ class AdminOrUserScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(onWillPop: ()async=>false,
+    return WillPopScope(
+      onWillPop: () async => false,
       child: Scaffold(
           body: Column(
         children: [
-
-
           Expanded(
-            child: InkWell(onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context){
-              return const LoginScreen(isAdmin: true,);
-      }));},
+            child: InkWell(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return const LoginScreen(
+                    isAdmin: true,
+                  );
+                }));
+              },
               child: Container(
                 color: Colors.blue,
                 child: const Center(
@@ -36,11 +38,14 @@ class AdminOrUserScreen extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: InkWell(onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context){
-                return LoginScreen(isUser: true,);
-      }));
-      },
+            child: InkWell(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return const LoginScreen(
+                    isUser: true,
+                  );
+                }));
+              },
               child: Container(
                 color: Colors.red,
                 child: const Center(

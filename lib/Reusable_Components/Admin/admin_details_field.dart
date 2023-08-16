@@ -31,7 +31,7 @@ class AdminDetailsField extends StatelessWidget {
               Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                      margin: EdgeInsets.only(left: 3),
+                      margin: const EdgeInsets.only(left: 3),
                       child: Text(
                         placeholder,
                         style: const TextStyle(
@@ -53,7 +53,7 @@ class AdminDetailsField extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 12,),
+          const SizedBox(height: 12,),
           const Expanded(
             child: Divider(
               color: Colors.blueAccent,

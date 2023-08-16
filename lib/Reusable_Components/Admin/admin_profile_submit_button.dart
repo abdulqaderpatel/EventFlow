@@ -5,8 +5,8 @@ class AdminProfileSubmitButton extends StatelessWidget {
   final VoidCallback voidCallback;
   final bool isLoading;
 
-  AdminProfileSubmitButton(
-      {required this.text,
+  const AdminProfileSubmitButton(
+      {super.key, required this.text,
       required this.voidCallback,
       this.isLoading = false});
 

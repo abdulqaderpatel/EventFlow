@@ -115,7 +115,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             ? SingleChildScrollView(
                 child: Container(
                   height: Get.height,
-                  color: Color(0xff111111),
+                  color: const Color(0xff111111),
                   child: Center(
                     child: Column(
                       children: [
@@ -144,11 +144,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                         Toast().successMessage(
                                             "Logged out successfully");
                                       },
+                                      focusColor: Colors.blue,
                                       child: const Icon(
                                         Icons.logout,
                                         color: Colors.white,
                                       ),
-                                      focusColor: Colors.blue,
                                     ),
                                     Text(
                                       items[0]["name"],

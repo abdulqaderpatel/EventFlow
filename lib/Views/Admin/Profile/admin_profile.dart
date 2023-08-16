@@ -90,12 +90,12 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                          InkWell(onTap:()async{
                            await FirebaseAuth.instance.signOut();
                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
-                             return AdminOrUserScreen();
+                             return const AdminOrUserScreen();
                            }));
                            Toast().successMessage("Logged out successfully");
 
-                         },
-                         child: Icon(Icons.logout,color: Colors.white,),focusColor: Colors.blue,),
+                         },focusColor: Colors.blue,
+                         child: const Icon(Icons.logout,color: Colors.white,),),
                           const Text(
                             "Profile",
                             style: TextStyle(
@@ -103,7 +103,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                           ),
                           InkWell(onTap: (){
                             Navigator.push(context, MaterialPageRoute(builder: (context){
-                              return EditAdminProfileScreen();
+                              return const EditAdminProfileScreen();
                             }));
                           },
                             child: const Icon(

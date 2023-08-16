@@ -1,6 +1,6 @@
 import 'package:eventflow/Reusable_Components/Authentication/auth_button.dart';
 import 'package:eventflow/Views/Admin/Profile/create_admin_profile.dart';
-import 'package:eventflow/Views/Admin/admin_navigation_bar.dart';
+
 import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
 import 'package:eventflow/Views/Misc/toast/toast.dart';
 
@@ -30,7 +30,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   final passwordController = TextEditingController();
 
-  final _formKey = GlobalKey<FormState>();
+
 
   bool buttonLoader=false;
 
@@ -45,7 +45,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
   late List<Map<String, dynamic>> users;
   late List<Map<String, dynamic>> admins;
-  static final nameRegExp = RegExp(r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]');
   static final emailRegExp = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 
@@ -56,11 +55,11 @@ class _SignupScreenState extends State<SignupScreen> {
 
     List<Map<String, dynamic>> userTemp = [];
 
-    userData.docs.forEach((element) {
+    for (var element in userData.docs) {
       setState(() {
         userTemp.add(element.data());
       });
-    });
+    }
 
     setState(() {
       users = userTemp;
@@ -83,11 +82,11 @@ class _SignupScreenState extends State<SignupScreen> {
 
     List<Map<String, dynamic>> adminTemp = [];
 
-    adminData.docs.forEach((element) {
+    for (var element in adminData.docs) {
       setState(() {
         adminTemp.add(element.data());
       });
-    });
+    }
 
     setState(() {
       admins = adminTemp;
@@ -223,7 +222,9 @@ class _SignupScreenState extends State<SignupScreen> {
                       controller: nameController,
                       obscureText: false,
                       isAdmin: widget.isAdmin == true ? true : false,
-                      validator: (value) {},
+                      validator: (value) {
+                        return null;
+                      },
                     ),
                     SizedBox(height: Get.height * 0.03),
                     AuthButton(
@@ -232,7 +233,9 @@ class _SignupScreenState extends State<SignupScreen> {
                       controller: emailController,
                       obscureText: false,
                       isAdmin: widget.isAdmin == true ? true : false,
-                      validator: (value) {},
+                      validator: (value) {
+                        return null;
+                      },
                     ),
                     SizedBox(height: Get.height * 0.03),
                     AuthButton(
@@ -241,7 +244,9 @@ class _SignupScreenState extends State<SignupScreen> {
                       controller: passwordController,
                       obscureText: true,
                       isAdmin: widget.isAdmin == true ? true : false,
-                      validator: (value) {},
+                      validator: (value) {
+                        return null;
+                      },
                     ),
                     SizedBox(height: Get.height * 0.05),
                     InkWell(
@@ -319,7 +324,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 });
                                 Navigator.pushReplacement(context,
                                     MaterialPageRoute(builder: (context) {
-                                  return CreateAdminProfileScreen();
+                                  return const CreateAdminProfileScreen();
                                 }));
                                 await FirebaseTable()
                                     .adminsTable
@@ -339,7 +344,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 });
                                 Navigator.pushReplacement(context,
                                     MaterialPageRoute(builder: (context) {
-                                  return CreateUserProfileScreen();
+                                  return const CreateUserProfileScreen();
                                 }));
                                 await FirebaseTable()
                                     .usersTable
@@ -398,7 +403,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               color: Color(0xffff5085),
                               fontWeight: FontWeight.w600,
                               fontSize: 16),
-                        ):CircularProgressIndicator()),
+                        ):const CircularProgressIndicator()),
                       ),
                     ),
                   ],
@@ -420,7 +425,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     InkWell(
                       onTap: () {
                         Navigator.pushReplacement(context, MaterialPageRoute(builder:(context){
-                          return widget.isAdmin==true?LoginScreen(isAdmin:true):LoginScreen(isUser:true);
+                          return widget.isAdmin==true?const LoginScreen(isAdmin:true):const LoginScreen(isUser:true);
                         }),);
 
                       },

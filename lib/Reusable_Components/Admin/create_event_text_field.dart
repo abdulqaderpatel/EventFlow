@@ -13,7 +13,7 @@ class CreateEventTextField extends StatelessWidget {
     required this.controller,
     required this.width,
     this.textInputType=TextInputType.text,
-    this.labelText = null,
+    this.labelText,
   });
 
   @override
@@ -27,7 +27,7 @@ class CreateEventTextField extends StatelessWidget {
               textAlignVertical: TextAlignVertical.center,
               decoration: InputDecoration(
                 labelText: labelText,
-                labelStyle: TextStyle(color: Colors.white),
+                labelStyle: const TextStyle(color: Colors.white),
                 alignLabelWithHint: true,
                 enabledBorder: OutlineInputBorder(
                     borderSide:

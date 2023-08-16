@@ -36,7 +36,7 @@ class _CreateAdminProfileScreenState extends State<CreateAdminProfileScreen> {
 
   final picker = ImagePicker();
 
-  bool buttonLoader=false;
+  bool buttonLoader = false;
 
   Future getImageGallery() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -118,7 +118,8 @@ class _CreateAdminProfileScreenState extends State<CreateAdminProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(onWillPop: ()async=>false,
+    return WillPopScope(
+      onWillPop: () async => false,
       child: Scaffold(
         body: isLoaded
             ? Container(
@@ -145,7 +146,8 @@ class _CreateAdminProfileScreenState extends State<CreateAdminProfileScreen> {
                             child: Container(
                               width: 120,
                               height: 120,
-                              margin: const EdgeInsets.only(top: 45, bottom: 30),
+                              margin:
+                                  const EdgeInsets.only(top: 45, bottom: 30),
                               padding: const EdgeInsets.all(2),
                               decoration: BoxDecoration(
                                 color: Colors.blue,
@@ -209,8 +211,6 @@ class _CreateAdminProfileScreenState extends State<CreateAdminProfileScreen> {
                                   width: Get.width * 0.8,
                                   labelText: "Username",
                                   validator: (value) {
-                                    print(value);
-
                                     return "";
                                   },
                                 ),
@@ -245,85 +245,96 @@ class _CreateAdminProfileScreenState extends State<CreateAdminProfileScreen> {
                                 ),
                                 SizedBox(
                                   width: Get.width * 0.8,
-                                  child: AdminProfileSubmitButton(text:"Submit",isLoading: buttonLoader,voidCallback: () async {
-                                    setState(() {
-                                      buttonLoader=true;
-                                    });
-                                    if (profileImage == null) {
-                                      Toast().errorMessage(
-                                          "Please choose a profile image");
+                                  child: AdminProfileSubmitButton(
+                                    text: "Submit",
+                                    isLoading: buttonLoader,
+                                    voidCallback: () async {
                                       setState(() {
-                                        buttonLoader=false;
+                                        buttonLoader = true;
                                       });
-                                    } else if (usernameController
-                                        .text.isEmpty) {
-                                      Toast().errorMessage(
-                                          "Username cannot be null");
-                                      setState(() {
-                                        buttonLoader=false;
-                                      });
-                                    } else if (phoneNumberController
-                                        .text.isEmpty) {
-                                      Toast().errorMessage(
-                                          "Phone number cannot be empty");
-                                      setState(() {
-                                        buttonLoader=false;
-                                      });
-                                    } else if (!RegExp(r'^[a-zA-Z0-9]+$')
-                                        .hasMatch(usernameController.text)) {
-                                      Toast().errorMessage(
-                                          "please enter a valid username");
-                                      setState(() {
-                                        buttonLoader=false;
-                                      });
-                                    } else if (!await checkIfUsernameIsUnique(
-                                        usernameController.text)) {
-                                      Toast().errorMessage(
-                                          "This username has already been taken");
-                                      setState(() {
-                                        buttonLoader=false;
-                                      });
-                                    } else if (phoneNumberController
-                                        .text.length !=
-                                        10||phoneNumberController.text.contains(".")||phoneNumberController.text.contains(",")) {
-                                      Toast()
-                                          .errorMessage("Invalid phone number");
-                                      setState(() {
-                                        buttonLoader=false;
-                                      });
-                                    } else {
-                                      Reference ref = FirebaseStorage.instance.ref(
-                                          "/${FirebaseAuth.instance.currentUser!.uid}/profile_picture");
-                                      UploadTask uploadTask =
-                                      ref.putFile(profileImage!.absolute);
-                                      Future.value(uploadTask)
-                                          .then((value) async {
-                                        var newUrl = await ref.getDownloadURL();
-                                        await FirebaseTable()
-                                            .adminsTable
-                                            .doc(FirebaseAuth
-                                            .instance.currentUser!.uid)
-                                            .update({
-                                          "image": newUrl.toString(),
-                                          "username": usernameController.text,
-                                          "phone_number":
+                                      if (profileImage == null) {
+                                        Toast().errorMessage(
+                                            "Please choose a profile image");
+                                        setState(() {
+                                          buttonLoader = false;
+                                        });
+                                      } else if (usernameController
+                                          .text.isEmpty) {
+                                        Toast().errorMessage(
+                                            "Username cannot be null");
+                                        setState(() {
+                                          buttonLoader = false;
+                                        });
+                                      } else if (phoneNumberController
+                                          .text.isEmpty) {
+                                        Toast().errorMessage(
+                                            "Phone number cannot be empty");
+                                        setState(() {
+                                          buttonLoader = false;
+                                        });
+                                      } else if (!RegExp(r'^[a-zA-Z0-9]+$')
+                                          .hasMatch(usernameController.text)) {
+                                        Toast().errorMessage(
+                                            "please enter a valid username");
+                                        setState(() {
+                                          buttonLoader = false;
+                                        });
+                                      } else if (!await checkIfUsernameIsUnique(
+                                          usernameController.text)) {
+                                        Toast().errorMessage(
+                                            "This username has already been taken");
+                                        setState(() {
+                                          buttonLoader = false;
+                                        });
+                                      } else if (phoneNumberController
+                                                  .text.length !=
+                                              10 ||
                                           phoneNumberController.text
-                                        });
-                                        Toast().successMessage(
-                                            "Profile updated successfully");
+                                              .contains(".") ||
+                                          phoneNumberController.text
+                                              .contains(",")) {
+                                        Toast().errorMessage(
+                                            "Invalid phone number");
                                         setState(() {
-                                          buttonLoader=false;
+                                          buttonLoader = false;
                                         });
-                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
-                                          return AdminNavigationBar();
-                                        }));
-                                        setState(() {
-                                          buttonLoader=false;
+                                      } else {
+                                        Reference ref = FirebaseStorage.instance
+                                            .ref(
+                                                "/${FirebaseAuth.instance.currentUser!.uid}/profile_picture");
+                                        UploadTask uploadTask =
+                                            ref.putFile(profileImage!.absolute);
+                                        Future.value(uploadTask)
+                                            .then((value) async {
+                                          var newUrl =
+                                              await ref.getDownloadURL();
+                                          await FirebaseTable()
+                                              .adminsTable
+                                              .doc(FirebaseAuth
+                                                  .instance.currentUser!.uid)
+                                              .update({
+                                            "image": newUrl.toString(),
+                                            "username": usernameController.text,
+                                            "phone_number":
+                                                phoneNumberController.text
+                                          });
+                                          Toast().successMessage(
+                                              "Profile updated successfully");
+                                          setState(() {
+                                            buttonLoader = false;
+                                          });
+                                          Navigator.pushReplacement(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return AdminNavigationBar();
+                                          }));
+                                          setState(() {
+                                            buttonLoader = false;
+                                          });
                                         });
-                                      });
-                                    }
-
-                                  },),
+                                      }
+                                    },
+                                  ),
                                 ),
                               ],
                             ),

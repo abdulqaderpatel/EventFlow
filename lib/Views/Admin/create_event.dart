@@ -13,7 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class CreateEventScreen extends StatefulWidget {
-  CreateEventScreen({super.key});
+  const CreateEventScreen({super.key});
 
   @override
   State<CreateEventScreen> createState() => _CreateEventScreenState();
@@ -53,12 +53,12 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   late DateTime eventEnd;
 
   Future<void> _startTime(BuildContext context) async {
-    final TimeOfDay? picked_s =
+    final TimeOfDay? pickedS =
         await showTimePicker(context: context, initialTime: startTime);
 
-    if (picked_s != null && picked_s != startTime) {
+    if (pickedS != null && pickedS != startTime) {
       setState(() {
-        startTime = picked_s;
+        startTime = pickedS;
         isStartPicked = true;
       });
     }
@@ -79,12 +79,12 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   }
 
   Future<void> _endTime(BuildContext context) async {
-    final TimeOfDay? picked_s =
+    final TimeOfDay? pickedS =
         await showTimePicker(context: context, initialTime: endTime);
 
-    if (picked_s != null && picked_s != endTime) {
+    if (pickedS != null && pickedS != endTime) {
       setState(() {
-        endTime = picked_s;
+        endTime = pickedS;
         isEndPicked = true;
       });
     }
@@ -113,7 +113,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        print(DateFormat('yyyy-MM-dd').format(selectedDate));
+
         isDatePicked = true;
       });
     }
@@ -359,13 +359,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                               ref.putFile(eventImage!.absolute);
                           Future.value(uploadTask).then((value) async {
                             var newUrl = await ref.getDownloadURL();
-                            var id=DateTime.now()
+                            var id = DateTime.now()
                                 .millisecondsSinceEpoch
                                 .toString();
-                            await FirebaseTable()
-                                .eventsTable
-                                .doc(id)
-                                .set({
+                            await FirebaseTable().eventsTable.doc(id).set({
                               "event_creator": FirebaseAuth
                                   .instance.currentUser!.displayName,
                               "name": titleController.text.toString(),
@@ -376,12 +373,13 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                               "price":
                                   int.parse(priceController.text.toString()),
                               "image": newUrl.toString(),
-                              "max_participants": int.parse(maxEntries.text.toString()),
+                              "max_participants":
+                                  int.parse(maxEntries.text.toString()),
                               "start_time": eventStart.toIso8601String(),
                               "end_time": eventEnd.toIso8601String(),
                               "location": locationController.text.toString(),
-                              "participants":[],
-                              "id":id,
+                              "participants": [],
+                              "id": id,
                             });
                             Toast()
                                 .successMessage("Event successfully created");
