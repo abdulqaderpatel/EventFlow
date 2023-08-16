@@ -3,6 +3,7 @@ import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
 import 'package:eventflow/Views/User/Profile/edit_user_profile.dart';
 import 'package:eventflow/Views/User/Profile/user_follower_page.dart';
 import 'package:eventflow/Views/User/Profile/user_following_page.dart';
+import 'package:eventflow/Views/User/user_enrolled_events.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -35,6 +36,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   late List<Map<String, dynamic>> followingItems;
   late List<Map<String, dynamic>> followerItems;
+  List<Map<String,dynamic>> eventItems=[];
+  List<Map<String,dynamic>> userEnrolledEventItems=[];
+  int userEvents=0;
 
   void incrementCounter() async {
     List<Map<String, dynamic>> followingTemp = [];
@@ -52,6 +56,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         .collection("userFollower")
         .get();
 
+    var eventData = await FirebaseTable()
+        .eventsTable
+        .get();
+
     for (var element in followingData.docs) {
       followingTemp.add(element.data());
     }
@@ -62,6 +70,21 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     }
 
     followerItems = followerTemp;
+
+    for (var element in eventData.docs) {
+      eventItems.add(element.data());
+    }
+
+    for(int i=0;i<eventItems.length;i++)
+      {
+        if(eventItems[i]["participants"].contains(FirebaseAuth.instance.currentUser!.email))
+          {
+            userEnrolledEventItems.add(eventItems[i]);
+            userEvents++;
+          }
+      }
+
+
 
     List<Map<String, dynamic>> temp = [];
     var data = await FirebaseTable()
@@ -279,10 +302,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                   SizedBox(
                                     width: Get.width * 0.05,
                                   ),
-                                  const UserDetailField(
+                                  UserDetailField(
                                       icon: Icons.event,
                                       placeholder: "Enrolled events",
-                                      details: "2"),
+                                      details: userEvents.toString(),voidCallback:()=>Navigator.push(context, MaterialPageRoute(builder: (context){
+                                        return UserEnrolledEventsScreen(userEnrolledEventItems);
+                                  })) ,),
                                 ],
                               ),
                             ],

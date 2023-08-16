@@ -6,12 +6,14 @@ class UserDetailField extends StatelessWidget {
   final IconData icon;
   final String placeholder;
   final String details;
+  final VoidCallback? voidCallback;
 
   const UserDetailField(
       {super.key,
       required this.icon,
       required this.placeholder,
-      required this.details});
+      required this.details
+      ,this.voidCallback});
 
   @override
   Widget build(BuildContext context) {
@@ -45,12 +47,14 @@ class UserDetailField extends StatelessWidget {
           ),
           Row(mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              AutoSizeText(
-                details,maxLines: 1,minFontSize: 13,
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600),
+              InkWell(onTap: voidCallback,
+                child: AutoSizeText(
+                  details,maxLines: 1,minFontSize: 13,
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600),
+                ),
               )
             ],
           )

@@ -126,7 +126,7 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
                     children: [
 
 
-                      Container(padding: EdgeInsets.all(10),width: Get.width,color: Color(0xff373A49),
+                      Container(padding: EdgeInsets.all(15),width: Get.width,color: Color(0xff373A49),
                         child: Column(
                           children:[ const Text(
                             "Edit Profile",

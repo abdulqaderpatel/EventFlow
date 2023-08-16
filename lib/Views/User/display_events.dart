@@ -143,7 +143,7 @@ class _DisplayEventsScreenState extends State<DisplayEventsScreen> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Container(
+                                            SizedBox(
                                               width: Get.width * 0.65,
                                               child: Column(
                                                 children: [
@@ -231,7 +231,7 @@ class _DisplayEventsScreenState extends State<DisplayEventsScreen> {
                   ],
                 ),
               )
-            : Container(
+            : SizedBox(
                 height: Get.height,
                 child: const Center(
                   child: CircularProgressIndicator(),
