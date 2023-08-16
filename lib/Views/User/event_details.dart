@@ -21,6 +21,13 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   List<Map<String, dynamic>> eventData = [];
 
   bool isLoaded = false;
+  List<Map<String, dynamic>> items = [];
+  List<Map<String, dynamic>> user = [];
+
+  List<bool> following = [];
+  List<Map<String, dynamic>> followingItems = [];
+  List<Map<String, dynamic>> followerItems = [];
+  List<Map<String, dynamic>> chatItems = [];
 
   void incrementCounter() async {
     List<Map<String, dynamic>> temp = [];
@@ -34,10 +41,49 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         temp.add(element.data());
       });
     }
+    eventData = temp;
+
+    var friendsData = await FirebaseTable()
+        .usersTable
+        .where("email", isNotEqualTo: FirebaseAuth.instance.currentUser!.email)
+        .get();
+    for (var element in friendsData.docs) {
+      items.add(element.data());
+    }
+    var followingData = await FirebaseTable()
+        .followingTable
+        .doc(FirebaseAuth.instance.currentUser!.email)
+        .collection("userFollowing")
+        .get();
+
+    var followerData = await FirebaseTable()
+        .followerTable
+        .doc(FirebaseAuth.instance.currentUser!.email)
+        .collection("userFollower")
+        .get();
+
+    for (var element in followingData.docs) {
+      followingItems.add(element.data());
+    }
+
+    for (var element in followerData.docs) {
+      followerItems.add(element.data());
+    }
+
+    for (int i = 0; i < items.length; i++) {
+      for (int j = 0; j < followingItems.length; j++) {
+        if (items[i]["email"] == followingItems[j]["email"]) {
+          for (int k = 0; k < followerItems.length; k++) {
+            if (items[i]["email"] == followerItems[k]["email"]) {
+              chatItems.add(items[i]);
+
+            }
+          }
+        }
+      }
+    }
 
     setState(() {
-      eventData = temp;
-
       isLoaded = true;
 
       isBooked = eventData[0]["participants"]
@@ -233,42 +279,44 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                             height: 15,
                           ),
                           StreamBuilder<QuerySnapshot>(
-                                stream: FirebaseTable()
-                                    .eventsTable
-                                    .where("id", isEqualTo: widget.id)
-                                    .snapshots(),
-                                builder: (context, snapshot) {
-                                  List<CircularPercentIndicator> clientWidgets = [];
-                                  if (snapshot.hasData) {
-                                    final clients = snapshot.data?.docs;
-                                    for (var client in clients!) {
-                                      final clientWidget = CircularPercentIndicator(
-                                        radius: 120.0,
-                                        lineWidth: 10.0,
-                                        animation: true,
-                                        percent: double.parse(
-                                            (client["participants"].length/ client["max_participants"])
-                                                .toString()),
-                                        center: Text(
-                                          "${client["max_participants"]-client["participants"].length} spots left",
-                                          style: const TextStyle(
-                                              fontSize: 20.0,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.white),
-                                        ),
-                                        backgroundColor: Colors.grey,
-                                        circularStrokeCap: CircularStrokeCap.round,
-                                        progressColor: Colors.redAccent,
-                                      );
-                                      clientWidgets.add(clientWidget);
-                                    }
+                              stream: FirebaseTable()
+                                  .eventsTable
+                                  .where("id", isEqualTo: widget.id)
+                                  .snapshots(),
+                              builder: (context, snapshot) {
+                                List<CircularPercentIndicator> clientWidgets =
+                                    [];
+                                if (snapshot.hasData) {
+                                  final clients = snapshot.data?.docs;
+                                  for (var client in clients!) {
+                                    final clientWidget =
+                                        CircularPercentIndicator(
+                                      radius: 120.0,
+                                      lineWidth: 10.0,
+                                      animation: true,
+                                      percent: double.parse(
+                                          (client["participants"].length /
+                                                  client["max_participants"])
+                                              .toString()),
+                                      center: Text(
+                                        "${client["max_participants"] - client["participants"].length} spots left",
+                                        style: const TextStyle(
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white),
+                                      ),
+                                      backgroundColor: Colors.grey,
+                                      circularStrokeCap:
+                                          CircularStrokeCap.round,
+                                      progressColor: Colors.redAccent,
+                                    );
+                                    clientWidgets.add(clientWidget);
                                   }
-                                  return Column(
-                                    children: clientWidgets,
-                                  );
-                                }),
-
-
+                                }
+                                return Column(
+                                  children: clientWidgets,
+                                );
+                              }),
                           const SizedBox(
                             height: 20,
                           ),
@@ -292,6 +340,82 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                             },
                             child: Text(isBooked ? "Booked" : "Book a spot"),
                           ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          ElevatedButton(
+                              onPressed: () {
+                                showModalBottomSheet<void>(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return Container(padding: EdgeInsets.all(10),
+                                      height: 200,
+                                      
+                                      child: ListView.builder(itemCount: chatItems.length,itemBuilder: (context,index){
+                                        return InkWell(
+                                          onTap: ()async {
+                                            List<String> ids = [
+                                              FirebaseAuth.instance.currentUser!.uid,
+                                              chatItems[index]["id"]
+                                            ];
+                                            ids.sort();
+                                            String time=DateTime.now().millisecondsSinceEpoch.toString();
+                                            await FirebaseTable().chatTable.doc(ids.join("_")).collection("messages").doc(time).set(
+                                                {
+                                                  "sender":FirebaseAuth.instance.currentUser!.email,
+                                                  "reciever":chatItems[index]["email"],
+                                                  "isText":false,
+                                                  "name":eventData[index]["name"],
+                                                  "price":eventData[index]["price"],
+                                                  "start_time":eventData[index]["start_time"],
+                                                  "location":eventData[index]["location"],
+                                                  "image":eventData[index]["image"],
+                                                  "id":eventData[index]["id"],
+
+
+                                                });
+                                            Toast().successMessage("Event shared successfully");
+                                            Navigator.pop(context);
+
+
+                                          },
+                                          child: Card(
+                                              margin:
+                                              const EdgeInsets.only(bottom: 20),
+                                              color: const Color(0xff0A171F),
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                  BorderRadius.circular(10),
+                                                  side: const BorderSide(
+                                                    width: 2,
+                                                    color: Color(0xff0A171F),
+                                                  )),
+                                              child: ListTile(
+                                                leading: CircleAvatar(
+                                                  backgroundImage: NetworkImage(
+                                                      chatItems[index]["image"]),
+                                                ),
+                                                title: Text(
+                                                  chatItems[index]["name"],
+                                                  style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 20,
+                                                      fontWeight: FontWeight.w600),
+                                                ),
+                                                subtitle: Text(
+                                                  chatItems[index]["name"],
+                                                  style: const TextStyle(
+                                                      color: Colors.grey,
+                                                      fontWeight: FontWeight.w500),
+                                                ),
+                                              )),
+                                        );
+                                      }),
+                                    );
+                                  },
+                                );
+                              },
+                              child: const Text("share"))
                         ],
                       ),
                     ),

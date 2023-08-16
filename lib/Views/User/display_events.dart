@@ -181,7 +181,7 @@ class _DisplayEventsScreenState extends State<DisplayEventsScreen> {
                                                         " - ${DateFormat("hh:mm a").format(
                                                           DateTime.parse(
                                                             items[index]
-                                                                ["end_time"],
+                                                                ["start_time"],
                                                           ),
                                                         )}",
                                                         style: const TextStyle(
