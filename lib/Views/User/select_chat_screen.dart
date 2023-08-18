@@ -17,8 +17,7 @@ class _SelectChatScreenState extends State<SelectChatScreen> {
   List<Map<String, dynamic>> user = [];
   var isLoaded = false;
   List<bool> following = [];
-  List<Map<String, dynamic>> followingItems = [];
-  List<Map<String, dynamic>> followerItems = [];
+
   List<Map<String, dynamic>> chatItems = [];
 
   void getUsernameAndUserImage() async {
@@ -35,38 +34,6 @@ class _SelectChatScreenState extends State<SelectChatScreen> {
     }
 
     items = temp;
-
-    var followingData = await FirebaseTable()
-        .followingTable
-        .doc(FirebaseAuth.instance.currentUser!.email)
-        .collection("userFollowing")
-        .get();
-
-    var followerData = await FirebaseTable()
-        .followerTable
-        .doc(FirebaseAuth.instance.currentUser!.email)
-        .collection("userFollower")
-        .get();
-
-    for (var element in followingData.docs) {
-      followingItems.add(element.data());
-    }
-
-    for (var element in followerData.docs) {
-      followerItems.add(element.data());
-    }
-
-    for (int i = 0; i < items.length; i++) {
-      for (int j = 0; j < followingItems.length; j++) {
-        if (items[i]["email"] == followingItems[j]["email"]) {
-          for (int k = 0; k < followerItems.length; k++) {
-            if (items[i]["email"] == followerItems[k]["email"]) {
-              chatItems.add(items[i]);
-            }
-          }
-        }
-      }
-    }
 
 
 
@@ -108,20 +75,27 @@ class _SelectChatScreenState extends State<SelectChatScreen> {
                       children: [
                         Expanded(
                             child: ListView.builder(
-                                itemCount: chatItems.length,
+                                itemCount: items.length,
                                 itemBuilder: (context, index) {
+
+                                  if ((items[index]["follower"])
+                                      .contains(FirebaseAuth.instance.currentUser!.email.toString()) &&
+                                      (items[index]["following"])
+                                          .contains(FirebaseAuth.instance.currentUser!.email)) {
+
+
                                   return InkWell(
                                     onTap: () {
                                       List<String> ids = [
                                         FirebaseAuth.instance.currentUser!.uid,
-                                        chatItems[index]["id"]
+                                        items[index]["id"]
                                       ];
                                       ids.sort();
 
                                       Navigator.push(context,
                                           MaterialPageRoute(builder: (context) {
                                         return ChatScreen(
-                                            ids.join("_"), chatItems[index]);
+                                            ids.join("_"), items[index]);
                                       }));
                                     },
                                     child: Card(
@@ -138,23 +112,26 @@ class _SelectChatScreenState extends State<SelectChatScreen> {
                                         child: ListTile(
                                           leading: CircleAvatar(
                                             backgroundImage: NetworkImage(
-                                                chatItems[index]["image"]),
+                                                items[index]["image"]),
                                           ),
                                           title: Text(
-                                            chatItems[index]["name"],
+                                            items[index]["name"],
                                             style: const TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.w600),
                                           ),
                                           subtitle: Text(
-                                            chatItems[index]["name"],
+                                            items[index]["name"],
                                             style: const TextStyle(
                                                 color: Colors.grey,
                                                 fontWeight: FontWeight.w500),
                                           ),
                                         )),
-                                  );
+                                  );}
+                                  else{
+                                    return Container();
+                                  }
                                 }))
                       ],
                     ),

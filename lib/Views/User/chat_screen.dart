@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
+import 'package:eventflow/Views/User/event_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,6 +19,16 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final messageController = TextEditingController();
   final ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds:100), () {
+      scrollController.jumpTo( scrollController.position.maxScrollExtent);
+    });
+
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +72,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: SingleChildScrollView(
                     controller: scrollController,
                     child: StreamBuilder<QuerySnapshot>(
+
                         stream: FirebaseTable()
                             .chatTable
                             .doc(widget.ids)
@@ -111,76 +123,78 @@ class _ChatScreenState extends State<ChatScreen> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
                                           children: [
-                                            Container(
-                                              margin: const EdgeInsets.only(
-                                                  bottom: 20),
-                                              width: Get.width * 0.6,
-                                              child: Column(
-                                                children: [
-                                                  Image(
-                                                    image: NetworkImage(
-                                                      client["image"],
+                                            InkWell(onTap:()=>Get.to(EventDetailsScreen(client["id"])),
+                                              child: Container(
+                                                margin: const EdgeInsets.only(
+                                                    bottom: 20),
+                                                width: Get.width * 0.6,
+                                                child: Column(
+                                                  children: [
+                                                    Image(
+                                                      image: NetworkImage(
+                                                        client["image"],
+                                                      ),
                                                     ),
-                                                  ),
-                                                  Container(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            10),
-                                                    color:
-                                                        const Color(0xff1C1C1C),
-                                                    child: Column(
-                                                      children: [
-                                                        Row(
-                                                          children: [
-                                                            Text(
-                                                              client["name"],
-                                                              style: const TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize: 20,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 10,
-                                                        ),
-                                                        Row(
-                                                          children: [
-                                                            Text(
-                                                              client[
-                                                                  "location"],
-                                                              style: const TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize: 18,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500),
-                                                            ),
-                                                            Text(
-                                                              " - ${DateFormat("hh:mm a").format(
-                                                                DateTime.parse(
-                                                                  client[
-                                                                      "start_time"],
-                                                                ),
-                                                              )}",
-                                                              style: const TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize: 18,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  )
-                                                ],
+                                                    Container(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              10),
+                                                      color:
+                                                          const Color(0xff1C1C1C),
+                                                      child: Column(
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              Text(
+                                                                client["name"],
+                                                                style: const TextStyle(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize: 20,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          Row(
+                                                            children: [
+                                                              Text(
+                                                                client[
+                                                                    "location"],
+                                                                style: const TextStyle(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize: 18,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500),
+                                                              ),
+                                                              Text(
+                                                                " - ${DateFormat("hh:mm a").format(
+                                                                  DateTime.parse(
+                                                                    client[
+                                                                        "start_time"],
+                                                                  ),
+                                                                )}",
+                                                                style: const TextStyle(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize: 18,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
                                               ),
                                             )
                                           ],
@@ -223,76 +237,78 @@ class _ChatScreenState extends State<ChatScreen> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
                                           children: [
-                                            Container(
-                                              margin: const EdgeInsets.only(
-                                                  bottom: 20),
-                                              width: Get.width * 0.6,
-                                              child: Column(
-                                                children: [
-                                                  Image(
-                                                    image: NetworkImage(
-                                                      client["image"],
+                                            InkWell(onTap:()=> Get.to(EventDetailsScreen(client["id"])),
+                                              child: Container(
+                                                margin: const EdgeInsets.only(
+                                                    bottom: 20),
+                                                width: Get.width * 0.6,
+                                                child: Column(
+                                                  children: [
+                                                    Image(
+                                                      image: NetworkImage(
+                                                        client["image"],
+                                                      ),
                                                     ),
-                                                  ),
-                                                  Container(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            10),
-                                                    color:
-                                                        const Color(0xff1C1C1C),
-                                                    child: Column(
-                                                      children: [
-                                                        Row(
-                                                          children: [
-                                                            Text(
-                                                              client["name"],
-                                                              style: const TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize: 20,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 10,
-                                                        ),
-                                                        Row(
-                                                          children: [
-                                                            Text(
-                                                              client[
-                                                                  "location"],
-                                                              style: const TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize: 18,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500),
-                                                            ),
-                                                            Text(
-                                                              " - ${DateFormat("hh:mm a").format(
-                                                                DateTime.parse(
-                                                                  client[
-                                                                      "start_time"],
-                                                                ),
-                                                              )}",
-                                                              style: const TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize: 18,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  )
-                                                ],
+                                                    Container(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              10),
+                                                      color:
+                                                          const Color(0xff1C1C1C),
+                                                      child: Column(
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              Text(
+                                                                client["name"],
+                                                                style: const TextStyle(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize: 20,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          Row(
+                                                            children: [
+                                                              Text(
+                                                                client[
+                                                                    "location"],
+                                                                style: const TextStyle(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize: 18,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500),
+                                                              ),
+                                                              Text(
+                                                                " - ${DateFormat("hh:mm a").format(
+                                                                  DateTime.parse(
+                                                                    client[
+                                                                        "start_time"],
+                                                                  ),
+                                                                )}",
+                                                                style: const TextStyle(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize: 18,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
                                               ),
                                             )
                                           ],

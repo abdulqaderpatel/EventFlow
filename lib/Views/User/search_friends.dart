@@ -1,3 +1,4 @@
+import 'package:eventflow/Views/User/Profile/random_user_profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +17,8 @@ class _SearchFriendsScreenState extends State<SearchFriendsScreen> {
   List<Map<String, dynamic>> user = [];
   var isLoaded = false;
   List<bool> following = [];
+  final searchController=TextEditingController();
+  late String title;
 
   void getUsernameAndUserImage() async {
     List<Map<String, dynamic>> temp = [];
@@ -85,100 +88,80 @@ class _SearchFriendsScreenState extends State<SearchFriendsScreen> {
                         const SizedBox(
                           height: 20,
                         ),
-                        const Text(
-                          "Add Friends",
-                          style: TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
+                        SizedBox(
+                          height: 50,
+                          width: Get.width,
+                          child: TextFormField(onChanged: (value){
+                            setState(() {
+                              title=value.toString();
+                            });
+                          },
+                            style: const TextStyle(color: Colors.white),
+
+
+                            controller: searchController,
+                            textAlignVertical: TextAlignVertical.center,
+                            decoration: const InputDecoration(
+
+
+                              labelStyle: TextStyle(color: Colors.grey),
+                              alignLabelWithHint: true,
+                              contentPadding: EdgeInsets.only(
+                                top: 2,
+                                left: 5,
+                              ),
+                              errorStyle: TextStyle(fontSize: 0),
+                              hintStyle: TextStyle(
+                                  color: Colors.grey, fontWeight: FontWeight.w400),
+                              hintText:"Search",
+                            ),
+                          ),
                         ),
+
                         Expanded(
                             child: ListView.builder(
                                 itemCount: items.length,
                                 itemBuilder: (context, index) {
-                                  return Card(
+                                  if(searchController.text.isEmpty)
+                                    {
+                                      return Container();
+                                    }
+                                  else if(items[index]["username"].toString().toLowerCase().contains(title.toLowerCase()))
+                                    {
+                                      return InkWell(onTap:()=>Get.to(RandomUserProfileScreen(items[index])),
+                                        child: Card(
 
-                                      margin: const EdgeInsets.only(bottom: 20),
-                                      color: const Color(0xff0A171F),
+                                            margin: const EdgeInsets.only(
+                                                bottom: 20),
+                                            color: const Color(0xff0A171F),
 
 
-                                      child: ListTile(
-                                        leading: CircleAvatar(
-                                          backgroundImage: NetworkImage(
-                                              items[index]["image"]),
-                                        ),
-                                        title: Text(
-                                          items[index]["username"],
-                                          style: const TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        subtitle: Text(
-                                          items[index]["name"],
-                                          style: const TextStyle(
-                                              color: Colors.grey,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                        trailing: ElevatedButton(
-                                          onPressed: () {
-                                            FirebaseTable()
-                                                .followingTable
-                                                .doc(FirebaseAuth.instance
-                                                    .currentUser!.email)
-                                                .collection("userFollowing")
-                                                .doc(items[index]["email"])
-                                                .get()
-                                                .then((value) {
-                                              if (value.exists) {
-                                                FirebaseTable()
-                                                    .followerTable
-                                                    .doc(items[index]["email"])
-                                                    .collection("userFollower")
-                                                    .doc(FirebaseAuth.instance
-                                                        .currentUser!.email)
-                                                    .delete();
-                                                FirebaseTable()
-                                                    .followingTable
-                                                    .doc(FirebaseAuth.instance
-                                                        .currentUser!.email)
-                                                    .collection("userFollowing")
-                                                    .doc(items[index]["email"])
-                                                    .delete()
-                                                    .then((value) {
-                                                  setState(() {
-                                                    following[index] = true;
-                                                  });
-                                                });
-                                              } else {
-                                                FirebaseTable()
-                                                    .followerTable
-                                                    .doc(items[index]["email"])
-                                                    .collection("userFollower")
-                                                    .doc(FirebaseAuth.instance
-                                                        .currentUser!.email)
-                                                    .set(user[0])
-                                                    .then((value) => null);
-                                                FirebaseTable()
-                                                    .followingTable
-                                                    .doc(FirebaseAuth.instance
-                                                        .currentUser!.email)
-                                                    .collection("userFollowing")
-                                                    .doc(items[index]["email"])
-                                                    .set(items[index])
-                                                    .then((value) {
-                                                  setState(() {
-                                                    following[index] = false;
-                                                  });
-                                                });
-                                              }
-                                            });
-                                          },
-                                          child: Text(
-                                            following[index]
-                                                ? "Follow"
-                                                : "Unfollow",
-                                            style: const TextStyle(color: Colors.red),
-                                          ),
-                                        ),
-                                      ));
+                                            child: ListTile(
+                                              leading: CircleAvatar(
+                                                backgroundImage: NetworkImage(
+                                                    items[index]["image"]),
+                                              ),
+                                              title: Text(
+                                                items[index]["username"],
+                                                style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.w600),
+                                              ),
+                                              subtitle: Text(
+                                                items[index]["name"],
+                                                style: const TextStyle(
+                                                    color: Colors.grey,
+                                                    fontWeight: FontWeight.w500),
+                                              ),
+
+                                            )),
+                                      );
+                                    }
+                                  else{
+                                    return Container();
+                                  }
+
                                 }))
                       ],
                     ),

@@ -10,10 +10,10 @@ class UserFollowerPageScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.grey,
+        color:  const Color(0xff0A171F),
         child: Container(
           margin:
-              EdgeInsets.only(left: Get.width * 0.05, right: Get.width * 0.05),
+              EdgeInsets.only(left: Get.width * 0.025, right: Get.width * 0.025),
           child: Column(
             children: [
               const SizedBox(
@@ -34,14 +34,12 @@ class UserFollowerPageScreen extends StatelessWidget {
                       itemCount: followerData.length,
                       itemBuilder: (context, index) {
                         return Card(
-                            surfaceTintColor: Colors.greenAccent,
-                            shadowColor: Colors.blue,
+
                             margin: const EdgeInsets.only(bottom: 20),
-                            color: Colors.red,
+                            color:  const Color(0xff0A171F),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                side: const BorderSide(
-                                    width: 2, color: Colors.white)),
+                                ),
                             elevation: 5,
                             child: ListTile(
                               leading: CircleAvatar(
@@ -50,7 +48,7 @@ class UserFollowerPageScreen extends StatelessWidget {
                               ),
                               title: Text(
                                 followerData[index]["username"],
-                                style: const TextStyle(
+                                style: const TextStyle(color: Colors.white,
                                     fontSize: 20, fontWeight: FontWeight.w600),
                               ),
                               subtitle: Text(

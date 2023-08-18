@@ -97,16 +97,16 @@ class _DisplayEventsScreenState extends State<DisplayEventsScreen> {
                                             decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(
-                                                        30)),
+                                                        20)),
                                             child: ClipRRect(
                                                 borderRadius:
                                                     const BorderRadius.only(
                                                         topRight:
                                                             Radius.circular(
-                                                                30),
+                                                                20),
                                                         topLeft:
                                                             Radius.circular(
-                                                                30)),
+                                                                20)),
                                                 child: Image.network(
                                                   items[index]["image"],
                                                   fit: BoxFit.cover,
@@ -203,7 +203,7 @@ class _DisplayEventsScreenState extends State<DisplayEventsScreen> {
                                               decoration: BoxDecoration(
                                                   borderRadius:
                                                       BorderRadius.circular(
-                                                          30),
+                                                          20),
                                                   color: Colors.white),
                                               child: Text(
                                                 "₹ ${items[index]["price"]}",
