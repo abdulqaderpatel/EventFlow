@@ -1,9 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventflow/Reusable_Components/User/user_details_field.dart';
 import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
 import 'package:eventflow/Views/User/Profile/edit_user_profile.dart';
 import 'package:eventflow/Views/User/Profile/user_follower_page.dart';
 import 'package:eventflow/Views/User/Profile/user_following_page.dart';
-import 'package:eventflow/Views/User/user_enrolled_events.dart';
+
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -31,161 +32,96 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   FirebaseStorage storage = FirebaseStorage.instance;
 
-  late List<Map<String, dynamic>> items;
-  bool isLoaded = false;
-
-  late List<Map<String, dynamic>> followingItems;
-  late List<Map<String, dynamic>> followerItems;
-  List<Map<String,dynamic>> eventItems=[];
-  List<Map<String,dynamic>> userEnrolledEventItems=[];
-  int userEvents=0;
-
-  void incrementCounter() async {
-    List<Map<String, dynamic>> followingTemp = [];
-    List<Map<String, dynamic>> followerTemp = [];
-
-    var followingData = await FirebaseTable()
-        .followingTable
-        .doc(FirebaseAuth.instance.currentUser!.email)
-        .collection("userFollowing")
-        .get();
-
-    var followerData = await FirebaseTable()
-        .followerTable
-        .doc(FirebaseAuth.instance.currentUser!.email)
-        .collection("userFollower")
-        .get();
-
-    var eventData = await FirebaseTable()
-        .eventsTable
-        .get();
-
-    for (var element in followingData.docs) {
-      followingTemp.add(element.data());
-    }
-    followingItems = followingTemp;
-
-    for (var element in followerData.docs) {
-      followerTemp.add(element.data());
-    }
-
-    followerItems = followerTemp;
-
-    for (var element in eventData.docs) {
-      eventItems.add(element.data());
-    }
-
-    for(int i=0;i<eventItems.length;i++)
-      {
-        if(eventItems[i]["participants"].contains(FirebaseAuth.instance.currentUser!.email))
-          {
-            userEnrolledEventItems.add(eventItems[i]);
-            userEvents++;
-          }
-      }
-
-
-
-    List<Map<String, dynamic>> temp = [];
-    var data = await FirebaseTable()
-        .usersTable
-        .where("email", isEqualTo: FirebaseAuth.instance.currentUser!.email)
-        .get();
-
-    for (var element in data.docs) {
-      temp.add(element.data());
-    }
-    items = temp;
-
-    setState(() {
-      isLoaded = true;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    incrementCounter();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: isLoaded
-            ? SingleChildScrollView(
-                child: Container(
-                  height: Get.height,
-                  color: const Color(0xff111111),
-                  child: Center(
-                    child: Column(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.only(top: 40, bottom: 20),
-                          decoration: const BoxDecoration(
-                            color: Color(0xff111111),
-                          ),
-                          width: Get.width,
+        body: SingleChildScrollView(
+          child: StreamBuilder<QuerySnapshot>(
+      stream: FirebaseTable()
+            .usersTable
+            .where("id", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+            .snapshots(),
+              builder: (context, snapshot) {
+                List<SingleChildScrollView> clientWidgets =
+                [];
+                if (snapshot.hasData) {
+                  final clients = snapshot.data?.docs;
+                  for (var client in clients!) {
+                    final clientWidget =
+                    SingleChildScrollView(
+                      child: Container(
+                        height: Get.height,
+                        color: const Color(0xff111111),
+                        child: Center(
                           child: Column(
                             children: [
                               Container(
-                                padding: const EdgeInsets.all(10),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    InkWell(
-                                      onTap: () async {
-                                        await FirebaseAuth.instance.signOut();
-                                        Navigator.pushReplacement(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return const AdminOrUserScreen();
-                                        }));
-                                        Toast().successMessage(
-                                            "Logged out successfully");
-                                      },
-                                      focusColor: Colors.blue,
-                                      child: const Icon(
-                                        Icons.logout,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    Text(
-                                      items[0]["name"],
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 23,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return const EditUserProfileScreen();
-                                        }));
-                                      },
-                                      child: const Icon(
-                                        Icons.edit,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
+                                padding: const EdgeInsets.only(top: 40, bottom: 20),
+                                decoration: const BoxDecoration(
+                                  color: Color(0xff111111),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 25,
-                              ),
-                              Container(
-                                margin:
-                                    const EdgeInsets.symmetric(horizontal: 15),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                width: Get.width,
+                                child: Column(
                                   children: [
                                     Container(
-                                      child: items[0]["image"] == null
-                                          ? const CircleAvatar(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          InkWell(
+                                            onTap: () async {
+                                              await FirebaseAuth.instance.signOut();
+                                              Navigator.pushReplacement(context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) {
+                                                        return const AdminOrUserScreen();
+                                                      }));
+                                              Toast().successMessage(
+                                                  "Logged out successfully");
+                                            },
+                                            focusColor: Colors.blue,
+                                            child: const Icon(
+                                              Icons.logout,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          Text(
+                                            client["name"],
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 23,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          InkWell(
+                                            onTap: () {
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) {
+                                                        return const EditUserProfileScreen();
+                                                      }));
+                                            },
+                                            child: const Icon(
+                                              Icons.edit,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 25,
+                                    ),
+                                    Container(
+                                      margin:
+                                      const EdgeInsets.symmetric(horizontal: 15),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            child: client["image"] == null
+                                                ? const CircleAvatar(
                                               radius: 60,
                                               backgroundColor: Colors.white,
                                               child: Icon(
@@ -194,132 +130,143 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                                 size: 50,
                                               ),
                                             )
-                                          : CircleAvatar(
+                                                : CircleAvatar(
                                               radius: 56,
                                               backgroundColor: Colors.white,
                                               backgroundImage: NetworkImage(
-                                                items[0]["image"],
+                                                client["image"],
                                               ),
                                             ),
-                                    ),
-                                    Column(
-                                      children: [
-                                        const Text(
-                                          "Followers",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 22,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                        InkWell(
-                                          onTap: () {
-                                            Navigator.push(context,
-                                                MaterialPageRoute(
-                                                    builder: (context) {
-                                              return UserFollowerPageScreen(
-                                                  followerItems);
-                                            }));
-                                          },
-                                          child: Text(
-                                            followerItems.length.toString(),
-                                            style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w400),
                                           ),
-                                        )
+                                          Column(
+                                            children: [
+                                              const Text(
+                                                "Followers",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 22,
+                                                    fontWeight: FontWeight.w500),
+                                              ),
+                                              InkWell(
+                                                onTap: () {
+                                                  Navigator.push(context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) {
+                                                            return UserFollowerPageScreen(
+                                                                client["follower"]);
+                                                          }));
+                                                },
+                                                child: Text(
+                                                  client["follower"].length.toString(),
+                                                  style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 20,
+                                                      fontWeight: FontWeight.w400),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          Column(
+                                            children: [
+                                              const Text(
+                                                "Following",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 22,
+                                                    fontWeight: FontWeight.w500),
+                                              ),
+                                              InkWell(
+                                                onTap: () {
+                                                  Navigator.push(context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) {
+                                                            return UserFollowingPageScreen(
+                                                               client["following"]);
+                                                          }));
+                                                },
+                                                child: Text(
+                                                  client["following"].length.toString(),
+                                                  style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 20,
+                                                      fontWeight: FontWeight.w400),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 25,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: Get.width * 0.02),
+                                child: Column(
+                                  children: [
+                                    const SizedBox(
+                                      height: 40,
+                                    ),
+                                    Row(
+                                      children: [
+                                        UserDetailField(
+                                            icon: Icons.supervised_user_circle,
+                                            placeholder: "username",
+                                            details: client["username"]),
+                                        SizedBox(
+                                          width: Get.width * 0.05,
+                                        ),
+                                        UserDetailField(
+                                            icon: Icons.email,
+                                            placeholder: "email",
+                                            details: client["email"]),
                                       ],
+
                                     ),
-                                    Column(
+                                    SizedBox(height: Get.height*0.05,),
+                                    Row(
                                       children: [
-                                        const Text(
-                                          "Following",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 22,
-                                              fontWeight: FontWeight.w500),
+                                        UserDetailField(
+                                            icon: Icons.phone,
+                                            placeholder: "phone number",
+                                            details:
+                                            client["phone_number"].toString()),
+                                        SizedBox(
+                                          width: Get.width * 0.05,
                                         ),
-                                        InkWell(
-                                          onTap: () {
-                                            Navigator.push(context,
-                                                MaterialPageRoute(
-                                                    builder: (context) {
-                                              return UserFollowingPageScreen(
-                                                  followingItems);
-                                            }));
-                                          },
-                                          child: Text(
-                                            followingItems.length.toString(),
-                                            style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w400),
-                                          ),
-                                        )
+                                        const UserDetailField(
+                                          icon: Icons.event,
+                                          placeholder: "Enrolled events",
+                                          details: "timepass" ,),
                                       ],
                                     ),
                                   ],
                                 ),
                               ),
-                              const SizedBox(
-                                height: 25,
-                              ),
                             ],
                           ),
                         ),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: Get.width * 0.02),
-                          child: Column(
-                            children: [
-                              const SizedBox(
-                                height: 40,
-                              ),
-                              Row(
-                                children: [
-                                  UserDetailField(
-                                      icon: Icons.supervised_user_circle,
-                                      placeholder: "username",
-                                      details: items[0]["username"]),
-                                  SizedBox(
-                                    width: Get.width * 0.05,
-                                  ),
-                                  UserDetailField(
-                                      icon: Icons.email,
-                                      placeholder: "email",
-                                      details: items[0]["email"]),
-                                ],
+                      ),
+                    );
+                    clientWidgets.add(clientWidget);
+                  }
+                }
+                else {
 
-                              ),
-                              SizedBox(height: Get.height*0.05,),
-                              Row(
-                                children: [
-                                  UserDetailField(
-                                      icon: Icons.phone,
-                                      placeholder: "phone number",
-                                      details:
-                                          items[0]["phone_number"].toString()),
-                                  SizedBox(
-                                    width: Get.width * 0.05,
-                                  ),
-                                  UserDetailField(
-                                      icon: Icons.event,
-                                      placeholder: "Enrolled events",
-                                      details: userEvents.toString(),voidCallback:()=>Navigator.push(context, MaterialPageRoute(builder: (context){
-                                        return UserEnrolledEventsScreen(userEnrolledEventItems);
-                                  })) ,),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              )
-            : const Center(
-                child: CircularProgressIndicator(),
-              ));
+                    final clientWidget = SingleChildScrollView(
+                      child: Container(color: const Color(0xff111111),),);
+                    clientWidgets.add(clientWidget);
+                  }
+
+                return Column(
+                  children: clientWidgets,
+                );
+              }),
+        ),
+    );
   }
 }

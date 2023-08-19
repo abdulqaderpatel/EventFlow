@@ -50,37 +50,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     for (var element in friendsData.docs) {
       items.add(element.data());
     }
-    var followingData = await FirebaseTable()
-        .followingTable
-        .doc(FirebaseAuth.instance.currentUser!.email)
-        .collection("userFollowing")
-        .get();
 
-    var followerData = await FirebaseTable()
-        .followerTable
-        .doc(FirebaseAuth.instance.currentUser!.email)
-        .collection("userFollower")
-        .get();
-
-    for (var element in followingData.docs) {
-      followingItems.add(element.data());
-    }
-
-    for (var element in followerData.docs) {
-      followerItems.add(element.data());
-    }
-
-    for (int i = 0; i < items.length; i++) {
-      for (int j = 0; j < followingItems.length; j++) {
-        if (items[i]["email"] == followingItems[j]["email"]) {
-          for (int k = 0; k < followerItems.length; k++) {
-            if (items[i]["email"] == followerItems[k]["email"]) {
-              chatItems.add(items[i]);
-            }
-          }
-        }
-      }
-    }
 
     setState(() {
       isLoaded = true;
