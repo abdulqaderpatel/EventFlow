@@ -27,12 +27,12 @@ class _RandomUserProfileScreenState extends State<RandomUserProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseTable()
-        .usersTable
-        .where("id",
-        isEqualTo:
-        widget.userData["id"])
-        .snapshots(),
+            stream: FirebaseTable()
+                .usersTable
+                .where("id",
+                isEqualTo:
+                widget.userData["id"])
+                .snapshots(),
             builder: (context, snapshot) {
               List<SingleChildScrollView> clientWidgets =
               [];
@@ -97,7 +97,7 @@ class _RandomUserProfileScreenState extends State<RandomUserProfileScreen> {
                                             ),
                                           ),
                                         ),
-                                         Column(
+                                        Column(
                                           children: [
                                             const Text(
                                               "Followers",
@@ -153,39 +153,39 @@ class _RandomUserProfileScreenState extends State<RandomUserProfileScreen> {
                                   const SizedBox(
                                     height: 40,
                                   ),
-                                client["follower"]
-                                    .contains(
-                                    FirebaseAuth.instance.currentUser!.email)
-                                    ? ElevatedButton(
-                                    onPressed: () {
-                                      FirebaseTable().usersTable.doc(
-                                          FirebaseAuth.instance.currentUser!
-                                              .uid).update(
-                                          {
-                                            "following": FieldValue
-                                                .arrayRemove(
-                                                [client["email"]])
-                                          });
-                                      FirebaseTable()
-                                          .usersTable.doc(
-                                          client["id"]).update({"follower":FieldValue.arrayRemove([FirebaseAuth.instance.currentUser!
-                                          .email])});
-                                    },
-                                    child: const Text("Unfollow"))
-                                    :
-                                ElevatedButton(
-                                    onPressed: () {
-                                      FirebaseTable()
-                                          .usersTable.doc(
-                                          FirebaseAuth.instance.currentUser!
-                                              .uid).update({"following":FieldValue.arrayUnion([client["email"]])});
-                                      FirebaseTable()
-                                          .usersTable.doc(
-                                          client["id"]).update({"follower":FieldValue.arrayUnion([FirebaseAuth.instance.currentUser!
-                                          .email])});
+                                  client["follower"]
+                                      .contains(
+                                      FirebaseAuth.instance.currentUser!.email)
+                                      ? ElevatedButton(
+                                      onPressed: () {
+                                        FirebaseTable().usersTable.doc(
+                                            FirebaseAuth.instance.currentUser!
+                                                .uid).update(
+                                            {
+                                              "following": FieldValue
+                                                  .arrayRemove(
+                                                  [client["email"]])
+                                            });
+                                        FirebaseTable()
+                                            .usersTable.doc(
+                                            client["id"]).update({"follower":FieldValue.arrayRemove([FirebaseAuth.instance.currentUser!
+                                            .email])});
+                                      },
+                                      child: const Text("Unfollow"))
+                                      :
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        FirebaseTable()
+                                            .usersTable.doc(
+                                            FirebaseAuth.instance.currentUser!
+                                                .uid).update({"following":FieldValue.arrayUnion([client["email"]])});
+                                        FirebaseTable()
+                                            .usersTable.doc(
+                                            client["id"]).update({"follower":FieldValue.arrayUnion([FirebaseAuth.instance.currentUser!
+                                            .email])});
 
-                                    },
-                                    child: const Text("follow")),
+                                      },
+                                      child: const Text("follow")),
                                   Row(
                                     children: [
                                       UserDetailField(

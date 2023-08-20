@@ -22,12 +22,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
 
   bool isLoaded = false;
   List<Map<String, dynamic>> items = [];
-  List<Map<String, dynamic>> user = [];
 
-  List<bool> following = [];
-  List<Map<String, dynamic>> followingItems = [];
-  List<Map<String, dynamic>> followerItems = [];
-  List<Map<String, dynamic>> chatItems = [];
+
 
   void incrementCounter() async {
     List<Map<String, dynamic>> temp = [];
@@ -42,6 +38,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       });
     }
     eventData = temp;
+    print(eventData);
 
     var friendsData = await FirebaseTable()
         .usersTable
@@ -319,16 +316,20 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                   builder: (BuildContext context) {
                                     return Container(
                                       padding: EdgeInsets.all(10),
-                                      height: 200,
+                                      height: 400,
                                       child: ListView.builder(
-                                          itemCount: chatItems.length,
+                                          itemCount:items.length,
                                           itemBuilder: (context, index) {
-                                            return InkWell(
+                                            if ((items[index]["follower"])
+                                                .contains(FirebaseAuth.instance.currentUser!.email.toString()) &&
+                                                (items[index]["following"])
+                                                    .contains(FirebaseAuth.instance.currentUser!.email)) {
+                                              return InkWell(
                                               onTap: () async {
                                                 List<String> ids = [
                                                   FirebaseAuth.instance
                                                       .currentUser!.uid,
-                                                  chatItems[index]["id"]
+                                                 items[index]["id"]
                                                 ];
                                                 ids.sort();
                                                 String time = DateTime.now()
@@ -344,20 +345,20 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                                       .instance
                                                       .currentUser!
                                                       .email,
-                                                  "reciever": chatItems[index]
+                                                  "reciever":items[index]
                                                       ["email"],
                                                   "isText": false,
-                                                  "name": eventData[index]
+                                                  "name": eventData[0]
                                                       ["name"],
-                                                  "price": eventData[index]
+                                                  "price": eventData[0]
                                                       ["price"],
-                                                  "start_time": eventData[index]
+                                                  "start_time": eventData[0]
                                                       ["start_time"],
-                                                  "location": eventData[index]
+                                                  "location": eventData[0]
                                                       ["location"],
-                                                  "image": eventData[index]
+                                                  "image": eventData[0]
                                                       ["image"],
-                                                  "id": eventData[index]["id"],
+                                                  "id": eventData[0]["id"],
                                                 });
                                                 Toast().successMessage(
                                                     "Event shared successfully");
@@ -381,11 +382,11 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                                     leading: CircleAvatar(
                                                       backgroundImage:
                                                           NetworkImage(
-                                                              chatItems[index]
+                                                             items[index]
                                                                   ["image"]),
                                                     ),
                                                     title: Text(
-                                                      chatItems[index]["name"],
+                                                     items[index]["name"],
                                                       style: const TextStyle(
                                                           color: Colors.white,
                                                           fontSize: 20,
@@ -393,7 +394,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                                               FontWeight.w600),
                                                     ),
                                                     subtitle: Text(
-                                                      chatItems[index]["name"],
+                                                     items[index]["name"],
                                                       style: const TextStyle(
                                                           color: Colors.grey,
                                                           fontWeight:
@@ -401,6 +402,10 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                                     ),
                                                   )),
                                             );
+                                            }
+                                            else{
+                                              return Container();
+                                            }
                                           }),
                                     );
                                   },
