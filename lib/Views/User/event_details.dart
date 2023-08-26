@@ -1,11 +1,14 @@
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
 import 'package:eventflow/Views/Misc/toast/toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:http/http.dart' as http;
 
 class EventDetailsScreen extends StatefulWidget {
   final String id;
@@ -23,8 +26,6 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   bool isLoaded = false;
   List<Map<String, dynamic>> items = [];
 
-
-
   void incrementCounter() async {
     List<Map<String, dynamic>> temp = [];
     var data = await FirebaseTable()
@@ -38,7 +39,6 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       });
     }
     eventData = temp;
-    print(eventData);
 
     var friendsData = await FirebaseTable()
         .usersTable
@@ -48,13 +48,77 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       items.add(element.data());
     }
 
-
     setState(() {
       isLoaded = true;
 
       isBooked = eventData[0]["participants"]
           .contains(FirebaseAuth.instance.currentUser!.email);
     });
+  }
+
+  Map<String, dynamic>? paymentIntent;
+
+  void makePayment() async {
+    try {
+      paymentIntent = await createPaymentIntent();
+      print(paymentIntent);
+      var gpay = const PaymentSheetGooglePay(
+          merchantCountryCode: "IND", currencyCode: "IND", testEnv: true);
+      await Stripe.instance.initPaymentSheet(
+        paymentSheetParameters: SetupPaymentSheetParameters(billingDetails:BillingDetails(address: Address(country:"IN",city: "",line1: "",line2: "",postalCode: "",state: "" )),
+            paymentIntentClientSecret:
+                paymentIntent!["client_secret"],
+            style: ThemeMode.dark,
+            merchantDisplayName: eventData[0]["event_creator"],
+            googlePay: gpay),
+      );
+
+      displayPaymentSheet();
+    } catch (e) {
+
+      Toast().errorMessage(e.toString());
+    }
+  }
+
+  void displayPaymentSheet() async {
+    try {
+      await Stripe.instance.presentPaymentSheet();
+      await FirebaseTable()
+          .eventsTable
+          .doc(eventData[0]["id"])
+          .update(
+        {
+          "participants": FieldValue.arrayUnion(
+            [
+              FirebaseAuth.instance.currentUser!.email,
+            ],
+          ),
+        },
+      );
+      incrementCounter();
+
+      Toast().successMessage("Booked slot");
+    } catch (e) {
+
+    }
+  }
+
+  createPaymentIntent() async {
+    try {
+      Map<String, dynamic> body = {"amount": (eventData[0]["price"]*100).toString(), "currency": "inr"};
+      http.Response response = await http.post(
+          Uri.parse("https://api.stripe.com/v1/payment_intents"),
+          body: body,
+          headers: {
+            "Authorization":
+                "Bearer sk_test_51NjJbkSDqOoAu1Yvou3QlHodXEQKoN5nrvK6WP8t2kAdyzKAE2Jmd6umSMZuvh6WjhUvyO8VZpbJo1zFJSyaMvpP00rKeK3kPR",
+            "Content-Type": "application/x-www-form-urlencoded"
+          });
+      return json.decode(response.body);
+    } catch (e) {
+      print(e);
+      Toast().errorMessage("Sorry something went wrong");
+    }
   }
 
   @override
@@ -288,21 +352,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                           ),
                           ElevatedButton(
                             onPressed: () async {
-                              await FirebaseTable()
-                                  .eventsTable
-                                  .doc(eventData[0]["id"])
-                                  .update(
-                                {
-                                  "participants": FieldValue.arrayUnion(
-                                    [
-                                      FirebaseAuth.instance.currentUser!.email,
-                                    ],
-                                  ),
-                                },
-                              );
-                              incrementCounter();
+                              makePayment();
 
-                              Toast().successMessage("Booked slot");
                             },
                             child: Text(isBooked ? "Booked" : "Book a spot"),
                           ),
@@ -315,95 +366,95 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return Container(
-                                      padding: EdgeInsets.all(10),
+                                      padding: const EdgeInsets.all(10),
                                       height: 400,
                                       child: ListView.builder(
-                                          itemCount:items.length,
+                                          itemCount: items.length,
                                           itemBuilder: (context, index) {
                                             if ((items[index]["follower"])
-                                                .contains(FirebaseAuth.instance.currentUser!.email.toString()) &&
+                                                    .contains(FirebaseAuth
+                                                        .instance
+                                                        .currentUser!
+                                                        .email
+                                                        .toString()) &&
                                                 (items[index]["following"])
-                                                    .contains(FirebaseAuth.instance.currentUser!.email)) {
+                                                    .contains(FirebaseAuth
+                                                        .instance
+                                                        .currentUser!
+                                                        .email)) {
                                               return InkWell(
-                                              onTap: () async {
-                                                List<String> ids = [
-                                                  FirebaseAuth.instance
-                                                      .currentUser!.uid,
-                                                 items[index]["id"]
-                                                ];
-                                                ids.sort();
-                                                String time = DateTime.now()
-                                                    .millisecondsSinceEpoch
-                                                    .toString();
-                                                await FirebaseTable()
-                                                    .chatTable
-                                                    .doc(ids.join("_"))
-                                                    .collection("messages")
-                                                    .doc(time)
-                                                    .set({
-                                                  "sender": FirebaseAuth
-                                                      .instance
-                                                      .currentUser!
-                                                      .email,
-                                                  "reciever":items[index]
-                                                      ["email"],
-                                                  "isText": false,
-                                                  "name": eventData[0]
-                                                      ["name"],
-                                                  "price": eventData[0]
-                                                      ["price"],
-                                                  "start_time": eventData[0]
-                                                      ["start_time"],
-                                                  "location": eventData[0]
-                                                      ["location"],
-                                                  "image": eventData[0]
-                                                      ["image"],
-                                                  "id": eventData[0]["id"],
-                                                });
-                                                Toast().successMessage(
-                                                    "Event shared successfully");
-                                                Navigator.pop(context);
-                                              },
-                                              child: Card(
-                                                  margin: const EdgeInsets.only(
-                                                      bottom: 20),
-                                                  color:
-                                                      const Color(0xff0A171F),
-                                                  shape: RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      side: const BorderSide(
-                                                        width: 2,
-                                                        color:
-                                                            Color(0xff0A171F),
-                                                      )),
-                                                  child: ListTile(
-                                                    leading: CircleAvatar(
-                                                      backgroundImage:
-                                                          NetworkImage(
-                                                             items[index]
-                                                                  ["image"]),
-                                                    ),
-                                                    title: Text(
-                                                     items[index]["name"],
-                                                      style: const TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 20,
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                    ),
-                                                    subtitle: Text(
-                                                     items[index]["name"],
-                                                      style: const TextStyle(
-                                                          color: Colors.grey,
-                                                          fontWeight:
-                                                              FontWeight.w500),
-                                                    ),
-                                                  )),
-                                            );
-                                            }
-                                            else{
+                                                onTap: () async {
+                                                  List<String> ids = [
+                                                    FirebaseAuth.instance
+                                                        .currentUser!.uid,
+                                                    items[index]["id"]
+                                                  ];
+                                                  ids.sort();
+                                                  String time = DateTime.now()
+                                                      .millisecondsSinceEpoch
+                                                      .toString();
+                                                  await FirebaseTable()
+                                                      .chatTable
+                                                      .doc(ids.join("_"))
+                                                      .collection("messages")
+                                                      .doc(time)
+                                                      .set({
+                                                    "sender": FirebaseAuth
+                                                        .instance
+                                                        .currentUser!
+                                                        .email,
+                                                    "reciever": items[index]
+                                                        ["email"],
+                                                    "isText": false,
+                                                    "name": eventData[0]
+                                                        ["name"],
+                                                    "price": eventData[0]
+                                                        ["price"],
+                                                    "start_time": eventData[0]
+                                                        ["start_time"],
+                                                    "location": eventData[0]
+                                                        ["location"],
+                                                    "image": eventData[0]
+                                                        ["image"],
+                                                    "id": eventData[0]["id"],
+                                                  });
+                                                  Toast().successMessage(
+                                                      "Event shared successfully");
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            bottom: 20),
+                                                    color:
+                                                        const Color(0xff0A171F),
+                                                    child: ListTile(
+                                                      leading: CircleAvatar(
+                                                        backgroundImage:
+                                                            NetworkImage(
+                                                                items[index]
+                                                                    ["image"]),
+                                                      ),
+                                                      title: Text(
+                                                        items[index]["name"],
+                                                        style: const TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 20,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600),
+                                                      ),
+                                                      subtitle: Text(
+                                                        items[index]["name"],
+                                                        style: const TextStyle(
+                                                            color: Colors.grey,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                      ),
+                                                    )),
+                                              );
+                                            } else {
                                               return Container();
                                             }
                                           }),

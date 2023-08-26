@@ -25,6 +25,8 @@ dependencies:
   percent_indicator:
   google_nav_bar:
   auto_size_text:
+  flutter_stripe:
+  http:
 
 dev_dependencies:
   flutter_test:

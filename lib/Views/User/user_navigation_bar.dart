@@ -33,14 +33,14 @@ class UserNavigationBar extends StatelessWidget {
           () => Container(color: const Color(0xff0A171F),
 
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 20),
-              child: GNav(selectedIndex: controller.index.value,
+              padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 12),
+              child: GNav(selectedIndex: controller.index.value,iconSize: 20,
                 onTabChange: (value)
                 {
                   controller.index.value=value;
                 },
                 backgroundColor:const Color(0xff0A171F),
-                gap: 8,
+                gap: 2,
                 activeColor: Colors.white,
 
 
