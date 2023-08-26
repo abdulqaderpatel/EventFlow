@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
 import 'package:eventflow/Views/Misc/toast/toast.dart';
@@ -7,8 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+
 import 'package:http/http.dart' as http;
+import 'package:syncfusion_flutter_pdf/pdf.dart';
+import '../Misc/pdf/pdf_invoice_api.dart';
 
 class EventDetailsScreen extends StatefulWidget {
   final String id;
@@ -22,7 +28,7 @@ class EventDetailsScreen extends StatefulWidget {
 class _EventDetailsScreenState extends State<EventDetailsScreen> {
   late bool isBooked;
   List<Map<String, dynamic>> eventData = [];
-
+  List<Map<String, dynamic>> userData = [];
   bool isLoaded = false;
   List<Map<String, dynamic>> items = [];
 
@@ -33,12 +39,23 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         .where("id", isEqualTo: widget.id)
         .get();
 
+
+
     for (var element in data.docs) {
       setState(() {
         temp.add(element.data());
       });
     }
     eventData = temp;
+
+    temp=[];
+    var data2=await FirebaseTable().usersTable.where("email",isEqualTo: FirebaseAuth.instance.currentUser!.email).get();
+    for (var element in data2.docs) {
+      setState(() {
+        temp.add(element.data());
+      });
+    }
+    userData=temp;
 
     var friendsData = await FirebaseTable()
         .usersTable
@@ -97,7 +114,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       );
       incrementCounter();
 
+
       Toast().successMessage("Booked slot");
+      await createPDF();
     } catch (e) {
 
     }
@@ -116,9 +135,43 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           });
       return json.decode(response.body);
     } catch (e) {
-      print(e);
+
       Toast().errorMessage("Sorry something went wrong");
     }
+  }
+
+  Future<void> createPDF()async{
+    PdfDocument document=PdfDocument();
+    final page=document.pages.add();
+
+    page.graphics.drawString("Reciept", PdfStandardFont(PdfFontFamily.helvetica,30),bounds: Rect.fromLTWH(170, 0, 400, 600));
+    page.graphics.drawString("Bill to:",PdfStandardFont(PdfFontFamily.helvetica,20),bounds: Rect.fromLTWH(0, 70, 400, 600));
+    page.graphics.drawString(userData[0]["name"],PdfStandardFont(PdfFontFamily.helvetica,20),bounds: Rect.fromLTWH(0, 110, 400, 600));
+    page.graphics.drawString("Bill no:${DateTime.now().millisecondsSinceEpoch}",PdfStandardFont(PdfFontFamily.helvetica,20),bounds: Rect.fromLTWH(320, 70, 400, 600));
+
+
+    page.graphics.drawString("Event name:", PdfStandardFont(PdfFontFamily.helvetica,30),bounds: Rect.fromLTWH(170, 300, 400, 600));
+    page.graphics.drawString("${eventData[0]["name"]}", PdfStandardFont(PdfFontFamily.helvetica,30),bounds: Rect.fromLTWH(170, 340, 400, 600));
+    page.graphics.drawString("price:${eventData[0]["price"]}", PdfStandardFont(PdfFontFamily.helvetica,30),bounds: Rect.fromLTWH(165, 410, 400, 600));
+
+    page.graphics.drawString("Please carry this reciept when attending the event", PdfStandardFont(PdfFontFamily.helvetica,18,),bounds: Rect.fromLTWH(90, 650, 400, 600));
+
+
+
+
+
+
+
+    List<int> bytes=await document.save();
+    document.dispose();
+    saveAndLaunchFile(bytes, "${eventData[0]["name"].toString().trim().replaceAll(" ","_")}.pdf");
+  }
+
+  Future<void> saveAndLaunchFile(List<int> bytes,String fileName)async{
+    final path=(await getExternalStorageDirectory())?.path;
+    final file=File("$path/$fileName");
+    await file.writeAsBytes(bytes,flush: true);
+    OpenFile.open("$path/$fileName");
   }
 
   @override
@@ -462,7 +515,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                   },
                                 );
                               },
-                              child: const Text("share"))
+                              child: const Text("share")),
+
+
                         ],
                       ),
                     ),

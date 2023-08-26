@@ -27,6 +27,9 @@ dependencies:
   auto_size_text:
   flutter_stripe:
   http:
+  syncfusion_flutter_pdf:
+  path_provider:
+  open_file:
 
 dev_dependencies:
   flutter_test:
