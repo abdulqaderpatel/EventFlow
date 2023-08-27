@@ -30,6 +30,8 @@ dependencies:
   syncfusion_flutter_pdf:
   path_provider:
   open_file:
+  screenshot:
+  share_plus:
 
 dev_dependencies:
   flutter_test:

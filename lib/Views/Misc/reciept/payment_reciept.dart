@@ -1,0 +1,196 @@
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:share_plus/share_plus.dart';
+
+class PaymentReciept extends StatelessWidget {
+  final List<Map<String, dynamic>> eventData;
+  final List<Map<String, dynamic>> userData;
+
+  const PaymentReciept(
+      {super.key, required this.eventData, required this.userData});
+
+  Future<void> _shareScreenshot(
+      {required BuildContext context, required Widget shareWidget}) async {
+    final box = context.findRenderObject() as RenderBox?;
+    ScreenshotController()
+        .captureFromWidget(shareWidget)
+        .then((Uint8List bytes) async {
+      final Directory dir = await getApplicationSupportDirectory();
+      final String ts = DateTime.now().millisecondsSinceEpoch.toString();
+      final String filePath = '${dir.path}/$ts.png';
+      await XFile.fromData(bytes).saveTo(filePath);
+      await Share.shareXFiles([XFile(filePath)],
+          sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        height: Get.height,
+        width: Get.width,
+        padding: const EdgeInsets.all(10),
+        child: Center(
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            const Text(
+              "Your Payment was successful",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  _shareScreenshot(
+                      context: context,
+                      shareWidget: MediaQuery(
+                        data: const MediaQueryData(),
+                        child: MaterialApp(
+                          home: Scaffold(
+                            body: Container(
+                                color: Colors.white,
+                                padding: const EdgeInsets.all(10),
+                                height: Get.height,
+                                width: Get.width,
+                                child: Center(
+                                  child: Column(
+                                    children: [
+                                      const Text(
+                                        "Payment Reciept",
+                                        style: TextStyle(
+                                            fontSize: 30,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      const SizedBox(
+                                        height: 40,
+                                      ),
+                                      Container(
+                                        height: Get.height * 0.17,
+                                        width: Get.height * 0.17,
+                                        decoration: BoxDecoration(
+                                            color: const Color(
+                                              0xffff8c85,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(25)),
+                                        child: Image.asset(
+                                          "assets/images/main-logo.png",
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: Get.height * 0.01,
+                                      ),
+                                      SizedBox(
+                                        height: 40,
+                                        child: Text(
+                                          "EventFlow",
+                                          style: GoogleFonts.roboto(
+                                            textStyle: const TextStyle(
+                                                fontSize: 32,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 70,
+                                      ),
+                                      Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                const Text(
+                                                  "Bill to: ",
+                                                  style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.w800),
+                                                ),
+                                                Text(
+                                                  userData[0]["name"]
+                                                      .toString(),
+                                                  style: const TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                const Text(
+                                                  "Bill no: ",
+                                                  style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight: FontWeight.w800),
+                                                ),
+                                                Text(
+                                                  DateTime.now().millisecondsSinceEpoch.toString(),
+                                                  style: const TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight: FontWeight.w500),
+                                                ),
+                                              ],
+                                            ),
+
+                                          ]),
+                                      const SizedBox(
+                                        height: 30,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              const Text(
+                                                  "Amount: ", style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w800),),
+                                              Text(
+                                                "${eventData[0]["price"]}", style: const TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w500),),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              const Text("Date: ", style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w800),),
+
+                                              Text(DateFormat('yMMMMd').format(
+                                                DateTime.parse(
+                                                  DateTime.now().toString(),
+                                                ),
+                                              ), style: const TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w500),),                                            ],
+                                          )
+                                        ],
+                                      ),
+                                      const SizedBox(height: 130,),
+                                      const Text("Please carry along this reciept when attending the event",style: TextStyle(fontSize: 13,fontWeight: FontWeight.bold))
+                                    ],
+                                  ),
+                                )),
+                          ),
+                        ),
+                      ));
+                },
+                child: const Text("Get Reciept"))
+          ],
+        )),
+      ),
+    );
+  }
+}

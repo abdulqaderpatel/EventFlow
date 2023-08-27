@@ -2,19 +2,19 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
+import 'package:eventflow/Views/Misc/reciept/payment_reciept.dart';
 import 'package:eventflow/Views/Misc/toast/toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:open_file/open_file.dart';
-import 'package:path_provider/path_provider.dart';
+
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:syncfusion_flutter_pdf/pdf.dart';
-import '../Misc/pdf/pdf_invoice_api.dart';
+
+
 
 class EventDetailsScreen extends StatefulWidget {
   final String id;
@@ -78,7 +78,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   void makePayment() async {
     try {
       paymentIntent = await createPaymentIntent();
-      print(paymentIntent);
+
       var gpay = const PaymentSheetGooglePay(
           merchantCountryCode: "IND", currencyCode: "IND", testEnv: true);
       await Stripe.instance.initPaymentSheet(
@@ -116,7 +116,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
 
 
       Toast().successMessage("Booked slot");
-      await createPDF();
+   Get.to(PaymentReciept(eventData: eventData,userData: userData,));
     } catch (e) {
 
     }
@@ -140,39 +140,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     }
   }
 
-  Future<void> createPDF()async{
-    PdfDocument document=PdfDocument();
-    final page=document.pages.add();
 
-    page.graphics.drawString("Reciept", PdfStandardFont(PdfFontFamily.helvetica,30),bounds: Rect.fromLTWH(170, 0, 400, 600));
-    page.graphics.drawString("Bill to:",PdfStandardFont(PdfFontFamily.helvetica,20),bounds: Rect.fromLTWH(0, 70, 400, 600));
-    page.graphics.drawString(userData[0]["name"],PdfStandardFont(PdfFontFamily.helvetica,20),bounds: Rect.fromLTWH(0, 110, 400, 600));
-    page.graphics.drawString("Bill no:${DateTime.now().millisecondsSinceEpoch}",PdfStandardFont(PdfFontFamily.helvetica,20),bounds: Rect.fromLTWH(320, 70, 400, 600));
-
-
-    page.graphics.drawString("Event name:", PdfStandardFont(PdfFontFamily.helvetica,30),bounds: Rect.fromLTWH(170, 300, 400, 600));
-    page.graphics.drawString("${eventData[0]["name"]}", PdfStandardFont(PdfFontFamily.helvetica,30),bounds: Rect.fromLTWH(170, 340, 400, 600));
-    page.graphics.drawString("price:${eventData[0]["price"]}", PdfStandardFont(PdfFontFamily.helvetica,30),bounds: Rect.fromLTWH(165, 410, 400, 600));
-
-    page.graphics.drawString("Please carry this reciept when attending the event", PdfStandardFont(PdfFontFamily.helvetica,18,),bounds: Rect.fromLTWH(90, 650, 400, 600));
-
-
-
-
-
-
-
-    List<int> bytes=await document.save();
-    document.dispose();
-    saveAndLaunchFile(bytes, "${eventData[0]["name"].toString().trim().replaceAll(" ","_")}.pdf");
-  }
-
-  Future<void> saveAndLaunchFile(List<int> bytes,String fileName)async{
-    final path=(await getExternalStorageDirectory())?.path;
-    final file=File("$path/$fileName");
-    await file.writeAsBytes(bytes,flush: true);
-    OpenFile.open("$path/$fileName");
-  }
 
   @override
   void initState() {
