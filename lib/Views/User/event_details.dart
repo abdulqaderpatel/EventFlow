@@ -72,7 +72,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     setState(() {
       isLoaded = true;
 
-      isBooked = eventData[0]["participants"]
+      isBooked = eventData[0]["emails"]
           .contains(FirebaseAuth.instance.currentUser!.email);
     });
   }
@@ -127,7 +127,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         userData: userData,
         bookedUserData: bookedUserData,
       ));
-      bookedUserData=[];
+      bookedUserData = [];
     } catch (e) {}
   }
 

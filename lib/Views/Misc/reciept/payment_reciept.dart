@@ -167,7 +167,7 @@ class PaymentReciept extends StatelessWidget {
                                                         FontWeight.w800),
                                               ),
                                               Text(
-                                                "${eventData[0]["price"]*bookedUserData.length}",
+                                                "${eventData[0]["price"] * bookedUserData.length}",
                                                 style: const TextStyle(
                                                     fontSize: 18,
                                                     fontWeight:
@@ -203,6 +203,7 @@ class PaymentReciept extends StatelessWidget {
                                         height: 30,
                                       ),
                                       DataTable(
+                                        horizontalMargin: 10,
                                         columns: const [
                                           DataColumn(
                                               label: Text('NO',
