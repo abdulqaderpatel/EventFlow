@@ -26,6 +26,7 @@ class EventDetailsScreen extends StatefulWidget {
 class _EventDetailsScreenState extends State<EventDetailsScreen> {
   late bool isBooked;
   int participants = 0;
+  List<Map<String, dynamic>> bookedUserData = [];
   List<Map<String, dynamic>> eventData = [];
   List<Map<String, dynamic>> userData = [];
   bool isLoaded = false;
@@ -124,7 +125,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       Get.to(PaymentReciept(
         eventData: eventData,
         userData: userData,
+        bookedUserData: bookedUserData,
       ));
+      bookedUserData=[];
     } catch (e) {}
   }
 
@@ -606,6 +609,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                                                           Map<String, dynamic>
                                                                               userData =
                                                                               {
+                                                                            "no":
+                                                                                "${i + 1}",
                                                                             "name":
                                                                                 nameController[i].text,
                                                                             "email":
@@ -613,6 +618,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                                                             "age":
                                                                                 ageController[i].text
                                                                           };
+                                                                          bookedUserData
+                                                                              .add(userData);
                                                                           await FirebaseTable()
                                                                               .eventsTable
                                                                               .doc(widget.id)
@@ -622,7 +629,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                                                               userData
                                                                             ])
                                                                           });
-                                                                          userData={};
+                                                                          userData =
+                                                                              {};
                                                                         }
 
                                                                         makePayment();

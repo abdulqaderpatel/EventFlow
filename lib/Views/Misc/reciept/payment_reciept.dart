@@ -12,9 +12,13 @@ import 'package:share_plus/share_plus.dart';
 class PaymentReciept extends StatelessWidget {
   final List<Map<String, dynamic>> eventData;
   final List<Map<String, dynamic>> userData;
+  final List<Map<String, dynamic>> bookedUserData;
 
   const PaymentReciept(
-      {super.key, required this.eventData, required this.userData});
+      {super.key,
+      required this.eventData,
+      required this.userData,
+      required this.bookedUserData});
 
   Future<void> _shareScreenshot(
       {required BuildContext context, required Widget shareWidget}) async {
@@ -100,7 +104,7 @@ class PaymentReciept extends StatelessWidget {
                                         ),
                                       ),
                                       const SizedBox(
-                                        height: 70,
+                                        height: 40,
                                       ),
                                       Row(
                                           mainAxisAlignment:
@@ -131,17 +135,20 @@ class PaymentReciept extends StatelessWidget {
                                                   "Bill no: ",
                                                   style: TextStyle(
                                                       fontSize: 18,
-                                                      fontWeight: FontWeight.w800),
+                                                      fontWeight:
+                                                          FontWeight.w800),
                                                 ),
                                                 Text(
-                                                  DateTime.now().millisecondsSinceEpoch.toString(),
+                                                  DateTime.now()
+                                                      .millisecondsSinceEpoch
+                                                      .toString(),
                                                   style: const TextStyle(
                                                       fontSize: 18,
-                                                      fontWeight: FontWeight.w500),
+                                                      fontWeight:
+                                                          FontWeight.w500),
                                                 ),
                                               ],
                                             ),
-
                                           ]),
                                       const SizedBox(
                                         height: 30,
@@ -153,33 +160,94 @@ class PaymentReciept extends StatelessWidget {
                                           Row(
                                             children: [
                                               const Text(
-                                                  "Amount: ", style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w800),),
+                                                "Amount: ",
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.w800),
+                                              ),
                                               Text(
-                                                "${eventData[0]["price"]}", style: const TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w500),),
+                                                "${eventData[0]["price"]*bookedUserData.length}",
+                                                style: const TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
                                             ],
                                           ),
                                           Row(
                                             children: [
-                                              const Text("Date: ", style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w800),),
-
-                                              Text(DateFormat('yMMMMd').format(
-                                                DateTime.parse(
-                                                  DateTime.now().toString(),
+                                              const Text(
+                                                "Date: ",
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.w800),
+                                              ),
+                                              Text(
+                                                DateFormat('yMMMMd').format(
+                                                  DateTime.parse(
+                                                    DateTime.now().toString(),
+                                                  ),
                                                 ),
-                                              ), style: const TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w500),),                                            ],
+                                                style: const TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ],
                                           )
                                         ],
                                       ),
-                                      const SizedBox(height: 130,),
-                                      const Text("Please carry along this reciept when attending the event",style: TextStyle(fontSize: 13,fontWeight: FontWeight.bold))
+                                      SizedBox(
+                                        height: 30,
+                                      ),
+                                      DataTable(
+                                        columns: const [
+                                          DataColumn(
+                                              label: Text('NO',
+                                                  style: TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.bold))),
+                                          DataColumn(
+                                              label: Text('Name',
+                                                  style: TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.bold))),
+                                          DataColumn(
+                                              label: Text('Email',
+                                                  style: TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.bold))),
+                                          DataColumn(
+                                              label: Text('Age',
+                                                  style: TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.bold))),
+                                        ],
+                                        rows: <DataRow>[
+                                          ...bookedUserData.map((e) {
+                                            return DataRow(cells: [
+                                              DataCell(Text(e["no"])),
+                                              DataCell(Text(e["name"])),
+                                              DataCell(Text(e["email"])),
+                                              DataCell(Text(e["age"])),
+                                            ]);
+                                          })
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 130,
+                                      ),
+                                      const Text(
+                                          "Please carry along this reciept when attending the event",
+                                          style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.bold))
                                     ],
                                   ),
                                 )),
