@@ -14,8 +14,6 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import 'package:http/http.dart' as http;
 
-
-
 class EventDetailsScreen extends StatefulWidget {
   final String id;
 
@@ -27,10 +25,14 @@ class EventDetailsScreen extends StatefulWidget {
 
 class _EventDetailsScreenState extends State<EventDetailsScreen> {
   late bool isBooked;
+  int participants = 0;
   List<Map<String, dynamic>> eventData = [];
   List<Map<String, dynamic>> userData = [];
   bool isLoaded = false;
   List<Map<String, dynamic>> items = [];
+  List<TextEditingController> emailController = [];
+  List<TextEditingController> nameController = [];
+  List<TextEditingController> ageController = [];
 
   void incrementCounter() async {
     List<Map<String, dynamic>> temp = [];
@@ -39,8 +41,6 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         .where("id", isEqualTo: widget.id)
         .get();
 
-
-
     for (var element in data.docs) {
       setState(() {
         temp.add(element.data());
@@ -48,14 +48,17 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     }
     eventData = temp;
 
-    temp=[];
-    var data2=await FirebaseTable().usersTable.where("email",isEqualTo: FirebaseAuth.instance.currentUser!.email).get();
+    temp = [];
+    var data2 = await FirebaseTable()
+        .usersTable
+        .where("email", isEqualTo: FirebaseAuth.instance.currentUser!.email)
+        .get();
     for (var element in data2.docs) {
       setState(() {
         temp.add(element.data());
       });
     }
-    userData=temp;
+    userData = temp;
 
     var friendsData = await FirebaseTable()
         .usersTable
@@ -82,9 +85,16 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       var gpay = const PaymentSheetGooglePay(
           merchantCountryCode: "IND", currencyCode: "IND", testEnv: true);
       await Stripe.instance.initPaymentSheet(
-        paymentSheetParameters: SetupPaymentSheetParameters(billingDetails:BillingDetails(address: Address(country:"IN",city: "",line1: "",line2: "",postalCode: "",state: "" )),
-            paymentIntentClientSecret:
-                paymentIntent!["client_secret"],
+        paymentSheetParameters: SetupPaymentSheetParameters(
+            billingDetails: const BillingDetails(
+                address: Address(
+                    country: "IN",
+                    city: "",
+                    line1: "",
+                    line2: "",
+                    postalCode: "",
+                    state: "")),
+            paymentIntentClientSecret: paymentIntent!["client_secret"],
             style: ThemeMode.dark,
             merchantDisplayName: eventData[0]["event_creator"],
             googlePay: gpay),
@@ -92,7 +102,6 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
 
       displayPaymentSheet();
     } catch (e) {
-
       Toast().errorMessage(e.toString());
     }
   }
@@ -100,12 +109,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   void displayPaymentSheet() async {
     try {
       await Stripe.instance.presentPaymentSheet();
-      await FirebaseTable()
-          .eventsTable
-          .doc(eventData[0]["id"])
-          .update(
+      await FirebaseTable().eventsTable.doc(eventData[0]["id"]).update(
         {
-          "participants": FieldValue.arrayUnion(
+          "emails": FieldValue.arrayUnion(
             [
               FirebaseAuth.instance.currentUser!.email,
             ],
@@ -114,17 +120,20 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       );
       incrementCounter();
 
-
       Toast().successMessage("Booked slot");
-   Get.to(PaymentReciept(eventData: eventData,userData: userData,));
-    } catch (e) {
-
-    }
+      Get.to(PaymentReciept(
+        eventData: eventData,
+        userData: userData,
+      ));
+    } catch (e) {}
   }
 
   createPaymentIntent() async {
     try {
-      Map<String, dynamic> body = {"amount": (eventData[0]["price"]*100).toString(), "currency": "inr"};
+      Map<String, dynamic> body = {
+        "amount": (eventData[0]["price"] * participants * 100).toString(),
+        "currency": "inr"
+      };
       http.Response response = await http.post(
           Uri.parse("https://api.stripe.com/v1/payment_intents"),
           body: body,
@@ -135,12 +144,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           });
       return json.decode(response.body);
     } catch (e) {
-
       Toast().errorMessage("Sorry something went wrong");
     }
   }
-
-
 
   @override
   void initState() {
@@ -151,6 +157,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("Change");
     return Scaffold(
         body: isLoaded
             ? ListView(
@@ -373,8 +380,269 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                           ),
                           ElevatedButton(
                             onPressed: () async {
-                              makePayment();
+                              showModalBottomSheet<void>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return StatefulBuilder(builder:
+                                      (BuildContext context, modalState) {
+                                    return Container(
+                                      padding: const EdgeInsets.all(10),
+                                      height: 300,
+                                      color: const Color(0xff2C384C),
+                                      child: Center(
+                                        child: Column(
+                                          children: <Widget>[
+                                            const SizedBox(height: 15),
+                                            const Text(
+                                              'Enter no of participants',
+                                              style: TextStyle(
+                                                  fontSize: 24,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            const SizedBox(
+                                              height: 40,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                InkWell(
+                                                    onTap: () {
+                                                      modalState(() {
+                                                        participants++;
+                                                      });
+                                                    },
+                                                    child: const Icon(
+                                                      Icons.add,
+                                                      size: 32,
+                                                      color: Colors.white,
+                                                    )),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(
+                                                  participants.toString(),
+                                                  style: const TextStyle(
+                                                      fontSize: 32,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                InkWell(
+                                                  onTap: () {
+                                                    if (participants != 0) {
+                                                      modalState(() {
+                                                        participants--;
+                                                      });
+                                                    }
+                                                  },
+                                                  child: const Icon(
+                                                    Icons.remove,
+                                                    size: 32,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 15),
+                                            ElevatedButton(
+                                                child:
+                                                    const Text('Enter Details'),
+                                                onPressed: () {
+                                                  for (int i = 0;
+                                                      i < participants;
+                                                      i++) {
+                                                    nameController.add(
+                                                        TextEditingController());
+                                                    emailController.add(
+                                                        TextEditingController());
+                                                    ageController.add(
+                                                        TextEditingController());
+                                                  }
+                                                  Navigator.pop(context);
+                                                  showModalBottomSheet<void>(
+                                                    isScrollControlled: true,
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return StatefulBuilder(
+                                                          builder: (BuildContext
+                                                                  context,
+                                                              modalState) {
+                                                        return Container(
+                                                          color: const Color(
+                                                              0xff2C384C),
+                                                          child: Container(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(10),
+                                                              margin: EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          Get.width *
+                                                                              0.05),
+                                                              height:
+                                                                  Get.height,
+                                                              child: Center(
+                                                                  child: Column(
+                                                                children: [
+                                                                  const Text(
+                                                                    "Enter Participant Details",
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .white,
+                                                                        fontSize:
+                                                                            24,
+                                                                        fontWeight:
+                                                                            FontWeight.w600),
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    height: 20,
+                                                                  ),
+                                                                  Container(
+                                                                    height:
+                                                                        Get.height *
+                                                                            0.75,
+                                                                    child: ListView
+                                                                        .builder(
+                                                                      padding: const EdgeInsets
+                                                                              .symmetric(
+                                                                          horizontal:
+                                                                              15),
+                                                                      shrinkWrap:
+                                                                          true,
+                                                                      itemCount:
+                                                                          participants,
+                                                                      itemBuilder:
+                                                                          (context,
+                                                                              index) {
+                                                                        nameController[0]
+                                                                            .text = userData[
+                                                                                0]
+                                                                            [
+                                                                            "name"];
+                                                                        emailController[0]
+                                                                            .text = userData[
+                                                                                0]
+                                                                            [
+                                                                            "email"];
+                                                                        return Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.only(top: 15),
+                                                                          child:
+                                                                              Row(
+                                                                            children: [
+                                                                              Expanded(
+                                                                                child: Container(
+                                                                                  alignment: Alignment.center,
+                                                                                  decoration: BoxDecoration(
+                                                                                    color: const Color(0xFF2E384E),
+                                                                                    borderRadius: BorderRadius.circular(10),
+                                                                                  ),
+                                                                                  child: Column(
+                                                                                    children: [
+                                                                                      Text(
+                                                                                        "Person ${index + 1}",
+                                                                                        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+                                                                                      ),
+                                                                                      TextField(
+                                                                                        controller: nameController[index],
+                                                                                        autofocus: false,
+                                                                                        style: const TextStyle(color: Color(0xFFF8F8FF)),
+                                                                                        decoration: const InputDecoration(
+                                                                                          border: InputBorder.none,
+                                                                                          hintText: "Enter name",
+                                                                                          hintStyle: TextStyle(color: Color.fromARGB(255, 132, 140, 155)),
+                                                                                        ),
+                                                                                      ),
+                                                                                      const SizedBox(height: 10),
+                                                                                      TextField(
+                                                                                        controller: emailController[index],
+                                                                                        autofocus: false,
+                                                                                        style: const TextStyle(color: Color(0xFFF8F8FF)),
+                                                                                        decoration: const InputDecoration(
+                                                                                          border: InputBorder.none,
+                                                                                          hintText: "Enter email",
+                                                                                          hintStyle: TextStyle(color: Color.fromARGB(255, 132, 140, 155)),
+                                                                                        ),
+                                                                                      ),
+                                                                                      const SizedBox(height: 10),
+                                                                                      TextField(
+                                                                                        controller: ageController[index],
+                                                                                        autofocus: false,
+                                                                                        style: const TextStyle(color: Color(0xFFF8F8FF)),
+                                                                                        decoration: const InputDecoration(
+                                                                                          border: InputBorder.none,
+                                                                                          hintText: "Enter age",
+                                                                                          hintStyle: TextStyle(color: Color.fromARGB(255, 132, 140, 155)),
+                                                                                        ),
+                                                                                      ),
+                                                                                      const SizedBox(height: 10),
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                              const SizedBox(
+                                                                                width: 10,
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        );
+                                                                      },
+                                                                    ),
+                                                                  ),
+                                                                  const SizedBox(
+                                                                      height:
+                                                                          15),
+                                                                  ElevatedButton(
+                                                                      onPressed:
+                                                                          () async {
+                                                                        for (int i =
+                                                                                0;
+                                                                            i < participants;
+                                                                            i++) {
+                                                                          Map<String, dynamic>
+                                                                              userData =
+                                                                              {
+                                                                            "name":
+                                                                                nameController[i].text,
+                                                                            "email":
+                                                                                emailController[i].text,
+                                                                            "age":
+                                                                                ageController[i].text
+                                                                          };
+                                                                          await FirebaseTable()
+                                                                              .eventsTable
+                                                                              .doc(widget.id)
+                                                                              .update({
+                                                                            "participants":
+                                                                                FieldValue.arrayUnion([
+                                                                              userData
+                                                                            ])
+                                                                          });
+                                                                          userData={};
+                                                                        }
 
+                                                                        makePayment();
+                                                                      },
+                                                                      child: const Text(
+                                                                          "Pay")),
+                                                                ],
+                                                              ))),
+                                                        );
+                                                      });
+                                                    },
+                                                  );
+                                                }),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  });
+                                },
+                              );
                             },
                             child: Text(isBooked ? "Booked" : "Book a spot"),
                           ),
@@ -484,8 +752,6 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                 );
                               },
                               child: const Text("share")),
-
-
                         ],
                       ),
                     ),

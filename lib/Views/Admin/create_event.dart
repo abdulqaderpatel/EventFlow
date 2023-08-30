@@ -379,6 +379,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                               "end_time": eventEnd.toIso8601String(),
                               "location": locationController.text.toString(),
                               "participants": [],
+                              "emails":[],
                               "id": id,
                             });
                             Toast()
