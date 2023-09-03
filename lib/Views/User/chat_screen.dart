@@ -34,7 +34,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey,
-      appBar: AppBar(
+      appBar: AppBar(elevation: 0,
         automaticallyImplyLeading: false,
         title: Row(
           children: [
@@ -43,14 +43,14 @@ class _ChatScreenState extends State<ChatScreen> {
               child: const Icon(Icons.arrow_back),
             ),
             SizedBox(
-              width: 200,
+              width: 300,
               child: ListTile(
                 leading: CircleAvatar(
                   backgroundImage: NetworkImage(widget.oppUser["image"]),
                 ),
                 title: Text(
-                  widget.oppUser["name"],
-                  style: const TextStyle(color: Colors.white, fontSize: 20),
+                  widget.oppUser["name"],maxLines: 1,
+                  style: const TextStyle(overflow: TextOverflow.ellipsis,color: Colors.white, fontSize: 20),
                 ),
               ),
             ),
@@ -123,17 +123,30 @@ class _ChatScreenState extends State<ChatScreen> {
                                 mainAxisAlignment:
                                 MainAxisAlignment.end,
                                 children: [
-                                  InkWell(onTap:()=>Get.to(EventDetailsScreen(client["id"])),
+                                  InkWell(onTap:()=>Get.to(()=>EventDetailsScreen({
+                                    "admin_image":client["admin_image"],
+                                    "description":client["description"],
+                                    "emails":client["emails"],
+                                    "end_time":client["end_time"],
+                                    "event_creator":client["event_creator"],
+                                    "id":client["id"],
+                                    "image":client["image"],
+                                    "location":client["location"],
+                                    "max_participants":client["max_participants"],
+                                    "name":client["name"],
+                                    "participants":client["participants"],
+                                    "price":client["price"],
+                                    "start_time":client["start_time"],
+                                    "username":client["username"],
+                                  })),
                                     child: Container(
                                       margin: const EdgeInsets.only(
                                           bottom: 20),
                                       width: Get.width * 0.6,
                                       child: Column(
                                         children: [
-                                          Image(
-                                            image: NetworkImage(
-                                              client["image"],
-                                            ),
+                                          Container(height: Get.height*0.2,width: Get.width,decoration: BoxDecoration(image: DecorationImage(fit: BoxFit.cover,image: NetworkImage(client["image"]))),
+
                                           ),
                                           Container(
                                             padding:
@@ -237,7 +250,22 @@ class _ChatScreenState extends State<ChatScreen> {
                                 mainAxisAlignment:
                                 MainAxisAlignment.start,
                                 children: [
-                                  InkWell(onTap:()=> Get.to(EventDetailsScreen(client["id"])),
+                                  InkWell(onTap:()=> Get.to(()=>EventDetailsScreen({
+                                    "admin_image":client["admin_image"],
+                                    "description":client["description"],
+                                    "emails":client["emails"],
+                                    "end_time":client["end_time"],
+                                    "event_creator":client["event_creator"],
+                                    "id":client["id"],
+                                    "image":client["image"],
+                                    "location":client["location"],
+                                    "max_participants":client["max_participants"],
+                                    "name":client["name"],
+                                    "participants":client["participants"],
+                                    "price":client["price"],
+                                    "start_time":client["start_time"],
+                                    "username":client["username"],
+                                  })),
                                     child: Container(
                                       margin: const EdgeInsets.only(
                                           bottom: 20),

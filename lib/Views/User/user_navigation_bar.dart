@@ -22,7 +22,7 @@ class UserNavigationBar extends StatelessWidget {
   ];
 
   final UserNavigationController controller =
-      Get.put(UserNavigationController());
+  Get.put(UserNavigationController());
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class UserNavigationBar extends StatelessWidget {
       onWillPop: () async => false,
       child: Scaffold(
         bottomNavigationBar: Obx(
-          () =>  BottomNavigationBar(elevation: 0,backgroundColor:controller.index==3? Color(0xff141414):Color(0xff00141C),type: BottomNavigationBarType.fixed,selectedItemColor: Colors.blue,
+              () =>  BottomNavigationBar(elevation: 0,backgroundColor:controller.index==3? Color(0xff141414):Color(0xff00141C),type: BottomNavigationBarType.fixed,selectedItemColor: Colors.blue,
             unselectedItemColor: Colors.white,
             currentIndex: controller.index.value,
             onTap: (index) {
