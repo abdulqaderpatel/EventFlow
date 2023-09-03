@@ -30,49 +30,30 @@ class UserNavigationBar extends StatelessWidget {
       onWillPop: () async => false,
       child: Scaffold(
         bottomNavigationBar: Obx(
-          () => Container(color: const Color(0xff0A171F),
-
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 12),
-              child: GNav(selectedIndex: controller.index.value,iconSize: 20,
-                onTabChange: (value)
-                {
-                  controller.index.value=value;
-                },
-                backgroundColor:const Color(0xff0A171F),
-                gap: 2,
-                activeColor: Colors.white,
-
-
-
-                color: Colors.white,
-
-                padding: const EdgeInsets.all(5),
-
-                 tabs:const [ GButton(
-                   icon: Icons.home_filled,
-                 iconActiveColor: Color(0xffFB5188),
-
-
-                 ),
-                   GButton(
-                     active: true,
-                     icon: Icons.search,
-                   iconActiveColor: Color(0xffFB5188),
-
-                   ),
-                   GButton(
-                     icon:Icons.chat_bubble,
-                   iconActiveColor: Color(0xffFB5188),
-
-                   ),
-                   GButton(
-                     icon: Icons.person,
-                   iconActiveColor: Color(0xffFB5188),
-
-                   ),],
+          () =>  BottomNavigationBar(elevation: 0,backgroundColor:controller.index==3? Color(0xff141414):Color(0xff00141C),type: BottomNavigationBarType.fixed,selectedItemColor: Colors.blue,
+            unselectedItemColor: Colors.white,
+            currentIndex: controller.index.value,
+            onTap: (index) {
+              controller.index.value=index;
+            },
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
               ),
-            ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.search),
+                label: 'Search',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.chat),
+                label: 'Chat',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: 'Profile',
+              ),
+            ],
           ),
         ),
         body: Obx(() => userPages[controller.index.value]),

@@ -64,7 +64,7 @@ class _SelectChatScreenState extends State<SelectChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold(appBar: AppBar(automaticallyImplyLeading: false,backgroundColor: Color(0xff00141C),title: Center(child: Text("Message")),),
         body: isLoaded
             ? Container(
                 color: const Color(0xff0A171F),
@@ -73,6 +73,8 @@ class _SelectChatScreenState extends State<SelectChatScreen> {
                   child: Center(
                     child: Column(
                       children: [
+
+
                         Expanded(
                             child: ListView.builder(
                                 itemCount: items.length,

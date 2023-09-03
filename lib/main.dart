@@ -10,19 +10,19 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'firebase_options.dart';
 
 void main() async {
-  Paint.enableDithering=true;
+  Paint.enableDithering = true;
   WidgetsFlutterBinding.ensureInitialized();
-  Stripe.publishableKey="pk_test_51NjJbkSDqOoAu1YvgQpN7weD8MzoNFW7rCOPBMnAZaJlWnpXkW2EvauiTP8PYpnQC73YJbX9K3jnkMBqVKTHqdTE00frWxNHzF";
+  Stripe.publishableKey =
+      "pk_test_51NjJbkSDqOoAu1YvgQpN7weD8MzoNFW7rCOPBMnAZaJlWnpXkW2EvauiTP8PYpnQC73YJbX9K3jnkMBqVKTHqdTE00frWxNHzF";
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
-
 
   runApp(MyApp());
 }
@@ -87,12 +87,11 @@ class _MyAppState extends State<MyApp> {
     return GetMaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
-        theme: ThemeData(colorScheme: ColorScheme.fromSwatch().copyWith(
-          primary: const Color(0xff0F1A20),
-
-        ),
-
-
+        theme: ThemeData(
+          textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
+          colorScheme: ColorScheme.fromSwatch().copyWith(
+            primary: const Color(0xff0F1A20),
+          ),
         ),
         home: isLoaded
             ? user == null
