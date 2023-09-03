@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -120,7 +121,7 @@ class PaymentReciept extends StatelessWidget {
                                                           FontWeight.w800),
                                                 ),
                                                 Text(
-                                                  userData[0]["name"]
+                                                  FirebaseAuth.instance.currentUser!.displayName
                                                       .toString(),
                                                   style: const TextStyle(
                                                       fontSize: 18,
@@ -167,7 +168,7 @@ class PaymentReciept extends StatelessWidget {
                                                         FontWeight.w800),
                                               ),
                                               Text(
-                                                "${eventData[0]["price"] * bookedUserData.length}",
+                                                "${567 * bookedUserData.length}",
                                                 style: const TextStyle(
                                                     fontSize: 18,
                                                     fontWeight:

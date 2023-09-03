@@ -15,7 +15,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:http/http.dart' as http;
 
 class EventDetailsScreen extends StatefulWidget {
-  final Map<String,dynamic> data;
+  final Map<String, dynamic> data;
 
   const EventDetailsScreen(this.data, {super.key});
 
@@ -310,7 +310,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                 StreamBuilder<QuerySnapshot>(
                                     stream: FirebaseTable()
                                         .eventsTable
-                                        .where("id", isEqualTo: widget.data["id"])
+                                        .where("id",
+                                            isEqualTo: widget.data["id"])
                                         .snapshots(),
                                     builder: (context, snapshot) {
                                       List<CircularPercentIndicator>
@@ -350,7 +351,12 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                ElevatedButton(
+                                client["emails"].contains(FirebaseAuth.instance.currentUser!.email)?ElevatedButton(
+                                  onPressed: (){
+
+                                  },
+                                  child: Text("Booked"),
+                                ): ElevatedButton(
                                   onPressed: () async {
                                     showModalBottomSheet<void>(
                                       context: context,
@@ -370,15 +376,15 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                                     style: TextStyle(
                                                         fontSize: 24,
                                                         fontWeight:
-                                                            FontWeight.w600),
+                                                        FontWeight.w600),
                                                   ),
                                                   const SizedBox(
                                                     height: 40,
                                                   ),
                                                   Row(
                                                     mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
+                                                    MainAxisAlignment
+                                                        .center,
                                                     children: [
                                                       InkWell(
                                                           onTap: () {
@@ -399,8 +405,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                                         style: const TextStyle(
                                                             fontSize: 32,
                                                             fontWeight:
-                                                                FontWeight
-                                                                    .w500),
+                                                            FontWeight
+                                                                .w500),
                                                       ),
                                                       const SizedBox(
                                                         width: 10,
@@ -428,8 +434,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                                           'Enter Details'),
                                                       onPressed: () {
                                                         for (int i = 0;
-                                                            i < participants;
-                                                            i++) {
+                                                        i < participants;
+                                                        i++) {
                                                           nameController.add(
                                                               TextEditingController());
                                                           emailController.add(
@@ -441,22 +447,22 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                                         showModalBottomSheet<
                                                             void>(
                                                           isScrollControlled:
-                                                              true,
+                                                          true,
                                                           context: context,
                                                           builder: (BuildContext
-                                                              context) {
-                                                            return StatefulBuilder(
-                                                                builder: (BuildContext
-                                                                        context,
+                                                          context) {
+                                                            return SingleChildScrollView(
+                                                              child: Padding(
+                                                                padding: EdgeInsets.only(
+                                                                    bottom: MediaQuery.of(
+                                                                        context)
+                                                                        .viewInsets
+                                                                        .bottom),
+                                                                child: StatefulBuilder(builder:
+                                                                    (BuildContext
+                                                                context,
                                                                     modalState) {
-                                                              return ListView(
-                                                                children: [
-                                                                  SizedBox(
-                                                                      height:
-                                                                          100),
-                                                                  Container(
-                                                                    height: Get
-                                                                        .height,
+                                                                  return Container(
                                                                     color: const Color(
                                                                         0xff2C384C),
                                                                     child: Container(
@@ -465,113 +471,182 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                                                         height: Get.height,
                                                                         child: Center(
                                                                             child: Column(
-                                                                          children: [
-                                                                            const Text(
-                                                                              "Enter Participant Details",
-                                                                              style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w600),
-                                                                            ),
-                                                                            const SizedBox(
-                                                                              height: 20,
-                                                                            ),
-                                                                            Container(
-                                                                              height: Get.height * 0.75,
-                                                                              child: ListView.builder(
-                                                                                padding: const EdgeInsets.symmetric(horizontal: 15),
-                                                                                scrollDirection: Axis.vertical,
-                                                                                shrinkWrap: true,
-                                                                                itemCount: participants,
-                                                                                itemBuilder: (context, index) {
-                                                                                  nameController[0].text = userData[0]["name"];
-                                                                                  emailController[0].text = userData[0]["email"];
-                                                                                  return Padding(
-                                                                                    padding: const EdgeInsets.only(top: 15),
-                                                                                    child: Row(
-                                                                                      children: [
-                                                                                        Container(
-                                                                                          alignment: Alignment.center,
-                                                                                          decoration: BoxDecoration(
-                                                                                            color: const Color(0xFF2E384E),
-                                                                                            borderRadius: BorderRadius.circular(10),
-                                                                                          ),
-                                                                                          child: Column(
+                                                                              mainAxisSize:
+                                                                              MainAxisSize.min,
+                                                                              children: [
+                                                                                const Text(
+                                                                                  "Enter Participant Details",
+                                                                                  style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w600),
+                                                                                ),
+                                                                                const SizedBox(
+                                                                                  height: 20,
+                                                                                ),
+                                                                                Container(
+                                                                                  height: Get.height * 0.75,
+                                                                                  child: ListView.builder(
+                                                                                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                                                                                    shrinkWrap: true,
+                                                                                    itemCount: participants,
+                                                                                    itemBuilder: (context, index) {
+                                                                                      nameController[0].text = FirebaseAuth.instance.currentUser!.displayName!;
+                                                                                      emailController[0].text = FirebaseAuth.instance.currentUser!.email!;
+                                                                                      return index + 1 != participants
+                                                                                          ? Padding(
+                                                                                        padding: const EdgeInsets.only(top: 15),
+                                                                                        child: Row(
+                                                                                          children: [
+                                                                                            Expanded(
+                                                                                              child: Container(
+                                                                                                alignment: Alignment.center,
+                                                                                                decoration: BoxDecoration(
+                                                                                                  color: const Color(0xFF2E384E),
+                                                                                                  borderRadius: BorderRadius.circular(10),
+                                                                                                ),
+                                                                                                child: Column(
+                                                                                                  children: [
+                                                                                                    Text(
+                                                                                                      "Person ${index + 1}",
+                                                                                                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+                                                                                                    ),
+                                                                                                    TextField(
+                                                                                                      controller: nameController[index],
+                                                                                                      autofocus: false,
+                                                                                                      style: const TextStyle(color: Color(0xFFF8F8FF)),
+                                                                                                      decoration: const InputDecoration(
+                                                                                                        border: InputBorder.none,
+                                                                                                        hintText: "Enter name",
+                                                                                                        hintStyle: TextStyle(color: Color.fromARGB(255, 132, 140, 155)),
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                    const SizedBox(height: 10),
+                                                                                                    TextField(
+                                                                                                      controller: emailController[index],
+                                                                                                      autofocus: false,
+                                                                                                      style: const TextStyle(color: Color(0xFFF8F8FF)),
+                                                                                                      decoration: const InputDecoration(
+                                                                                                        border: InputBorder.none,
+                                                                                                        hintText: "Enter email",
+                                                                                                        hintStyle: TextStyle(color: Color.fromARGB(255, 132, 140, 155)),
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                    const SizedBox(height: 10),
+                                                                                                    TextField(
+                                                                                                      controller: ageController[index],
+                                                                                                      autofocus: false,
+                                                                                                      style: const TextStyle(color: Color(0xFFF8F8FF)),
+                                                                                                      decoration: const InputDecoration(
+                                                                                                        border: InputBorder.none,
+                                                                                                        hintText: "Enter age",
+                                                                                                        hintStyle: TextStyle(color: Color.fromARGB(255, 132, 140, 155)),
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                    const SizedBox(height: 10),
+                                                                                                  ],
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                            const SizedBox(
+                                                                                              width: 10,
+                                                                                            ),
+                                                                                          ],
+                                                                                        ),
+                                                                                      )
+                                                                                          : Container(
+                                                                                        margin: EdgeInsets.only(bottom: 300),
+                                                                                        child: Padding(
+                                                                                          padding: const EdgeInsets.only(top: 15),
+                                                                                          child: Row(
                                                                                             children: [
-                                                                                              Text(
-                                                                                                "Person ${index + 1}",
-                                                                                                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
-                                                                                              ),
-                                                                                              TextField(
-                                                                                                controller: nameController[index],
-                                                                                                autofocus: false,
-                                                                                                style: const TextStyle(color: Color(0xFFF8F8FF)),
-                                                                                                decoration: const InputDecoration(
-                                                                                                  border: InputBorder.none,
-                                                                                                  hintText: "Enter name",
-                                                                                                  hintStyle: TextStyle(color: Color.fromARGB(255, 132, 140, 155)),
+                                                                                              Expanded(
+                                                                                                child: Container(
+                                                                                                  alignment: Alignment.center,
+                                                                                                  decoration: BoxDecoration(
+                                                                                                    color: const Color(0xFF2E384E),
+                                                                                                    borderRadius: BorderRadius.circular(10),
+                                                                                                  ),
+                                                                                                  child: Column(
+                                                                                                    children: [
+                                                                                                      Text(
+                                                                                                        "Person ${index + 1}",
+                                                                                                        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+                                                                                                      ),
+                                                                                                      TextField(
+                                                                                                        controller: nameController[index],
+                                                                                                        autofocus: false,
+                                                                                                        style: const TextStyle(color: Color(0xFFF8F8FF)),
+                                                                                                        decoration: const InputDecoration(
+                                                                                                          border: InputBorder.none,
+                                                                                                          hintText: "Enter name",
+                                                                                                          hintStyle: TextStyle(color: Color.fromARGB(255, 132, 140, 155)),
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                      const SizedBox(height: 10),
+                                                                                                      TextField(
+                                                                                                        controller: emailController[index],
+                                                                                                        autofocus: false,
+                                                                                                        style: const TextStyle(color: Color(0xFFF8F8FF)),
+                                                                                                        decoration: const InputDecoration(
+                                                                                                          border: InputBorder.none,
+                                                                                                          hintText: "Enter email",
+                                                                                                          hintStyle: TextStyle(color: Color.fromARGB(255, 132, 140, 155)),
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                      const SizedBox(height: 10),
+                                                                                                      TextField(
+                                                                                                        controller: ageController[index],
+                                                                                                        autofocus: false,
+                                                                                                        style: const TextStyle(color: Color(0xFFF8F8FF)),
+                                                                                                        decoration: const InputDecoration(
+                                                                                                          border: InputBorder.none,
+                                                                                                          hintText: "Enter age",
+                                                                                                          hintStyle: TextStyle(color: Color.fromARGB(255, 132, 140, 155)),
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                      const SizedBox(height: 10),
+                                                                                                    ],
+                                                                                                  ),
                                                                                                 ),
                                                                                               ),
-                                                                                              const SizedBox(height: 10),
-                                                                                              TextField(
-                                                                                                controller: emailController[index],
-                                                                                                autofocus: false,
-                                                                                                style: const TextStyle(color: Color(0xFFF8F8FF)),
-                                                                                                decoration: const InputDecoration(
-                                                                                                  border: InputBorder.none,
-                                                                                                  hintText: "Enter email",
-                                                                                                  hintStyle: TextStyle(color: Color.fromARGB(255, 132, 140, 155)),
-                                                                                                ),
+                                                                                              const SizedBox(
+                                                                                                width: 10,
                                                                                               ),
-                                                                                              const SizedBox(height: 10),
-                                                                                              TextField(
-                                                                                                controller: ageController[index],
-                                                                                                autofocus: false,
-                                                                                                style: const TextStyle(color: Color(0xFFF8F8FF)),
-                                                                                                decoration: const InputDecoration(
-                                                                                                  border: InputBorder.none,
-                                                                                                  hintText: "Enter age",
-                                                                                                  hintStyle: TextStyle(color: Color.fromARGB(255, 132, 140, 155)),
-                                                                                                ),
-                                                                                              ),
-                                                                                              const SizedBox(height: 10),
                                                                                             ],
                                                                                           ),
                                                                                         ),
-                                                                                        const SizedBox(
-                                                                                          width: 10,
-                                                                                        ),
-                                                                                      ],
-                                                                                    ),
-                                                                                  );
-                                                                                },
-                                                                              ),
-                                                                            ),
-                                                                            const SizedBox(height: 15),
-                                                                            ElevatedButton(
-                                                                                onPressed: () async {
-                                                                                  for (int i = 0; i < participants; i++) {
-                                                                                    Map<String, dynamic> userData = {
-                                                                                      "no": "${i + 1}",
-                                                                                      "name": nameController[i].text,
-                                                                                      "email": emailController[i].text,
-                                                                                      "age": ageController[i].text
-                                                                                    };
-                                                                                    bookedUserData.add(userData);
-                                                                                    await FirebaseTable().eventsTable.doc(widget.data["id"]).update({
-                                                                                      "participants": FieldValue.arrayUnion([
-                                                                                        userData
-                                                                                      ])
-                                                                                    });
-                                                                                    userData = {};
-                                                                                  }
+                                                                                      );
+                                                                                    },
+                                                                                  ),
+                                                                                ),
+                                                                                const SizedBox(height: 15),
+                                                                                ElevatedButton(
+                                                                                    onPressed: () async {
+                                                                                      for (int i = 0; i < participants; i++) {
+                                                                                        Map<String, dynamic> userData = {
+                                                                                          "no": "${i + 1}",
+                                                                                          "name": nameController[i].text,
+                                                                                          "email": emailController[i].text,
+                                                                                          "age": ageController[i].text
+                                                                                        };
+                                                                                        bookedUserData.add(userData);
 
-                                                                                  makePayment();
-                                                                                },
-                                                                                child: const Text("Pay")),
-                                                                          ],
-                                                                        ))),
-                                                                  ),
-                                                                ],
-                                                              );
-                                                            });
+                                                                                        await FirebaseTable().eventsTable.doc(widget.data["id"]).update({
+                                                                                          "participants": FieldValue.arrayUnion([
+                                                                                            userData
+                                                                                          ])
+                                                                                        });
+                                                                                        userData = {};
+
+                                                                                      }
+
+                                                                                      makePayment();
+                                                                                    },
+                                                                                    child: const Text("Pay")),
+                                                                              ],
+                                                                            ))),
+                                                                  );
+                                                                }),
+                                                              ),
+                                                            );
                                                           },
                                                         );
                                                       }),
@@ -583,11 +658,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                       },
                                     );
                                   },
-                                  child: Text(client["emails"].contains(
-                                          FirebaseAuth
-                                              .instance.currentUser!.email)
-                                      ? "Booked"
-                                      : "Book"),
+                                  child: Text("Book a spot"),
                                 ),
                                 const SizedBox(
                                   height: 20,
@@ -647,18 +718,32 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                                                           .now()
                                                                       .millisecondsSinceEpoch
                                                                       .toString();
-                                                                  Map<String,dynamic> displayData={
-
-                                                                    "time":time,
-                                                                    "sender":FirebaseAuth.instance.currentUser!.email,
-                                                                    "reciever":client["email"],
-                                                                    "isText":false,
-
-
+                                                                  Map<String,
+                                                                          dynamic>
+                                                                      displayData =
+                                                                      {
+                                                                    "time":
+                                                                        time,
+                                                                    "sender": FirebaseAuth
+                                                                        .instance
+                                                                        .currentUser!
+                                                                        .email,
+                                                                    "reciever":
+                                                                        client[
+                                                                            "email"],
+                                                                    "isText":
+                                                                        false,
                                                                   };
-                                                                  Map<String,dynamic>completeData=  {};
-                                                                  completeData.addAll(widget.data);
-                                                                  completeData.addAll(displayData);
+                                                                  Map<String,
+                                                                          dynamic>
+                                                                      completeData =
+                                                                      {};
+                                                                  completeData
+                                                                      .addAll(widget
+                                                                          .data);
+                                                                  completeData
+                                                                      .addAll(
+                                                                          displayData);
                                                                   await FirebaseTable()
                                                                       .chatTable
                                                                       .doc(ids
@@ -668,8 +753,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                                                           "messages")
                                                                       .doc(time)
                                                                       .set(
-                                                                    completeData
-                                                                  );
+                                                                          completeData);
                                                                   Toast().successMessage(
                                                                       "Event shared successfully");
                                                                   Navigator.pop(
