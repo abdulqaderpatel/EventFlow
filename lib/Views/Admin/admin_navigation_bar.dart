@@ -12,7 +12,7 @@ class AdminNavigationBar extends StatelessWidget {
   AdminNavigationBar({super.key});
 
   final List<Widget> userPages = [
-    CreateEventScreen(),
+    const CreateEventScreen(),
     const AdminProfileScreen(),
   ];
 
@@ -29,20 +29,22 @@ class AdminNavigationBar extends StatelessWidget {
       },
       child: Scaffold(
         bottomNavigationBar: Obx(
-          () => BottomNavigationBar(
-            backgroundColor: Colors.blue,
-            fixedColor: Colors.white,
+              () =>  BottomNavigationBar(elevation: 0,backgroundColor:controller.index==1? const Color(0xff141414):const Color(0xff00141C),type: BottomNavigationBarType.fixed,selectedItemColor: Colors.blue,
+            unselectedItemColor: Colors.white,
             currentIndex: controller.index.value,
-            onTap: (value) => controller.index.value = value,
+            onTap: (index) {
+              controller.index.value=index;
+            },
             items: const [
               BottomNavigationBarItem(
                 icon: Icon(Icons.add),
-                label: "Add Events",
+                label: 'Add Events',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.person),
-                label: "Profile",
+                label: 'Profile',
               ),
+
             ],
           ),
         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class CreateEventTextField extends StatelessWidget {
   final String text;
@@ -6,6 +7,7 @@ class CreateEventTextField extends StatelessWidget {
   final double width;
   final String? labelText;
   final TextInputType textInputType;
+  final IconData? icon;
 
   const CreateEventTextField({
     super.key,
@@ -14,6 +16,7 @@ class CreateEventTextField extends StatelessWidget {
     required this.width,
     this.textInputType=TextInputType.text,
     this.labelText,
+    this.icon
   });
 
   @override
@@ -22,24 +25,30 @@ class CreateEventTextField extends StatelessWidget {
         ? SizedBox(
             height: 50,
             width: width,
-            child: TextFormField(keyboardType: textInputType,
+            child: TextFormField(style: TextStyle(color: Colors.white),keyboardType: textInputType,
               controller: controller,
               textAlignVertical: TextAlignVertical.center,
-              decoration: InputDecoration(
-                labelText: labelText,
+              decoration: InputDecoration(suffixIcon: Icon(icon),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                filled: true,
+                fillColor: const Color(0xff352D3C),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(
+                    width: 1, //<-- SEE HERE
+                    color: Colors.black,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 labelStyle: const TextStyle(color: Colors.white),
                 alignLabelWithHint: true,
-                enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        const BorderSide(color: Colors.blue,),
-                    borderRadius: BorderRadius.circular(8)),
                 contentPadding: const EdgeInsets.only(
                   top: 2,
                   left: 5,
                 ),
                 errorStyle: const TextStyle(fontSize: 0),
                 hintStyle: const TextStyle(
-                    color: Colors.blue, fontWeight: FontWeight.bold),
+                    color: Colors.grey, fontWeight: FontWeight.w400),
                 hintText: text,
               ),
             ),
@@ -53,16 +62,26 @@ class CreateEventTextField extends StatelessWidget {
               minLines: 5,
               controller: controller,
               decoration: InputDecoration(
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                filled: true,
+                fillColor: const Color(0xff352D3C),
                 enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(
-                      color: Colors.blue,
-                    ),
-                    borderRadius: BorderRadius.circular(8)),
-                contentPadding: const EdgeInsets.only(top: 2, left: 3),
+                  borderSide: const BorderSide(
+                    width: 1, //<-- SEE HERE
+                    color: Colors.black,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                labelStyle: const TextStyle(color: Colors.grey),
+                alignLabelWithHint: true,
+                contentPadding: const EdgeInsets.only(
+                  top: 2,
+                  left: 5,
+                ),
                 errorStyle: const TextStyle(fontSize: 0),
                 hintStyle: const TextStyle(
-                  color: Colors.blueAccent,
-                ),
+                    color: Colors.grey, fontWeight: FontWeight.w400),
                 hintText: text,
               ),
             ),
