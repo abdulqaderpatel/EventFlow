@@ -34,6 +34,8 @@ dependencies:
   share_plus:
   firebase_messaging:
   firebase_analytics:
+  flutter_local_notifications:
+  flutter_datetime_picker:
 
 dev_dependencies:
   flutter_test:

@@ -92,13 +92,21 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
     }
   }
 
+void initDetails()async{
+  DocumentSnapshot snap=await FirebaseTable().eventsTable.doc("1693758139569").get();
+  List<dynamic> token=snap["token"];
+  print(token);
 
+}
 
 
   @override
   void initState() {
-    // TODO: implement initState
-    requestPermission();
+  requestPermission();
+  initDetails();
+
+
+
   }
 
 
@@ -254,7 +262,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                                         width: Get.width * 0.05,
                                       ),
                                      ElevatedButton(onPressed: ()async{
-                                       DocumentSnapshot snap=await FirebaseTable().eventsTable.doc("1693459480359").get();
+                                       DocumentSnapshot snap=await FirebaseTable().eventsTable.doc("1693758139569").get();
                                        List<dynamic> token=snap["token"];
                                        print(token);
 

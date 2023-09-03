@@ -57,7 +57,7 @@ class _CreateAdminProfileScreenState extends State<CreateAdminProfileScreen> {
   void incrementCounter() async {
     List<Map<String, dynamic>> temp = [];
     var data = await FirebaseTable()
-        .usersTable
+        .adminsTable
         .where("email", isEqualTo: FirebaseAuth.instance.currentUser!.email)
         .get();
 

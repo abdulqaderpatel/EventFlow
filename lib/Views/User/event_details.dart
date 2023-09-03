@@ -1,15 +1,16 @@
 import 'dart:convert';
-import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
 import 'package:eventflow/Views/Misc/reciept/payment_reciept.dart';
 import 'package:eventflow/Views/Misc/toast/toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import "package:timezone/data/latest.dart" as tz;
+import "../Misc/notification_service.dart";
 
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
@@ -79,8 +80,6 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       );
 
       Toast().successMessage("Booked slot");
-      requestPermission();
-      getToken();
       Get.to(PaymentReciept(
         eventData: eventData,
         userData: userData,
@@ -111,53 +110,6 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   }
 
   //for notifications
-  String mToken="";
-
-  void requestPermission() async{
-    var firebaseMessage=FirebaseMessaging.instance;
-    NotificationSettings settings=await firebaseMessage.requestPermission(
-        alert: true,
-        announcement: true,
-        badge: true,
-        carPlay: true,
-        criticalAlert: true,
-        provisional: false,
-        sound: true
-    );
-    if(settings.authorizationStatus==AuthorizationStatus.authorized)
-    {
-      print("granted");
-    }
-    else if(settings.authorizationStatus==AuthorizationStatus.provisional)
-    {
-      print("provisional");
-    }
-    else{
-      print("revoked");
-    }
-  }
-
-  void getToken()async
-  {
-    await FirebaseMessaging.instance.getToken().then((value) {
-      setState(() {
-        mToken=value!;
-      });
-      saveToken(value!);
-    });
-  }
-
-  void saveToken(String token)async{
-    await FirebaseTable().eventsTable.doc(widget.data["id"]).update({"token":FieldValue.arrayUnion([token])});
-
-  }
-
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    print(widget.data);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -710,7 +662,18 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                   height: 20,
                                 ),
                                 ElevatedButton(
-                                    onPressed: () {
+                                    onPressed: () async{
+                                     DateTime date=DateTime.parse(widget.data["start_time"]);
+                                     print(date);
+                                     var time=Timestamp.fromDate(date);
+                                     int number=time.millisecondsSinceEpoch;
+                                     print(number);
+                                     print(DateTime.now().millisecondsSinceEpoch);
+                                     print(time);
+
+                                     print(number-DateTime.now().millisecondsSinceEpoch-1800000);
+
+                                      NotificationService().showNotification(1, "Event starting soon", "we hope to see you there!",10000);
                                       showModalBottomSheet<void>(
                                         context: context,
                                         builder: (BuildContext context) {

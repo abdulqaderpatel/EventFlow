@@ -2,16 +2,18 @@ import 'package:eventflow/Views/Admin/Profile/create_admin_profile.dart';
 import 'package:eventflow/Views/Admin/admin_navigation_bar.dart';
 import 'package:eventflow/Views/Authentication/admin_or_user.dart';
 import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
+import 'package:eventflow/Views/Misc/notification_service.dart';
 import 'package:eventflow/Views/Misc/splash_screen.dart';
 import 'package:eventflow/Views/User/Profile/create_user_profile.dart';
 import 'package:eventflow/Views/User/user_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import "package:timezone/data/latest.dart" as tz;
 import 'firebase_options.dart';
 
 void main() async {
@@ -19,7 +21,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Stripe.publishableKey =
       "pk_test_51NjJbkSDqOoAu1YvgQpN7weD8MzoNFW7rCOPBMnAZaJlWnpXkW2EvauiTP8PYpnQC73YJbX9K3jnkMBqVKTHqdTE00frWxNHzF";
-
+NotificationService().initNotification();
+  tz.initializeTimeZones();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
