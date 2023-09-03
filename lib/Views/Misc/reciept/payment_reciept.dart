@@ -167,7 +167,7 @@ class PaymentReciept extends StatelessWidget {
                                                         FontWeight.w800),
                                               ),
                                               Text(
-                                                "${eventData[0]["price"]*bookedUserData.length}",
+                                                "${eventData[0]["price"] * bookedUserData.length}",
                                                 style: const TextStyle(
                                                     fontSize: 18,
                                                     fontWeight:
@@ -200,9 +200,10 @@ class PaymentReciept extends StatelessWidget {
                                         ],
                                       ),
                                       SizedBox(
-                                        height: 30,
+                                        height: 10,
                                       ),
                                       DataTable(
+                                        horizontalMargin: 3,
                                         columns: const [
                                           DataColumn(
                                               label: Text('NO',
@@ -239,9 +240,6 @@ class PaymentReciept extends StatelessWidget {
                                             ]);
                                           })
                                         ],
-                                      ),
-                                      const SizedBox(
-                                        height: 130,
                                       ),
                                       const Text(
                                           "Please carry along this reciept when attending the event",
