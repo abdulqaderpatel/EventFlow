@@ -5,6 +5,7 @@ import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
 import 'package:eventflow/Views/Misc/reciept/payment_reciept.dart';
 import 'package:eventflow/Views/Misc/toast/toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
@@ -78,6 +79,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       );
 
       Toast().successMessage("Booked slot");
+      requestPermission();
+      getToken();
       Get.to(PaymentReciept(
         eventData: eventData,
         userData: userData,
@@ -106,6 +109,49 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       Toast().errorMessage("Sorry something went wrong");
     }
   }
+
+  //for notifications
+  String mToken="";
+
+  void requestPermission() async{
+    var firebaseMessage=FirebaseMessaging.instance;
+    NotificationSettings settings=await firebaseMessage.requestPermission(
+        alert: true,
+        announcement: true,
+        badge: true,
+        carPlay: true,
+        criticalAlert: true,
+        provisional: false,
+        sound: true
+    );
+    if(settings.authorizationStatus==AuthorizationStatus.authorized)
+    {
+      print("granted");
+    }
+    else if(settings.authorizationStatus==AuthorizationStatus.provisional)
+    {
+      print("provisional");
+    }
+    else{
+      print("revoked");
+    }
+  }
+
+  void getToken()async
+  {
+    await FirebaseMessaging.instance.getToken().then((value) {
+      setState(() {
+        mToken=value!;
+      });
+      saveToken(value!);
+    });
+  }
+
+  void saveToken(String token)async{
+    await FirebaseTable().eventsTable.doc(widget.data["id"]).update({"token":FieldValue.arrayUnion([token])});
+
+  }
+
 
   @override
   void initState() {
