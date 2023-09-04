@@ -40,7 +40,9 @@ class UserDetailField extends StatelessWidget {
             children: [
               AutoSizeText(
                 placeholder,
+                maxLines: 1,
                 style: const TextStyle(
+                    overflow: TextOverflow.ellipsis,
                     color: Colors.grey,
                     fontSize: 17,
                     fontWeight: FontWeight.w500),
@@ -56,13 +58,13 @@ class UserDetailField extends StatelessWidget {
             children: [
               InkWell(
                 onTap: voidCallback,
-                child: AutoSizeText(
+                child: Text(
                   details,
                   maxLines: 1,
-                  minFontSize: 13,
                   style: const TextStyle(
+                      overflow: TextOverflow.ellipsis,
                       color: Colors.white,
-                      fontSize: 14,
+                      fontSize: 13,
                       fontWeight: FontWeight.w600),
                 ),
               )

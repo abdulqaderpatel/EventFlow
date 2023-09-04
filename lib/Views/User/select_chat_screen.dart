@@ -36,8 +36,6 @@ class _SelectChatScreenState extends State<SelectChatScreen> {
 
     items = temp;
 
-
-
     temp = [];
 
     var userData = await FirebaseTable()
@@ -65,106 +63,111 @@ class _SelectChatScreenState extends State<SelectChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(automaticallyImplyLeading: false,backgroundColor: Color(0xff00141C),title: Center(child: Text("Message")),),
-        body: Container(
-                color: const Color(0xff0A171F),
-                child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
-                  child: Center(
-                    child: Column(
-                      children: [
-                        SizedBox(height: Get.height*0.8,
-                          child: ListView(
-                            children: [
-                              StreamBuilder<QuerySnapshot>(
-
-                                  stream: FirebaseTable()
-                                      .usersTable
-                                      .where("email",isNotEqualTo: FirebaseAuth.instance.currentUser!.email)
-                                      .snapshots(),
-                                  builder: (context, snapshot) {
-                                    List<Container> clientWidgets = [];
-                                    if (snapshot.hasData) {
-                                      final clients = snapshot.data?.docs;
-                                      for (var client in clients!) {
-                                        final clientWidget=((client["follower"])
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Color(0xff00141C),
+        title: Center(child: Text("Message")),
+      ),
+      body: Container(
+        color: const Color(0xff0A171F),
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
+          child: Center(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: Get.height * 0.78,
+                  child: ListView(
+                    children: [
+                      StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseTable()
+                              .usersTable
+                              .where("email",
+                                  isNotEqualTo:
+                                      FirebaseAuth.instance.currentUser!.email)
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            List<Container> clientWidgets = [];
+                            if (snapshot.hasData) {
+                              final clients = snapshot.data?.docs;
+                              for (var client in clients!) {
+                                final clientWidget = ((client["follower"])
                                             .contains(FirebaseAuth
-                                            .instance
-                                            .currentUser!
-                                            .email
-                                            .toString()) &&
-                                            (client["following"])
-                                                .contains(FirebaseAuth
-                                                .instance
-                                                .currentUser!
-                                                .email))?Container(
-                                          child: InkWell(
-                                                    onTap: (){
+                                                .instance.currentUser!.email
+                                                .toString()) &&
+                                        (client["following"]).contains(
+                                            FirebaseAuth
+                                                .instance.currentUser!.email))
+                                    ? Container(
+                                        child: InkWell(
+                                          onTap: () {
+                                            List<String> ids = [
+                                              FirebaseAuth
+                                                  .instance.currentUser!.uid,
+                                              client["id"]
+                                            ];
+                                            ids.sort();
 
-                                                      List<String> ids = [
-                                                        FirebaseAuth.instance.currentUser!.uid,
-                                                        client["id"]
-                                                      ];
-                                                      ids.sort();
-
-
-                                                      Navigator.push(context,
-                                                          MaterialPageRoute(builder: (context) {
-                                                            return ChatScreen(
-                                                                ids.join("_"), {"email":client["email"],
-                                                              "phone_number":client["phone_number"],
-                                                              "name":client["name"],
-                                                              "id":client["id"],
-                                                              "follower":client["follower"],
-                                                              "following":client["following"],
-                                                              "image":client["image"]
-                                                            });
-                                                          }));
-                                                    },
-                                            child: Card(
-                                                margin: const EdgeInsets.only(
-                                                    bottom: 20),
-                                                color: const Color(0xff0A171F),
-                                                child: ListTile(
-                                                  leading: CircleAvatar(
-                                                    backgroundImage: NetworkImage(
-                                                        client["image"]),
-                                                  ),
-                                                  title: Text(
-                                                    client["username"],
-                                                    style: const TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                        FontWeight.w600),
-                                                  ),
-                                                  subtitle: Text(
-                                                    client["name"],
-                                                    style: const TextStyle(
-                                                        color: Colors.grey,
-                                                        fontWeight:
-                                                        FontWeight.w500),
-                                                  ),
-                                                )),
-                                          ),
-                                        ):Container();
-                                        clientWidgets.add(clientWidget);
-                                      }
-                                    }
-                                    return Column(
-                                      children: clientWidgets,
-                                    );
-                                  }),
-                            ],
-                          ),
-                        ),
-
-
-                      ],
-                    ),
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                              return ChatScreen(ids.join("_"), {
+                                                "email": client["email"],
+                                                "phone_number":
+                                                    client["phone_number"],
+                                                "name": client["name"],
+                                                "id": client["id"],
+                                                "follower": client["follower"],
+                                                "following":
+                                                    client["following"],
+                                                "image": client["image"]
+                                              });
+                                            }));
+                                          },
+                                          child: Card(
+                                              margin: const EdgeInsets.only(
+                                                  bottom: 20),
+                                              color: const Color(0xff0A171F),
+                                              child: ListTile(
+                                                leading: CircleAvatar(
+                                                  backgroundImage: NetworkImage(
+                                                      client["image"]),
+                                                ),
+                                                title: Text(
+                                                  client["username"],
+                                                  style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                                subtitle: Text(
+                                                  client["name"],
+                                                  style: const TextStyle(
+                                                      color: Colors.grey,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                              )),
+                                        ),
+                                      )
+                                    : Container();
+                                clientWidgets.add(clientWidget);
+                              }
+                            }
+                            return Column(
+                              children: clientWidgets,
+                            );
+                          }),
+                    ],
                   ),
                 ),
-              ),
-           );
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

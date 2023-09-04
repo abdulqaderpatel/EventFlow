@@ -489,8 +489,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 "image": "",
                                 "phone_number": 0,
                                 "id": FirebaseAuth.instance.currentUser!.uid,
-                                "follower":[],
-                                "following":[]
+                                "follower": [],
+                                "following": []
                               }).then((value) {
                                 setState(() {
                                   googleLoader = false;
