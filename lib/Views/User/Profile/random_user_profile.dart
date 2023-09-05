@@ -155,7 +155,7 @@ class _RandomUserProfileScreenState extends State<RandomUserProfileScreen> {
                                   ),
                                   client["follower"]
                                       .contains(
-                                      FirebaseAuth.instance.currentUser!.email)
+                                      FirebaseAuth.instance.currentUser!.uid)
                                       ? ElevatedButton(
                                       onPressed: () {
                                         FirebaseTable().usersTable.doc(
@@ -164,25 +164,57 @@ class _RandomUserProfileScreenState extends State<RandomUserProfileScreen> {
                                             {
                                               "following": FieldValue
                                                   .arrayRemove(
-                                                  [client["email"]])
+                                                  [client["id"]])
                                             });
                                         FirebaseTable()
                                             .usersTable.doc(
                                             client["id"]).update({"follower":FieldValue.arrayRemove([FirebaseAuth.instance.currentUser!
-                                            .email])});
+                                            .uid])});
+
+                                        FirebaseTable().usersTable.doc(client["id"]).update({"notification":FieldValue.arrayRemove([FirebaseAuth.instance.currentUser!.email])});
+                                        FirebaseTable().usersTable.doc(client["id"]).collection("notifications").doc(FirebaseAuth.instance.currentUser!.uid).delete();
                                       },
                                       child: const Text("Unfollow"))
                                       :
                                   ElevatedButton(
-                                      onPressed: () {
+                                      onPressed: () async {
                                         FirebaseTable()
                                             .usersTable.doc(
                                             FirebaseAuth.instance.currentUser!
-                                                .uid).update({"following":FieldValue.arrayUnion([client["email"]])});
+                                                .uid).update({"following":FieldValue.arrayUnion([client["id"]])});
                                         FirebaseTable()
                                             .usersTable.doc(
                                             client["id"]).update({"follower":FieldValue.arrayUnion([FirebaseAuth.instance.currentUser!
-                                            .email])});
+                                            .uid])});
+                                        FirebaseTable().usersTable.doc(client["id"]).update({"notification":FieldValue.arrayUnion([FirebaseAuth.instance.currentUser!.email])});
+
+                                        List<Map<String, dynamic>> items = [];
+
+
+
+                                          List<Map<String, dynamic>> temp = [];
+                                          var data = await FirebaseTable()
+                                              .usersTable
+                                              .where("email", isEqualTo: FirebaseAuth.instance.currentUser!.email)
+                                              .get();
+
+                                          for (var element in data.docs) {
+                                            setState(() {
+                                              temp.add(element.data());
+                                            });
+                                          }
+                                          setState(() {
+                                            items = temp;
+                                          });
+
+
+
+
+
+                                        FirebaseTable().usersTable.doc(client["id"]).collection("notifications").doc(FirebaseAuth.instance.currentUser!.uid).set(
+                                         items[0]
+
+                                        );
 
                                       },
                                       child: const Text("follow")),

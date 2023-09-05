@@ -36,6 +36,7 @@ dependencies:
   firebase_analytics:
   flutter_local_notifications:
   flutter_datetime_picker:
+  badges:
 
 dev_dependencies:
   flutter_test:

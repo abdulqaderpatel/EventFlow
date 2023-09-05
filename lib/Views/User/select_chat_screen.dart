@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventflow/Views/User/chat_screen.dart';
+import 'package:eventflow/Views/User/notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:badges/badges.dart' as badge;
 
 import '../Misc/Firebase/firebase_tables.dart';
 
@@ -65,9 +67,42 @@ class _SelectChatScreenState extends State<SelectChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+
         backgroundColor: Color(0xff00141C),
-        title: Center(child: Text("Message")),
+        title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [Container(),
+            Center(child: Text("Message")),
+            InkWell(onTap: (){
+              FirebaseTable().usersTable.doc(FirebaseAuth.instance.currentUser!.uid).update({"notification":[]});
+              Navigator.push(context, MaterialPageRoute(builder: (context){
+                return NotificationsScreen();
+              }));
+            },child:Container(
+              child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseTable()
+                      .usersTable
+                      .where("email",
+                      isEqualTo:
+                      FirebaseAuth.instance.currentUser!.email)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    List<badge.Badge> clientWidgets = [];
+                    if (snapshot.hasData) {
+                      final clients = snapshot.data?.docs;
+                      for (var client in clients!) {
+                        final clientWidget =client["notification"].length==0?badge.Badge(child: (Icon(Icons.menu)),):badge.Badge(badgeContent: Text(client["notification"].length.toString()),child: Icon(Icons.menu),);
+
+
+                        clientWidgets.add(clientWidget);
+                      }
+                    }
+                    return Column(
+                      children: clientWidgets,
+                    );
+                  }),
+            ))
+          ],
+        ),
       ),
       body: Container(
         color: const Color(0xff0A171F),
@@ -94,11 +129,11 @@ class _SelectChatScreenState extends State<SelectChatScreen> {
                               for (var client in clients!) {
                                 final clientWidget = ((client["follower"])
                                             .contains(FirebaseAuth
-                                                .instance.currentUser!.email
+                                                .instance.currentUser!.uid
                                                 .toString()) &&
                                         (client["following"]).contains(
                                             FirebaseAuth
-                                                .instance.currentUser!.email))
+                                                .instance.currentUser!.uid))
                                     ? Container(
                                         child: InkWell(
                                           onTap: () {

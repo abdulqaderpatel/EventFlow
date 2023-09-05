@@ -358,7 +358,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                   "phone_number": 0,
                                   "id":FirebaseAuth.instance.currentUser!.uid,
                                   "follower":[],
-                                  "following":[]
+                                  "following":[],
+                                  "notification":[]
                                 });
                               }
                               Toast().successMessage(
