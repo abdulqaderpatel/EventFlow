@@ -17,8 +17,10 @@ class DisplayEventsScreen extends StatefulWidget {
 }
 
 class _DisplayEventsScreenState extends State<DisplayEventsScreen> {
-  @override
-  void initState() {}
+
+  List<String> categoryTypes=["Trekking","Concert","Marathon","Educational","Party","Misc"];
+  List<String> categoryImages=["assets/images/mountain.jpeg","assets/images/timepass3.jpg","assets/images/marathon.jpeg","assets/images/educational.jpeg","assets/images/celebration.jpeg","assets/images/others.jpeg"];
+
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,7 @@ class _DisplayEventsScreenState extends State<DisplayEventsScreen> {
               Container(
                 padding: EdgeInsets.symmetric(vertical: 10),
                 height: 120,
-                child: ListView.builder(
+                child: ListView.builder(itemCount: 6,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
                       return Column(
@@ -50,13 +52,13 @@ class _DisplayEventsScreenState extends State<DisplayEventsScreen> {
                               children: [
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(20),
-                                  child: Image(
+                                  child: Image(opacity: AlwaysStoppedAnimation(0.9),
                                     image: AssetImage(
-                                        "assets/images/mountain.jpeg"),
-                                    fit: BoxFit.cover,
+                                        categoryImages[index]),
+                                    fit: BoxFit.contain,
                                   ),
                                 ),
-                                Center(child: Text("Mountain"))
+                                Center(child: Text(categoryTypes[index],style: TextStyle(color: Colors.white54),))
                               ],
                             ),
                           ),
@@ -68,7 +70,7 @@ class _DisplayEventsScreenState extends State<DisplayEventsScreen> {
                 height: Get.height * 0.02,
               ),
               Container(
-                height: Get.height * 0.78,
+                height: Get.height * 0.75,padding: EdgeInsets.symmetric(vertical: 10),
                 child: ListView(
                   children: [
                     StreamBuilder<QuerySnapshot>(
@@ -108,7 +110,7 @@ class _DisplayEventsScreenState extends State<DisplayEventsScreen> {
                                   children: [
                                     Container(
                                       decoration: BoxDecoration(
-                                        color: Colors.grey,
+                                        color: Color(0xffFF4655),
                                         borderRadius: BorderRadius.circular(
                                           20,
                                         ),
