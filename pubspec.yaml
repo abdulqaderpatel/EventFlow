@@ -37,6 +37,7 @@ dependencies:
   flutter_local_notifications:
   flutter_datetime_picker:
   badges:
+  status_bar_control:
 
 dev_dependencies:
   flutter_test:

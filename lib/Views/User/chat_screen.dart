@@ -204,7 +204,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                                     color: Colors
                                                                         .white,
                                                                     fontSize:
-                                                                        15,
+                                                                        18,
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .w500),
