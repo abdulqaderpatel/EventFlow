@@ -18,9 +18,9 @@ class DisplayEventsScreen extends StatefulWidget {
 
 class _DisplayEventsScreenState extends State<DisplayEventsScreen> {
 
-  List<String> categoryTypes=["Trekking","Concert","Marathon","Educational","Party","Misc"];
+  List<String> categoryTypes=["Trekking","Concert","Marathon","Educational","Celebration","Misc"];
   List<String> categoryImages=["assets/images/mountain.jpeg","assets/images/timepass3.jpg","assets/images/marathon.jpeg","assets/images/educational.jpeg","assets/images/celebration.jpeg","assets/images/others.jpeg"];
-
+int selectedEventNo=0;
 
   @override
   Widget build(BuildContext context) {
@@ -39,30 +39,36 @@ class _DisplayEventsScreenState extends State<DisplayEventsScreen> {
                 child: ListView.builder(itemCount: 6,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(right: 20),
-                            height: 100,
-                            width: 150,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Colors.red),
-                            child: Stack(
-                              children: [
-                                ClipRRect(
+                      return InkWell(onTap: (){
+                        setState(() {
+                          selectedEventNo=index;
+                        });
+                      },
+                        child: Column(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(right: 20),
+                              height: 100,
+                              width: 150,
+                              decoration: BoxDecoration(border: selectedEventNo==index?Border.all(width: 2,color: Colors.grey):null,
                                   borderRadius: BorderRadius.circular(20),
-                                  child: Image(opacity: AlwaysStoppedAnimation(0.9),
-                                    image: AssetImage(
-                                        categoryImages[index]),
-                                    fit: BoxFit.contain,
+                                  color: Colors.red),
+                              child: Stack(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: Image(opacity: AlwaysStoppedAnimation(0.9),
+                                      image: AssetImage(
+                                          categoryImages[index]),
+                                      fit: BoxFit.contain,
+                                    ),
                                   ),
-                                ),
-                                Center(child: Text(categoryTypes[index],style: TextStyle(color: Colors.white54),))
-                              ],
+                                  Center(child: Text(categoryTypes[index],style: TextStyle(color: Colors.white54),))
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       );
                     }),
               ),
@@ -74,7 +80,7 @@ class _DisplayEventsScreenState extends State<DisplayEventsScreen> {
                 child: ListView(
                   children: [
                     StreamBuilder<QuerySnapshot>(
-                        stream: FirebaseTable().eventsTable.snapshots(),
+                        stream: FirebaseTable().eventsTable.where("type",isEqualTo:categoryTypes[selectedEventNo]).snapshots(),
                         builder: (context, snapshot) {
                           List<InkWell> clientWidgets = [];
                           if (snapshot.hasData) {
@@ -236,7 +242,7 @@ class _DisplayEventsScreenState extends State<DisplayEventsScreen> {
                                                             style: const TextStyle(
                                                                 color: Colors
                                                                     .white,
-                                                                fontSize: 18,
+                                                                fontSize: 17,
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w500),
@@ -251,7 +257,7 @@ class _DisplayEventsScreenState extends State<DisplayEventsScreen> {
                                                             style: const TextStyle(
                                                                 color: Colors
                                                                     .white,
-                                                                fontSize: 18,
+                                                                fontSize: 17,
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w500),
@@ -263,7 +269,7 @@ class _DisplayEventsScreenState extends State<DisplayEventsScreen> {
                                                 ),
                                                 Container(
                                                   padding:
-                                                      const EdgeInsets.all(8),
+                                                      const EdgeInsets.all(4),
                                                   decoration: BoxDecoration(
                                                       borderRadius:
                                                           BorderRadius.circular(

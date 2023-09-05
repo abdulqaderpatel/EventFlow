@@ -715,13 +715,13 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                                                   .contains(FirebaseAuth
                                                                       .instance
                                                                       .currentUser!
-                                                                      .email
+                                                                      .uid
                                                                       .toString()) &&
                                                               (client["following"])
                                                                   .contains(FirebaseAuth
                                                                       .instance
                                                                       .currentUser!
-                                                                      .email))
+                                                                      .uid))
                                                           ? Container(
                                                               child: InkWell(
                                                                 onTap:
