@@ -38,6 +38,7 @@ dependencies:
   flutter_datetime_picker:
   badges:
   status_bar_control:
+  scroll_to_index:
 
 dev_dependencies:
   flutter_test:
