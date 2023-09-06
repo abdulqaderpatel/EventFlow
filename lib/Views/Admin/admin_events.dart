@@ -10,6 +10,8 @@ import 'package:get/get.dart';
 
 import 'package:intl/intl.dart';
 
+import 'admin_event_details.dart';
+
 class AdminEventsScreen extends StatefulWidget {
   const AdminEventsScreen({super.key});
 
@@ -98,7 +100,7 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
                 child: ListView(
                   children: [
                     StreamBuilder<QuerySnapshot>(
-                        stream: FirebaseTable().eventsTable.snapshots(),
+                        stream: FirebaseTable().eventsTable.where("event_creator",isEqualTo:FirebaseAuth.instance.currentUser!.displayName).snapshots(),
                         builder: (context, snapshot) {
                           List<InkWell> clientWidgets = [];
                           if (snapshot.hasData) {
@@ -113,7 +115,7 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) {
-                                                return EventDetailsScreen({
+                                                return AdminEventDetailsScreen({
                                                   "admin_image":
                                                       client["admin_image"],
                                                   "description":
@@ -145,7 +147,14 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
                                             children: [
                                               Container(
                                                 decoration: BoxDecoration(
-                                                  color: Color(0xffFF4655),
+                                                  gradient: LinearGradient(
+                                                    colors: [
+                                                      Colors.black,
+                                                      Color(0xff4D4855)
+                                                    ],
+                                                    begin: Alignment.bottomLeft,
+                                                    end: Alignment.topRight,
+                                                  ),
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                     20,
@@ -359,7 +368,7 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) {
-                                                return EventDetailsScreen({
+                                                return AdminEventDetailsScreen({
                                                   "admin_image":
                                                       client["admin_image"],
                                                   "description":
@@ -392,7 +401,10 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
                                               Container(
                                                 decoration: BoxDecoration(
                                                   gradient: LinearGradient(
-                                                    colors: [Colors.black, Color(0xff4D4855)],
+                                                    colors: [
+                                                      Colors.black,
+                                                      Color(0xff4D4855)
+                                                    ],
                                                     begin: Alignment.bottomLeft,
                                                     end: Alignment.topRight,
                                                   ),
@@ -602,7 +614,7 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
                                       : InkWell(
                                           child: Container(),
                                         ));
-                              ;
+
                               clientWidgets.add(clientWidget);
                             }
                           }
