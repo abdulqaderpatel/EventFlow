@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:eventflow/Views/User/display_events.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -42,7 +43,7 @@ class PaymentReciept extends StatelessWidget {
       body: SingleChildScrollView(
         child: Container(
           height: Get.height,
-          color: Color(0xff1C2124),
+          color: const Color(0xff1C2124),
           child: Container(
             padding: const EdgeInsets.all(10),
             child: Center(
@@ -189,31 +190,31 @@ class PaymentReciept extends StatelessWidget {
                         )
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     DataTable(
                       horizontalMargin: 0,
                       columns: [
-                        DataColumn(
+                        const DataColumn(
                             label: Text('NO',
                                 style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white))),
-                        DataColumn(
+                        const DataColumn(
                             label: Text('Name',
                                 style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white))),
-                        DataColumn(
+                        const DataColumn(
                             label: Text('Email',
                                 style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white))),
-                        DataColumn(
+                        const DataColumn(
                             label: Text('Age',
                                 style: TextStyle(
                                     fontSize: 15,
@@ -224,14 +225,14 @@ class PaymentReciept extends StatelessWidget {
                         ...bookedUserData.map((e) {
                           return DataRow(cells: [
                             DataCell(Text(e["no"],
-                                style: TextStyle(color: Colors.white))),
+                                style: const TextStyle(color: Colors.white))),
                             DataCell(Text(e["name"],
-                                style: TextStyle(color: Colors.white))),
+                                style: const TextStyle(color: Colors.white))),
                             DataCell(Text(e["email"],
-                                style: TextStyle(color: Colors.white))),
+                                style: const TextStyle(color: Colors.white))),
                             DataCell(
                               Text(e["age"],
-                                  style: TextStyle(color: Colors.white)),
+                                  style: const TextStyle(color: Colors.white)),
                             ),
                           ]);
                         })
@@ -245,6 +246,9 @@ class PaymentReciept extends StatelessWidget {
                 ),
                 ElevatedButton(
                     onPressed: () {
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
+                        return const DisplayEventsScreen();
+                      }));
                       _shareScreenshot(
                           context: context,
                           shareWidget: MediaQuery(
@@ -398,7 +402,7 @@ class PaymentReciept extends StatelessWidget {
                                               )
                                             ],
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             height: 10,
                                           ),
                                           DataTable(

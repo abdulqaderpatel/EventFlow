@@ -1,65 +1,101 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eventflow/Views/User/chat_screen.dart';
+import 'package:eventflow/Views/User/notifications.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:badges/badges.dart' as badge;
 
-class UserFollowingPageScreen extends StatelessWidget {
-  final List<Map<String, dynamic>> followingData;
+import '../../Misc/Firebase/firebase_tables.dart';
 
-  const UserFollowingPageScreen(this.followingData, {super.key});
+
+
+class UserFollowingScreen extends StatefulWidget {
+  const UserFollowingScreen({super.key});
+
+  @override
+  State<UserFollowingScreen> createState() => _UserFollowingScreenState();
+}
+
+class _UserFollowingScreenState extends State<UserFollowingScreen> {
+
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        color:  const Color(0xff0A171F),
-        child: Container(
-          margin:
-              EdgeInsets.only(left: Get.width * 0.025, right: Get.width * 0.025),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              const Text(
-                "Following",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Expanded(
-                  child: ListView.builder(
-                      itemCount: followingData.length,
-                      itemBuilder: (context, index) {
-                        return Card(
+    return AnnotatedRegion<SystemUiOverlayStyle>(value: const SystemUiOverlayStyle(statusBarColor: Color(0xff00141C)),
+      child: Scaffold(
+        appBar: AppBar(
 
-                            margin: const EdgeInsets.only(bottom: 20),
-                            color:  const Color(0xff0A171F),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                ),
-                            elevation: 5,
-                            child: ListTile(
-                              leading: CircleAvatar(
-                                backgroundImage:
-                                    NetworkImage(followingData[index]["image"]),
-                              ),
-                              title: Text(
-                                followingData[index]["username"],
-                                style: const TextStyle(color:Colors.white,
-                                    fontSize: 20, fontWeight: FontWeight.w600),
-                              ),
-                              subtitle: Text(
-                                followingData[index]["name"],
-                                style: const TextStyle(
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ));
-                      }))
-            ],
+          backgroundColor: const Color(0xff00141C),
+          title: Text("Following"),
+        ),
+        body: Container(
+          color: const Color(0xff0A171F),
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
+            child: Center(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: Get.height * 0.78,
+                    child: ListView(
+                      children: [
+                        StreamBuilder<QuerySnapshot>(
+                            stream: FirebaseTable()
+                                .usersTable
+                                .where("id",
+                                isNotEqualTo:
+                                FirebaseAuth.instance.currentUser!.uid)
+                                .snapshots(),
+                            builder: (context, snapshot) {
+                              List<Container> clientWidgets = [];
+                              if (snapshot.hasData) {
+                                final clients = snapshot.data?.docs;
+                                for (var client in clients!) {
+                                  final clientWidget = client["follower"].contains(FirebaseAuth.instance.currentUser!.uid)
+
+                                      ? Container(
+                                    child: Card(
+                                        margin: const EdgeInsets.only(
+                                            bottom: 20),
+                                        color: const Color(0xff0A171F),
+                                        child: ListTile(
+                                          leading: CircleAvatar(
+                                            backgroundImage: NetworkImage(
+                                                client["image"]),
+                                          ),
+                                          title: Text(
+                                            client["username"],
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 20,
+                                                fontWeight:
+                                                FontWeight.w600),
+                                          ),
+                                          subtitle: Text(
+                                            client["name"],
+                                            style: const TextStyle(
+                                                color: Colors.grey,
+                                                fontWeight:
+                                                FontWeight.w500),
+                                          ),
+                                        )),
+                                  )
+                                      : Container();
+                                  clientWidgets.add(clientWidget);
+                                }
+                              }
+                              return Column(
+                                children: clientWidgets,
+                              );
+                            }),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),

@@ -4,6 +4,7 @@ import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
 import 'package:eventflow/Views/User/Profile/edit_user_profile.dart';
 import 'package:eventflow/Views/User/Profile/user_follower_page.dart';
 import 'package:eventflow/Views/User/Profile/user_following_page.dart';
+import 'package:eventflow/Views/User/user_enrolled_events.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -153,8 +154,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                                     Navigator.push(context,
                                                         MaterialPageRoute(
                                                             builder: (context) {
-                                                      return UserFollowerPageScreen(
-                                                          client["follower"]);
+                                                      return UserFollowerScreen(
+                                                         );
                                                     }));
                                                   },
                                                   child: Text(
@@ -184,8 +185,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                                     Navigator.push(context,
                                                         MaterialPageRoute(
                                                             builder: (context) {
-                                                      return UserFollowingPageScreen(
-                                                          client["following"]);
+                                                      return UserFollowingScreen(
+                                                          );
                                                     }));
                                                   },
                                                   child: Text(
@@ -246,10 +247,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                           SizedBox(
                                             width: Get.width * 0.05,
                                           ),
-                                          const UserDetailField(
-                                            icon: Icons.event,
-                                            placeholder: "Enrolled events",
-                                            details: "timepass",
+                                          InkWell(onTap:()=> Navigator.push(context, MaterialPageRoute(builder: (context){
+                                            return UserEnrolledEventsScreen();
+                                          })),
+                                            child: const UserDetailField(
+                                              icon: Icons.event,
+                                              placeholder: "Enrolled events",
+                                              details: "view",
+                                            ),
                                           ),
                                         ],
                                       ),
