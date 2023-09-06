@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:eventflow/Controllers/Admins/admin_navigation_controller.dart';
 
 import 'package:eventflow/Views/Admin/Profile/admin_profile.dart';
+import 'package:eventflow/Views/Admin/admin_events.dart';
 import 'package:eventflow/Views/Admin/create_event.dart';
 
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ class AdminNavigationBar extends StatelessWidget {
   AdminNavigationBar({super.key});
 
   final List<Widget> userPages = [
+    const AdminEventsScreen(),
     const CreateEventScreen(),
     const AdminProfileScreen(),
   ];
@@ -36,6 +38,10 @@ class AdminNavigationBar extends StatelessWidget {
               controller.index.value=index;
             },
             items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.event),
+                label: 'Your Events',
+              ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.add),
                 label: 'Add Events',

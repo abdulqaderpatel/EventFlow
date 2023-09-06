@@ -23,6 +23,12 @@ class _DisplayEventsScreenState extends State<DisplayEventsScreen> {
   List<String> categoryImages=["assets/images/mountain.jpeg","assets/images/timepass3.jpg","assets/images/marathon.jpeg","assets/images/educational.jpeg","assets/images/celebration.jpeg","assets/images/others.jpeg"];
 int selectedEventNo=0;
 
+@override
+  void initState() {
+    // TODO: implement initState
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,7 +93,7 @@ int selectedEventNo=0;
                           if (snapshot.hasData) {
                             final clients = snapshot.data?.docs;
                             for (var client in clients!) {
-                              final clientWidget = InkWell(
+                              final clientWidget =DateTime.now().isBefore(DateTime.parse(client["end_time"]))? InkWell(
                                 onTap: () {
                                   Navigator.push(
                                     context,
@@ -295,7 +301,7 @@ int selectedEventNo=0;
                                     )
                                   ],
                                 ),
-                              );
+                              ):InkWell(child: Container(),);
                               ;
                               clientWidgets.add(clientWidget);
                             }

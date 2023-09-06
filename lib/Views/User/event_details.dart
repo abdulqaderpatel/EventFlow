@@ -146,7 +146,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
               if (snapshot.hasData) {
                 final clients = snapshot.data?.docs;
                 for (var client in clients!) {
-                  final clientWidget = Container(
+                  final clientWidget =Container(
                     height: Get.height,
                     child: ListView(
                       children: [
