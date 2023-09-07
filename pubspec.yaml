@@ -39,6 +39,7 @@ dependencies:
   badges:
   status_bar_control:
   scroll_to_index:
+  flutter_rating_bar:
 
 dev_dependencies:
   flutter_test:

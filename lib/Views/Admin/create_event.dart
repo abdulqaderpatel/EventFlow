@@ -422,6 +422,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                 "location": locationController.text.toString(),
                                 "participants": [],
                                 "emails":[],
+
+                                "rating":0.0,
+                                "raters":[],
+
                                 "type":dropdownValue,
                                 "id": id,
                               });

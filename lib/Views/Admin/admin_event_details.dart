@@ -7,6 +7,7 @@ import 'package:eventflow/Views/Misc/reciept/payment_reciept.dart';
 import 'package:eventflow/Views/Misc/toast/toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -320,7 +321,8 @@ class _AdminEventDetailsScreenState extends State<AdminEventDetailsScreen> {
                                   height: 10,
                                 ),
                                 Text(
-                                    "Participant limit: ${client["max_participants"]}",
+                                    DateTime.now().isBefore(
+                                        DateTime.parse(client["end_time"]))?  "Participant limit: ${client["max_participants"]}":"Average Rating: ${client["rating"]/client["raters"].length} ",
                                     style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 20,
@@ -328,6 +330,8 @@ class _AdminEventDetailsScreenState extends State<AdminEventDetailsScreen> {
                                 const SizedBox(
                                   height: 15,
                                 ),
+                                DateTime.now().isBefore(
+                                    DateTime.parse(client["end_time"]))?
                                 StreamBuilder<QuerySnapshot>(
                                     stream: FirebaseTable()
                                         .eventsTable
@@ -368,7 +372,25 @@ class _AdminEventDetailsScreenState extends State<AdminEventDetailsScreen> {
                                       return Column(
                                         children: clientWidgets,
                                       );
-                                    }),
+                                    }):     IgnorePointer(
+                                      child: RatingBar(
+                                  initialRating:client["rating"]/client["raters"].length,
+                                  minRating: 0,
+                                  maxRating: 5,
+                                  allowHalfRating: true,
+                                  itemSize: 30.0,
+                                  ratingWidget: RatingWidget(
+                                      full:
+                                      const Icon(Icons.star, color: Colors.blueAccent),
+                                      half: const Icon(Icons.star_half,
+                                          color: Colors.blueAccent),
+                                      empty: const Icon(Icons.star_border,
+                                          color: Colors.blueAccent),
+                                  ),
+                                  onRatingUpdate: (rating) {
+                                  },
+                                ),
+                                    ),
                                 const SizedBox(
                                   height: 20,
                                 ),

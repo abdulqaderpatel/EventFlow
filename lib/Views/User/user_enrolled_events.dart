@@ -141,6 +141,8 @@ class _UserEnrolledEventsScreenState extends State<UserEnrolledEventsScreen> {
                                                 client["start_time"],
                                                 "username":
                                                 client["username"],
+                                                "rating":client["rating"],
+
                                               });
                                             }),
                                       );
