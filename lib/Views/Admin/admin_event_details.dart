@@ -25,7 +25,8 @@ class AdminEventDetailsScreen extends StatefulWidget {
   const AdminEventDetailsScreen(this.data, {super.key});
 
   @override
-  State<AdminEventDetailsScreen> createState() => _AdminEventDetailsScreenState();
+  State<AdminEventDetailsScreen> createState() =>
+      _AdminEventDetailsScreenState();
 }
 
 class _AdminEventDetailsScreenState extends State<AdminEventDetailsScreen> {
@@ -117,7 +118,7 @@ class _AdminEventDetailsScreenState extends State<AdminEventDetailsScreen> {
           body: body,
           headers: {
             "Authorization":
-            "Bearer sk_test_51NjJbkSDqOoAu1Yvou3QlHodXEQKoN5nrvK6WP8t2kAdyzKAE2Jmd6umSMZuvh6WjhUvyO8VZpbJo1zFJSyaMvpP00rKeK3kPR",
+                "Bearer sk_test_51NjJbkSDqOoAu1Yvou3QlHodXEQKoN5nrvK6WP8t2kAdyzKAE2Jmd6umSMZuvh6WjhUvyO8VZpbJo1zFJSyaMvpP00rKeK3kPR",
             "Content-Type": "application/x-www-form-urlencoded"
           });
       return json.decode(response.body);
@@ -148,7 +149,7 @@ class _AdminEventDetailsScreenState extends State<AdminEventDetailsScreen> {
               if (snapshot.hasData) {
                 final clients = snapshot.data?.docs;
                 for (var client in clients!) {
-                  final clientWidget =Container(
+                  final clientWidget = Container(
                     height: Get.height,
                     child: ListView(
                       children: [
@@ -162,10 +163,12 @@ class _AdminEventDetailsScreenState extends State<AdminEventDetailsScreen> {
                               ),
                             ),
                           ),
+                          child:DateTime.now().isBefore(
+                              DateTime.parse(client["end_time"]))?Container():const Banner(message: "Event Over",location: BannerLocation.topEnd,color: Colors.blue,),
                         ),
                         Container(
                           decoration: const BoxDecoration(
-                            color: Color(0xff1C2124),
+                            color: Color(0xff151924),
                           ),
                           child: Container(
                             width: Get.width,
@@ -179,7 +182,7 @@ class _AdminEventDetailsScreenState extends State<AdminEventDetailsScreen> {
                               children: [
                                 Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       client["name"],
@@ -194,7 +197,7 @@ class _AdminEventDetailsScreenState extends State<AdminEventDetailsScreen> {
                                       decoration: BoxDecoration(
                                           color: Colors.white,
                                           borderRadius:
-                                          BorderRadius.circular(20)),
+                                              BorderRadius.circular(20)),
                                       alignment: Alignment.center,
                                       child: Text(
                                         "₹${client["price"]}",
@@ -313,7 +316,7 @@ class _AdminEventDetailsScreenState extends State<AdminEventDetailsScreen> {
                                     child: Text(
                                       client["description"],
                                       style:
-                                      const TextStyle(color: Colors.white),
+                                          const TextStyle(color: Colors.white),
                                     ),
                                   ),
                                 ),
@@ -322,7 +325,9 @@ class _AdminEventDetailsScreenState extends State<AdminEventDetailsScreen> {
                                 ),
                                 Text(
                                     DateTime.now().isBefore(
-                                        DateTime.parse(client["end_time"]))?  "Participant limit: ${client["max_participants"]}":"Average Rating: ${client["rating"]/client["raters"].length} ",
+                                            DateTime.parse(client["end_time"]))
+                                        ? "Participant limit: ${client["max_participants"]}"
+                                        : "Average Rating: ${client["rating"] / client["raters"].length} from ${client["raters"].length} ${client["raters"].length == 1 ? "review" : "reviews"}",
                                     style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 20,
@@ -331,77 +336,83 @@ class _AdminEventDetailsScreenState extends State<AdminEventDetailsScreen> {
                                   height: 15,
                                 ),
                                 DateTime.now().isBefore(
-                                    DateTime.parse(client["end_time"]))?
-                                StreamBuilder<QuerySnapshot>(
-                                    stream: FirebaseTable()
-                                        .eventsTable
-                                        .where("id",
-                                        isEqualTo: widget.data["id"])
-                                        .snapshots(),
-                                    builder: (context, snapshot) {
-                                      List<CircularPercentIndicator>
-                                      clientWidgets = [];
-                                      if (snapshot.hasData) {
-                                        final clients = snapshot.data?.docs;
-                                        for (var client in clients!) {
-                                          final clientWidget =
-                                          CircularPercentIndicator(
-                                            radius: 120.0,
-                                            lineWidth: 10.0,
-                                            animation: true,
-                                            percent: double.parse(
-                                                (client["participants"].length /
-                                                    client[
-                                                    "max_participants"])
+                                        DateTime.parse(client["end_time"]))
+                                    ? StreamBuilder<QuerySnapshot>(
+                                        stream: FirebaseTable()
+                                            .eventsTable
+                                            .where("id",
+                                                isEqualTo: widget.data["id"])
+                                            .snapshots(),
+                                        builder: (context, snapshot) {
+                                          List<CircularPercentIndicator>
+                                              clientWidgets = [];
+                                          if (snapshot.hasData) {
+                                            final clients = snapshot.data?.docs;
+                                            for (var client in clients!) {
+                                              final clientWidget =
+                                                  CircularPercentIndicator(
+                                                radius: 120.0,
+                                                lineWidth: 10.0,
+                                                animation: true,
+                                                percent: double.parse((client[
+                                                                "participants"]
+                                                            .length /
+                                                        client[
+                                                            "max_participants"])
                                                     .toString()),
-                                            center: Text(
-                                              "${client["max_participants"] - client["participants"].length} spots left",
-                                              style: const TextStyle(
-                                                  fontSize: 20.0,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.white),
-                                            ),
-                                            backgroundColor: Colors.grey,
-                                            circularStrokeCap:
-                                            CircularStrokeCap.round,
-                                            progressColor: Colors.redAccent,
+                                                center: Text(
+                                                  "${client["max_participants"] - client["participants"].length} spots left",
+                                                  style: const TextStyle(
+                                                      fontSize: 20.0,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: Colors.white),
+                                                ),
+                                                backgroundColor: Colors.grey,
+                                                circularStrokeCap:
+                                                    CircularStrokeCap.round,
+                                                progressColor: Colors.redAccent,
+                                              );
+                                              clientWidgets.add(clientWidget);
+                                            }
+                                          }
+                                          return Column(
+                                            children: clientWidgets,
                                           );
-                                          clientWidgets.add(clientWidget);
-                                        }
-                                      }
-                                      return Column(
-                                        children: clientWidgets,
-                                      );
-                                    }):     IgnorePointer(
-                                      child: RatingBar(
-                                  initialRating:client["rating"]/client["raters"].length,
-                                  minRating: 0,
-                                  maxRating: 5,
-                                  allowHalfRating: true,
-                                  itemSize: 30.0,
-                                  ratingWidget: RatingWidget(
-                                      full:
-                                      const Icon(Icons.star, color: Colors.blueAccent),
-                                      half: const Icon(Icons.star_half,
-                                          color: Colors.blueAccent),
-                                      empty: const Icon(Icons.star_border,
-                                          color: Colors.blueAccent),
-                                  ),
-                                  onRatingUpdate: (rating) {
-                                  },
-                                ),
-                                    ),
+                                        })
+                                    : IgnorePointer(
+                                        child: RatingBar(
+                                          initialRating: client["rating"] /
+                                              client["raters"].length,
+                                          minRating: 0,
+                                          maxRating: 5,
+                                          allowHalfRating: true,
+                                          itemSize: 30.0,
+                                          ratingWidget: RatingWidget(
+                                            full: const Icon(Icons.star,
+                                                color: Colors.blueAccent),
+                                            half: const Icon(Icons.star_half,
+                                                color: Colors.blueAccent),
+                                            empty: const Icon(Icons.star_border,
+                                                color: Colors.blueAccent),
+                                          ),
+                                          onRatingUpdate: (rating) {},
+                                        ),
+                                      ),
                                 const SizedBox(
                                   height: 20,
                                 ),
-
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                ElevatedButton(
+                                ElevatedButton( style: ElevatedButton.styleFrom(minimumSize: Size(Get.width, 40),
+                                  primary: Color(0xffB83B5D),textStyle: TextStyle(fontSize: 15,fontWeight: FontWeight.w500) // Background color
+                                ),
                                     onPressed: () async {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context){
-                                        return ParticipantDetailsScreen(id: widget.data["id"]);
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return ParticipantDetailsScreen(
+                                            id: widget.data["id"]);
                                       }));
                                     },
                                     child: const Text("Participant Details")),

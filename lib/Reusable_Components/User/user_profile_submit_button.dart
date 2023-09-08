@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class UserProfileSubmitButton extends StatelessWidget {
   final String text;
@@ -11,21 +12,25 @@ class UserProfileSubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-        style: ButtonStyle(
-          backgroundColor:
-              MaterialStateProperty.all<Color>(const Color(0xff383A48)),
-          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-        ),
-        onPressed: voidCallback,
-        child: !isLoading
-            ? Text(
-                text,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                ),
-              )
-            : const CircularProgressIndicator());
+    return Align(alignment: Alignment.bottomCenter,
+      child: ElevatedButton(
+          style: ElevatedButton.styleFrom(  shape:
+          RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+      side: BorderSide(color: Colors.red))
+      ,minimumSize: Size(Get.width, 40),
+              primary: Color(0xffFE7A3E),textStyle: TextStyle(fontSize: 15,fontWeight: FontWeight.w500) // Background color
+          ),
+          onPressed: voidCallback,
+          child: !isLoading
+              ? Text(
+                  text,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
+                )
+              : const CircularProgressIndicator()),
+    );
   }
 }

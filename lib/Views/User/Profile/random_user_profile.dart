@@ -140,9 +140,7 @@ class _RandomUserProfileScreenState extends State<RandomUserProfileScreen> {
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(
-                                    height: 25,
-                                  ),
+
                                 ],
                               ),
                             ),
@@ -150,13 +148,13 @@ class _RandomUserProfileScreenState extends State<RandomUserProfileScreen> {
                               padding: EdgeInsets.symmetric(horizontal: Get.width * 0.02),
                               child: Column(
                                 children: [
-                                  const SizedBox(
-                                    height: 40,
-                                  ),
+
                                   client["follower"]
                                       .contains(
                                       FirebaseAuth.instance.currentUser!.uid)
-                                      ? ElevatedButton(
+                                      ? ElevatedButton(style: ElevatedButton.styleFrom(minimumSize: Size(Get.width, 40),
+                                      primary: Colors.red,textStyle: TextStyle(fontSize: 15,fontWeight: FontWeight.w500) // Background color
+                                  ),
                                       onPressed: () {
                                         FirebaseTable().usersTable.doc(
                                             FirebaseAuth.instance.currentUser!
@@ -176,7 +174,9 @@ class _RandomUserProfileScreenState extends State<RandomUserProfileScreen> {
                                       },
                                       child: const Text("Unfollow"))
                                       :
-                                  ElevatedButton(
+                                  ElevatedButton(style: ElevatedButton.styleFrom(minimumSize: Size(Get.width, 40),
+                                      primary: Colors.green,textStyle: TextStyle(fontSize: 15,fontWeight: FontWeight.w500) // Background color
+                                  ),
                                       onPressed: () async {
                                         FirebaseTable()
                                             .usersTable.doc(

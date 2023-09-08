@@ -155,8 +155,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                     height: Get.height,
                     child: ListView(
                       children: [
-                        Container(
-                          height: Get.height * 0.4,
+                        Container(height: Get.height * 0.4,
                           decoration: BoxDecoration(
                             image: DecorationImage(
                               fit: BoxFit.cover,
@@ -164,7 +163,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                 client["image"],
                               ),
                             ),
-                          ),
+                          ),child: DateTime.now().isBefore(
+                        DateTime.parse(client["end_time"]))?Container(): const Banner(message: "Event Over",location: BannerLocation.topEnd,color: Colors.red,),
                         ),
                         Container(
                           decoration: const BoxDecoration(
@@ -340,11 +340,16 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                                 color: Colors.white,
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.w500))
-                                        : Text("Your rating: $rate",
-                                            style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w500)),
+                                        : (!client["raters"].contains(
+                                                FirebaseAuth.instance
+                                                    .currentUser!.email)
+                                            ? Text("Your rating: $rate",
+                                                style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 20,
+                                                    fontWeight:
+                                                        FontWeight.w500))
+                                            : Container()),
                                 const SizedBox(
                                   height: 15,
                                 ),
@@ -393,34 +398,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                             children: clientWidgets,
                                           );
                                         })
-                                    : client["event_creator"] ==
-                                            FirebaseAuth.instance.currentUser!
-                                                .displayName
+                                    : !client["raters"].contains(FirebaseAuth
+                                            .instance.currentUser!.email)
                                         ? RatingBar(
-                                            initialRating: client["rating"]
-                                                    .map((m) => m)
-                                                    .reduce((a, b) => a + b) /
-                                                client["rating"].length,
-                                            minRating: 0,
-                                            maxRating: 5,
-                                            allowHalfRating: true,
-                                            itemSize: 30.0,
-                                            ratingWidget: RatingWidget(
-                                              full: const Icon(Icons.star,
-                                                  color: Colors.blueAccent),
-                                              half: const Icon(Icons.star_half,
-                                                  color: Colors.blueAccent),
-                                              empty: const Icon(
-                                                  Icons.star_border,
-                                                  color: Colors.blueAccent),
-                                            ),
-                                            onRatingUpdate: (rating) {
-                                              setState(() {
-                                                rate = rating;
-                                              });
-                                            },
-                                          )
-                                        : RatingBar(
                                             initialRating: 0,
                                             minRating: 0,
                                             maxRating: 5,
@@ -428,19 +408,20 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                             itemSize: 30.0,
                                             ratingWidget: RatingWidget(
                                               full: const Icon(Icons.star,
-                                                  color: Colors.blueAccent),
+                                                  color: Colors.redAccent),
                                               half: const Icon(Icons.star_half,
                                                   color: Colors.blueAccent),
                                               empty: const Icon(
                                                   Icons.star_border,
-                                                  color: Colors.blueAccent),
+                                                  color: Colors.redAccent),
                                             ),
                                             onRatingUpdate: (rating) {
                                               setState(() {
                                                 rate = rating;
                                               });
                                             },
-                                          ),
+                                          )
+                                        : Container(),
                                 const SizedBox(
                                   height: 20,
                                 ),
@@ -448,10 +429,14 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                         DateTime.parse(client["end_time"]))
                                     ? (client["raters"].contains(FirebaseAuth
                                             .instance.currentUser!.email)
-                                        ? ElevatedButton(
+                                        ? ElevatedButton(style: ElevatedButton.styleFrom(minimumSize: Size(Get.width, 40),
+                                    primary: Color(0xffB83B5D),textStyle: TextStyle(fontSize: 15,fontWeight: FontWeight.w500) // Background color
+                                ),
                                             onPressed: () {},
-                                            child: Text("Already Rated"))
-                                        : ElevatedButton(
+                                            child: const Text("Already Rated"))
+                                        : ElevatedButton(style: ElevatedButton.styleFrom(minimumSize: Size(Get.width, 40),
+                                    primary: Colors.red,textStyle: TextStyle(fontSize: 15,fontWeight: FontWeight.w500) // Background color
+                                ),
                                             onPressed: () {
                                               FirebaseTable()
                                                   .eventsTable
@@ -466,14 +451,18 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                                 ])
                                               });
                                             },
-                                            child: Text("Rate")))
+                                            child: const Text("Rate")))
                                     : (client["emails"].contains(FirebaseAuth
                                             .instance.currentUser!.email)
-                                        ? ElevatedButton(
+                                        ? ElevatedButton(style: ElevatedButton.styleFrom(minimumSize: Size(Get.width, 40),
+                                    primary: Colors.red,textStyle: TextStyle(fontSize: 15,fontWeight: FontWeight.w500) // Background color
+                                ),
                                             onPressed: () {},
                                             child: const Text("Booked"),
                                           )
-                                        : ElevatedButton(
+                                        : ElevatedButton(style: ElevatedButton.styleFrom(minimumSize: Size(Get.width, 40),
+                                    primary: Color(0xffB83B5D),textStyle: TextStyle(fontSize: 15,fontWeight: FontWeight.w500) // Background color
+                                ),
                                             onPressed: () async {
                                               showModalBottomSheet<void>(
                                                 context: context,
@@ -613,7 +602,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                                                           child:
                                                                               StatefulBuilder(builder: (BuildContext context, modalState) {
                                                                             return Container(
-                                                                              padding: EdgeInsets.only(top: 15),
+                                                                              padding: const EdgeInsets.only(top: 15),
                                                                               color: const Color(0xff201A30),
                                                                               child: Container(
                                                                                   padding: const EdgeInsets.all(10),
@@ -764,7 +753,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                                                                           children: participantPages.map((e) {
                                                                                         return InkWell(
                                                                                           onTap: () {
-                                                                                            scrollController.animateTo((e - 1) * 280.toDouble(), duration: Duration(milliseconds: 500), curve: Curves.ease);
+                                                                                            scrollController.animateTo((e - 1) * 280.toDouble(), duration: const Duration(milliseconds: 500), curve: Curves.ease);
                                                                                           },
                                                                                           child: Row(
                                                                                             children: [
@@ -783,7 +772,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                                                                         );
                                                                                       }).toList()),
                                                                                       const SizedBox(height: 15),
-                                                                                      ElevatedButton(
+                                                                                      ElevatedButton(style: ElevatedButton.styleFrom(minimumSize: Size(Get.width, 40),
+                                                                                          primary: Color(0xffB83B5D),textStyle: TextStyle(fontSize: 15,fontWeight: FontWeight.w500) // Background color
+                                                                                      ),
                                                                                           onPressed: () async {
                                                                                             for (int i = 0; i < participants; i++) {
                                                                                               Map<String, dynamic> userData = {
@@ -827,7 +818,10 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                ElevatedButton(
+                              DateTime.now().isBefore(
+                                  DateTime.parse(client["end_time"]))?ElevatedButton(style: ElevatedButton.styleFrom(minimumSize: Size(Get.width, 40),
+                                  primary: Colors.blue,textStyle: TextStyle(fontSize: 15,fontWeight: FontWeight.w500) // Background color
+                              ),
                                     onPressed: () async {
                                       showModalBottomSheet<void>(
                                         context: context,
@@ -967,7 +961,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                         },
                                       );
                                     },
-                                    child: const Text("share")),
+                                    child: const Text("share")):Container(),
                               ],
                             ),
                           ),
