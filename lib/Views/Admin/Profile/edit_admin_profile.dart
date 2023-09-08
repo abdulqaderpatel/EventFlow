@@ -299,7 +299,7 @@ class _EditAdminProfileScreenState extends State<EditAdminProfileScreen> {
                           } else {
                             if (profileImage == null) {
                               await FirebaseTable()
-                                  .usersTable
+                                  .adminsTable
                                   .doc(FirebaseAuth
                                   .instance.currentUser!.uid)
                                   .update({

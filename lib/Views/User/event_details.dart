@@ -826,137 +826,143 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                       showModalBottomSheet<void>(
                                         context: context,
                                         builder: (BuildContext context) {
-                                          return Container(
+                                          return Container(color: Color(0xff0F1A20),
                                             padding: const EdgeInsets.all(10),
                                             height: 400,
-                                            child: StreamBuilder<QuerySnapshot>(
-                                                stream: FirebaseTable()
-                                                    .usersTable
-                                                    .where("email",
-                                                        isNotEqualTo:
-                                                            FirebaseAuth
-                                                                .instance
-                                                                .currentUser!
-                                                                .email)
-                                                    .snapshots(),
-                                                builder: (context, snapshot) {
-                                                  List<Container>
-                                                      clientWidgets = [];
-                                                  if (snapshot.hasData) {
-                                                    final clients =
-                                                        snapshot.data?.docs;
-                                                    for (var client
-                                                        in clients!) {
-                                                      final clientWidget = ((client[
-                                                                      "follower"])
-                                                                  .contains(FirebaseAuth
-                                                                      .instance
-                                                                      .currentUser!
-                                                                      .uid
-                                                                      .toString()) &&
-                                                              (client["following"])
-                                                                  .contains(FirebaseAuth
-                                                                      .instance
-                                                                      .currentUser!
-                                                                      .uid))
-                                                          ? Container(
-                                                              child: InkWell(
-                                                                onTap:
-                                                                    () async {
-                                                                  List<String>
-                                                                      ids = [
-                                                                    FirebaseAuth
-                                                                        .instance
-                                                                        .currentUser!
-                                                                        .uid,
-                                                                    client["id"]
-                                                                  ];
-                                                                  ids.sort();
-                                                                  String time = DateTime
-                                                                          .now()
-                                                                      .millisecondsSinceEpoch
-                                                                      .toString();
-                                                                  Map<String,
-                                                                          dynamic>
-                                                                      displayData =
-                                                                      {
-                                                                    "time":
-                                                                        time,
-                                                                    "sender": FirebaseAuth
-                                                                        .instance
-                                                                        .currentUser!
-                                                                        .email,
-                                                                    "reciever":
-                                                                        client[
-                                                                            "email"],
-                                                                    "isText":
-                                                                        false,
-                                                                  };
-                                                                  Map<String,
-                                                                          dynamic>
-                                                                      completeData =
-                                                                      {};
-                                                                  completeData
-                                                                      .addAll(widget
-                                                                          .data);
-                                                                  completeData
-                                                                      .addAll(
-                                                                          displayData);
-                                                                  await FirebaseTable()
-                                                                      .chatTable
-                                                                      .doc(ids
-                                                                          .join(
-                                                                              "_"))
-                                                                      .collection(
-                                                                          "messages")
-                                                                      .doc(time)
-                                                                      .set(
-                                                                          completeData);
-                                                                  Toast().successMessage(
-                                                                      "Event shared successfully");
-                                                                  Navigator.pop(
-                                                                      context);
-                                                                },
-                                                                child:
-                                                                    Container(
-                                                                        margin: const EdgeInsets.only(
-                                                                            bottom:
-                                                                                20),
-                                                                        color: const Color(
-                                                                            0xff0A171F),
-                                                                        child:
-                                                                            ListTile(
-                                                                          leading:
-                                                                              CircleAvatar(
-                                                                            backgroundImage:
-                                                                                NetworkImage(client["image"]),
-                                                                          ),
-                                                                          title:
-                                                                              Text(
-                                                                            client["username"],
-                                                                            style: const TextStyle(
-                                                                                color: Colors.white,
-                                                                                fontSize: 20,
-                                                                                fontWeight: FontWeight.w600),
-                                                                          ),
-                                                                          subtitle:
-                                                                              Text(
-                                                                            client["name"],
-                                                                            style:
-                                                                                const TextStyle(color: Colors.grey, fontWeight: FontWeight.w500),
-                                                                          ),
-                                                                        )),
-                                                              ),
-                                                            )
-                                                          : Container();
-                                                      clientWidgets
-                                                          .add(clientWidget);
-                                                    }
-                                                  }
-                                                  return Column(
-                                                    children: clientWidgets,
-                                                  );
-                                                }),
+                                            child: Column(
+                                              children: [
+                                                Text("Share",style: TextStyle(color: Colors.white,fontSize: 20),),
+                                                SizedBox(height: 15,),
+                                                StreamBuilder<QuerySnapshot>(
+                                                    stream: FirebaseTable()
+                                                        .usersTable
+                                                        .where("email",
+                                                            isNotEqualTo:
+                                                                FirebaseAuth
+                                                                    .instance
+                                                                    .currentUser!
+                                                                    .email)
+                                                        .snapshots(),
+                                                    builder: (context, snapshot) {
+                                                      List<Container>
+                                                          clientWidgets = [];
+                                                      if (snapshot.hasData) {
+                                                        final clients =
+                                                            snapshot.data?.docs;
+                                                        for (var client
+                                                            in clients!) {
+                                                          final clientWidget = ((client[
+                                                                          "follower"])
+                                                                      .contains(FirebaseAuth
+                                                                          .instance
+                                                                          .currentUser!
+                                                                          .uid
+                                                                          .toString()) &&
+                                                                  (client["following"])
+                                                                      .contains(FirebaseAuth
+                                                                          .instance
+                                                                          .currentUser!
+                                                                          .uid))
+                                                              ? Container(
+                                                                  child: InkWell(
+                                                                    onTap:
+                                                                        () async {
+                                                                      List<String>
+                                                                          ids = [
+                                                                        FirebaseAuth
+                                                                            .instance
+                                                                            .currentUser!
+                                                                            .uid,
+                                                                        client["id"]
+                                                                      ];
+                                                                      ids.sort();
+                                                                      String time = DateTime
+                                                                              .now()
+                                                                          .millisecondsSinceEpoch
+                                                                          .toString();
+                                                                      Map<String,
+                                                                              dynamic>
+                                                                          displayData =
+                                                                          {
+                                                                        "time":
+                                                                            time,
+                                                                        "sender": FirebaseAuth
+                                                                            .instance
+                                                                            .currentUser!
+                                                                            .email,
+                                                                        "reciever":
+                                                                            client[
+                                                                                "email"],
+                                                                        "isText":
+                                                                            false,
+                                                                      };
+                                                                      Map<String,
+                                                                              dynamic>
+                                                                          completeData =
+                                                                          {};
+                                                                      completeData
+                                                                          .addAll(widget
+                                                                              .data);
+                                                                      completeData
+                                                                          .addAll(
+                                                                              displayData);
+                                                                      await FirebaseTable()
+                                                                          .chatTable
+                                                                          .doc(ids
+                                                                              .join(
+                                                                                  "_"))
+                                                                          .collection(
+                                                                              "messages")
+                                                                          .doc(time)
+                                                                          .set(
+                                                                              completeData);
+                                                                      Toast().successMessage(
+                                                                          "Event shared successfully");
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                    },
+                                                                    child:
+                                                                        Container(
+                                                                            margin: const EdgeInsets.only(
+                                                                                bottom:
+                                                                                    20),
+                                                                            color: const Color(
+                                                                                0xff0A171F),
+                                                                            child:
+                                                                                ListTile(
+                                                                              leading:
+                                                                                  CircleAvatar(
+                                                                                backgroundImage:
+                                                                                    NetworkImage(client["image"]),
+                                                                              ),
+                                                                              title:
+                                                                                  Text(
+                                                                                client["username"],
+                                                                                style: const TextStyle(
+                                                                                    color: Colors.white,
+                                                                                    fontSize: 20,
+                                                                                    fontWeight: FontWeight.w600),
+                                                                              ),
+                                                                              subtitle:
+                                                                                  Text(
+                                                                                client["name"],
+                                                                                style:
+                                                                                    const TextStyle(color: Colors.grey, fontWeight: FontWeight.w500),
+                                                                              ),
+                                                                            )),
+                                                                  ),
+                                                                )
+                                                              : Container();
+                                                          clientWidgets
+                                                              .add(clientWidget);
+                                                        }
+                                                      }
+                                                      return Column(
+                                                        children: clientWidgets,
+                                                      );
+                                                    }),
+                                              ],
+                                            ),
                                           );
                                         },
                                       );

@@ -123,7 +123,7 @@ int selectedEventNo=0;
                                   children: [
                                     Container(
                                       decoration: BoxDecoration(
-                                        color: Color(0xffFF4655),
+                                        gradient: LinearGradient(colors: [Color(0xff09203F),  Color(0xff537895)]),
                                         borderRadius: BorderRadius.circular(
                                           20,
                                         ),

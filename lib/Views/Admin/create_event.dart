@@ -157,9 +157,16 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
 
   final picker = ImagePicker();
 
-  List<String> list = <String>["Trekking","Concert","Marathon","Educational","Celebration","Other"];
+  List<String> list = <String>[
+    "Trekking",
+    "Concert",
+    "Marathon",
+    "Educational",
+    "Celebration",
+    "Other"
+  ];
   String dropdownValue = "Trekking";
-
+  late bool isButtonLoading;
 
   Future getImageGallery() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -197,6 +204,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     super.initState();
     // TODO: implement initState
     getUsernameAndUserImage();
+    isButtonLoading=false;
   }
 
   @override
@@ -204,7 +212,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: SingleChildScrollView(
-          child: Container(color: Color(0xff00141C),
+          child: Container(
+            color: const Color(0xff00141C),
             child: Container(
               margin: EdgeInsets.only(
                   left: Get.width * 0.08,
@@ -300,13 +309,20 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                       children: [
                         InkWell(
                             onTap: () => _selectDate(context),
-                            child: Container(decoration: BoxDecoration(
-                              color: Color(0xff352D3C),
-                              borderRadius: BorderRadius.circular(10),
-                            ),padding: EdgeInsets.symmetric(horizontal: 5,vertical: 10),
-                              child: Text(!isDatePicked
-                                  ? "Please select a date"
-                                  : DateFormat('dd-MM-yyyy').format(selectedDate),style: TextStyle(color: Colors.grey),),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: const Color(0xff352D3C),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 5, vertical: 10),
+                              child: Text(
+                                !isDatePicked
+                                    ? "Please select a date"
+                                    : DateFormat('dd-MM-yyyy')
+                                        .format(selectedDate),
+                                style: const TextStyle(color: Colors.grey),
+                              ),
                             )),
                         CreateEventTextField(
                           text: "Max participants",
@@ -332,24 +348,36 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                       children: [
                         InkWell(
                           onTap: () => _startTime(context),
-                          child: Container(decoration: BoxDecoration(
-                            color: Color(0xff352D3C),
-                            borderRadius: BorderRadius.circular(10),
-                          ),padding: EdgeInsets.symmetric(horizontal: 5,vertical: 10),
-                            child: Text(!isStartPicked
-                                ? "Select start time"
-                                : startTime.format(context),style: TextStyle(color:Colors.grey),),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: const Color(0xff352D3C),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 5, vertical: 10),
+                            child: Text(
+                              !isStartPicked
+                                  ? "Select start time"
+                                  : startTime.format(context),
+                              style: const TextStyle(color: Colors.grey),
+                            ),
                           ),
                         ),
                         InkWell(
                           onTap: () => _endTime(context),
-                          child: Container(decoration: BoxDecoration(
-                              color: Color(0xff352D3C),
-                            borderRadius: BorderRadius.circular(10),
-                          ),padding: EdgeInsets.symmetric(horizontal: 5,vertical: 10),
-                            child: Text(!isEndPicked
-                                ? "Select end time"
-                                : endTime.format(context),style: TextStyle(color: Colors.grey),),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: const Color(0xff352D3C),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 5, vertical: 10),
+                            child: Text(
+                              !isEndPicked
+                                  ? "Select end time"
+                                  : endTime.format(context),
+                              style: const TextStyle(color: Colors.grey),
+                            ),
                           ),
                         ),
                       ],
@@ -367,43 +395,84 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                               MaterialStateProperty.all<Color>(Colors.white),
                         ),
                         onPressed: () async {
+                          setState(() {
+                            isButtonLoading = true;
+
+                          });
                           if (titleController.text.isEmpty) {
                             Toast().errorMessage("Event name cannot be empty");
+                            setState(() {
+                              isButtonLoading = false;
+                            });
                           } else if (locationController.text.isEmpty) {
                             Toast().errorMessage("Location cannot be empty");
+                            setState(() {
+                              isButtonLoading = false;
+                            });
                           } else if (priceController.text.isEmpty) {
                             Toast().errorMessage("Price cannot be empty");
+                            setState(() {
+                              isButtonLoading = false;
+                            });
                           } else if (eventImage == null) {
                             Toast().errorMessage("Image cannot be empty");
+                            setState(() {
+                              isButtonLoading = false;
+                            });
                           } else if (!isDatePicked) {
                             Toast().errorMessage("Event Date cannot be empty");
+                            setState(() {
+                              isButtonLoading = false;
+                            });
                           } else if (maxEntries.text.isEmpty) {
-                            Toast()
-                                .errorMessage("max participants cannot be empty");
+                            Toast().errorMessage(
+                                "max participants cannot be empty");
+                            setState(() {
+                              isButtonLoading = false;
+                            });
                           } else if (descriptionController.text.isEmpty) {
                             Toast().errorMessage("Description cannot be empty");
+                            setState(() {
+                              isButtonLoading = false;
+                            });
                           } else if (!isStartPicked) {
                             Toast().errorMessage("start time cannot be empty");
+                            setState(() {
+                              isButtonLoading = false;
+                            });
                           } else if (!isEndPicked) {
                             Toast().errorMessage("End time cannot be empty");
+                            setState(() {
+                              isButtonLoading = false;
+                            });
                           } else if (priceController.text.contains(".") ||
                               priceController.text.contains(".")) {
                             Toast()
                                 .errorMessage("Price should be a valid number");
+                            setState(() {
+                              isButtonLoading = false;
+                            });
                           } else if (maxEntries.text.contains(".") ||
                               maxEntries.text.contains(".")) {
                             Toast().errorMessage(
                                 "max participants should be a valid number");
+                            setState(() {
+                              isButtonLoading = false;
+                            });
                           } else {
                             Reference ref = FirebaseStorage.instance.ref(
                                 "/${FirebaseAuth.instance.currentUser!.uid}/${DateTime.now().millisecondsSinceEpoch.toString()}");
                             UploadTask uploadTask =
                                 ref.putFile(eventImage!.absolute);
+
                             Future.value(uploadTask).then((value) async {
                               var newUrl = await ref.getDownloadURL();
                               var id = DateTime.now()
                                   .millisecondsSinceEpoch
                                   .toString();
+                              setState(() {
+                                isButtonLoading = false;
+                              });
                               await FirebaseTable().eventsTable.doc(id).set({
                                 "event_creator": FirebaseAuth
                                     .instance.currentUser!.displayName,
@@ -421,26 +490,27 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                 "end_time": eventEnd.toIso8601String(),
                                 "location": locationController.text.toString(),
                                 "participants": [],
-                                "emails":[],
-
-                                "rating":0.0,
-                                "raters":[],
-
-                                "type":dropdownValue,
+                                "emails": [],
+                                "rating": 0.0,
+                                "raters": [],
+                                "type": dropdownValue,
                                 "id": id,
                               });
                               Toast()
                                   .successMessage("Event successfully created");
                             });
+
                           }
                         },
-                        child: const Text(
-                          "Submit",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                        child: isButtonLoading
+                            ? const CircularProgressIndicator()
+                            : const Text(
+                                "Submit",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
                       ),
                     ),
                   ],
