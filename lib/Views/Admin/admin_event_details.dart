@@ -163,8 +163,14 @@ class _AdminEventDetailsScreenState extends State<AdminEventDetailsScreen> {
                               ),
                             ),
                           ),
-                          child:DateTime.now().isBefore(
-                              DateTime.parse(client["end_time"]))?Container():const Banner(message: "Event Over",location: BannerLocation.topEnd,color: Colors.blue,),
+                          child: DateTime.now()
+                                  .isBefore(DateTime.parse(client["end_time"]))
+                              ? Container()
+                              : const Banner(
+                                  message: "Event Over",
+                                  location: BannerLocation.topEnd,
+                                  color: Colors.blue,
+                                ),
                         ),
                         Container(
                           decoration: const BoxDecoration(
@@ -327,7 +333,7 @@ class _AdminEventDetailsScreenState extends State<AdminEventDetailsScreen> {
                                     DateTime.now().isBefore(
                                             DateTime.parse(client["end_time"]))
                                         ? "Participant limit: ${client["max_participants"]}"
-                                        : "Average Rating: ${client["rating"] / client["raters"].length} from ${client["raters"].length} ${client["raters"].length == 1 ? "review" : "reviews"}",
+                                        :client["raters"].length==0?"No ratings yet":"Average Rating: ${client["rating"] / client["raters"].length} from ${client["raters"].length} ${client["raters"].length == 1 ? "review" : "reviews"}",
                                     style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 20,
@@ -382,8 +388,11 @@ class _AdminEventDetailsScreenState extends State<AdminEventDetailsScreen> {
                                         })
                                     : IgnorePointer(
                                         child: RatingBar(
-                                          initialRating: client["rating"] /
-                                              client["raters"].length,
+                                          initialRating:
+                                              client["raters"].length == 0
+                                                  ? 0
+                                                  : client["rating"] /
+                                                      client["raters"].length,
                                           minRating: 0,
                                           maxRating: 5,
                                           allowHalfRating: true,
@@ -405,9 +414,15 @@ class _AdminEventDetailsScreenState extends State<AdminEventDetailsScreen> {
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                ElevatedButton( style: ElevatedButton.styleFrom(minimumSize: Size(Get.width, 40),
-                                  primary: Color(0xffB83B5D),textStyle: TextStyle(fontSize: 15,fontWeight: FontWeight.w500) // Background color
-                                ),
+                                ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        minimumSize: Size(Get.width, 40),
+                                        primary: Color(0xffB83B5D),
+                                        textStyle: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight
+                                                .w500) // Background color
+                                        ),
                                     onPressed: () async {
                                       Navigator.push(context,
                                           MaterialPageRoute(builder: (context) {

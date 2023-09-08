@@ -38,58 +38,92 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
         body: SafeArea(
       child: SingleChildScrollView(
         child: Container(
+          height: Get.height,
           color: const Color(0xff00141C),
           padding:
               EdgeInsets.only(left: Get.width * 0.05, right: Get.width * 0.05),
           child: Column(
             children: [
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 10),
-                height: 120,
-                child: ListView.builder(
-                    itemCount: 2,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        onTap: () {
-                          setState(() {
-                            currentIndex = index;
-                          });
-                        },
-                        child: Column(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(right: 20),
-                              height: 100,
-                              width: 150,
-                              decoration: BoxDecoration(
-                                  border: currentIndex == index
-                                      ? Border.all(width: 2, color: Colors.grey)
-                                      : null,
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: Colors.red),
-                              child: Stack(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(20),
-                                    child: Image(
-                                      opacity: AlwaysStoppedAnimation(0.9),
-                                      image: AssetImage(categoryImages[index]),
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                  Center(
-                                      child: Text(
-                                    categoryTypes[index],
-                                    style: TextStyle(color: Colors.white54),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        currentIndex = 0;
+                      });
+                    },
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(right: 20),
+                          height: 100,
+                          width: 150,
+                          decoration: BoxDecoration(
+                              border: currentIndex == 0
+                                  ? Border.all(width: 2, color: Colors.grey)
+                                  : null,
+                              gradient: LinearGradient(colors: [
+                                Color(0xffF907FC),
+                                Color(0xff05D6D9)
+                              ]),
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.red),
+                          child: Stack(
+                            children: [
+                              Center(
+                                  child: Text(
+                                    categoryTypes[0],
+                                    style: TextStyle(
+                                        color: currentIndex == 0
+                                            ? Colors.white54
+                                            : Colors.grey),
                                   ))
-                                ],
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      );
-                    }),
+                      ],
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        currentIndex = 1;
+                      });
+                    },
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(right: 20),
+                          height: 100,
+                          width: 150,
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(colors: [
+                                Color(0xffFF0000),
+                                Color(0xffFF7878)
+                              ]),
+                              border: currentIndex == 1
+                                  ? Border.all(width: 2, color: Colors.grey)
+                                  : null,
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.red),
+                          child: Stack(
+                            children: [
+                              Center(
+                                  child: Text(
+                                    categoryTypes[1],
+                                    style: TextStyle(
+                                        color: currentIndex == 1
+                                            ? Colors.white54
+                                            : Colors.grey),
+                                  ))
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
               SizedBox(
                 height: Get.height * 0.02,
