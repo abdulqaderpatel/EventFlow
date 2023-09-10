@@ -41,7 +41,7 @@ int selectedEventNo=0;
           child: Column(
             children: [
               Container(
-                padding: EdgeInsets.symmetric(vertical: 10),
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 height: 120,
                 child: ListView.builder(itemCount: 6,
                     scrollDirection: Axis.horizontal,
@@ -54,7 +54,7 @@ int selectedEventNo=0;
                         child: Column(
                           children: [
                             Container(
-                              margin: EdgeInsets.only(right: 20),
+                              margin: const EdgeInsets.only(right: 20),
                               height: 100,
                               width: 150,
                               decoration: BoxDecoration(border: selectedEventNo==index?Border.all(width: 2,color: Colors.grey):null,
@@ -64,13 +64,13 @@ int selectedEventNo=0;
                                 children: [
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(20),
-                                    child: Image(opacity: AlwaysStoppedAnimation(0.9),
+                                    child: Image(opacity: const AlwaysStoppedAnimation(0.9),
                                       image: AssetImage(
                                           categoryImages[index]),
                                       fit: BoxFit.contain,
                                     ),
                                   ),
-                                  Center(child: Text(categoryTypes[index],style: TextStyle(color: Colors.white54),))
+                                  Center(child: Text(categoryTypes[index],style: const TextStyle(color: Colors.white54),))
                                 ],
                               ),
                             ),
@@ -83,7 +83,7 @@ int selectedEventNo=0;
                 height: Get.height * 0.02,
               ),
               Container(
-                height: Get.height * 0.75,padding: EdgeInsets.symmetric(vertical: 10),
+                height: Get.height * 0.75,padding: const EdgeInsets.symmetric(vertical: 10),
                 child: ListView(
                   children: [
                     StreamBuilder<QuerySnapshot>(
@@ -123,7 +123,7 @@ int selectedEventNo=0;
                                   children: [
                                     Container(
                                       decoration: BoxDecoration(
-                                        gradient: LinearGradient(colors: [Color(0xff09203F),  Color(0xff537895)]),
+                                        gradient: const LinearGradient(colors: [Color(0xff09203F),  Color(0xff537895)]),
                                         borderRadius: BorderRadius.circular(
                                           20,
                                         ),
