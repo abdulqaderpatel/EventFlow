@@ -40,6 +40,8 @@ dependencies:
   status_bar_control:
   scroll_to_index:
   flutter_rating_bar:
+  animated_background:
+  gradient_widgets:
 
 dev_dependencies:
   flutter_test:

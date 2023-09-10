@@ -8,7 +8,7 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(color:const Color(0xff151924),
+      body: Container(color:const Color(0xff0F1A20),
         child: Container(height: Get.height,
           margin: EdgeInsets.only(bottom: Get.height * 0.1),
 
@@ -20,9 +20,7 @@ class SplashScreen extends StatelessWidget {
                   height: Get.height * 0.17,
                   width: Get.height * 0.17,
                   decoration: BoxDecoration(
-                      color: const Color(
-                        0xffff8c85,
-                      ),
+
                       borderRadius: BorderRadius.circular(25)),
                   child: Image.asset(
                     "assets/images/main-logo.png",

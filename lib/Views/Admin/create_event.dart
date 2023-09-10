@@ -204,7 +204,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     super.initState();
     // TODO: implement initState
     getUsernameAndUserImage();
-    isButtonLoading=false;
+    isButtonLoading = false;
   }
 
   @override
@@ -213,6 +213,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         resizeToAvoidBottomInset: false,
         body: SingleChildScrollView(
           child: Container(
+            height: Get.height * 1.1,
             color: const Color(0xff00141C),
             child: Container(
               margin: EdgeInsets.only(
@@ -305,25 +306,37 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                       }).toList(),
                     ),
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        InkWell(
-                            onTap: () => _selectDate(context),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: const Color(0xff352D3C),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 5, vertical: 10),
-                              child: Text(
-                                !isDatePicked
-                                    ? "Please select a date"
-                                    : DateFormat('dd-MM-yyyy')
-                                        .format(selectedDate),
-                                style: const TextStyle(color: Colors.grey),
-                              ),
-                            )),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Select Date",
+                              style: TextStyle(color: Color(0xff616161)),
+                            ),
+                            InkWell(
+                                onTap: () => _selectDate(context),
+                                child: Container(
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xff352D3C),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 5, vertical: 10),
+                                  child: Text(
+                                    !isDatePicked
+                                        ? "Please select a date"
+                                        : DateFormat('dd-MM-yyyy')
+                                            .format(selectedDate),
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(color: Colors.grey),
+                                  ),
+                                )),
+                          ],
+                        ),
                         CreateEventTextField(
                           text: "Max participants",
                           controller: maxEntries,
@@ -346,39 +359,67 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        InkWell(
-                          onTap: () => _startTime(context),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xff352D3C),
-                              borderRadius: BorderRadius.circular(10),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Select start time",
+                              style: TextStyle(color: Color(0xff616161)),
                             ),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 5, vertical: 10),
-                            child: Text(
-                              !isStartPicked
-                                  ? "Select start time"
-                                  : startTime.format(context),
-                              style: const TextStyle(color: Colors.grey),
+                            InkWell(
+                              onTap: () => _startTime(context),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: const Color(0xff352D3C),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 5, vertical: 10),
+                                child: Row(
+                                  children: [Icon(Icons.watch_later),
+                                    SizedBox(width: 5,),
+                                    Text(
+                                      !isStartPicked
+                                          ? "Select start time"
+                                          : startTime.format(context),
+                                      style: const TextStyle(color: Colors.grey),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
-                        InkWell(
-                          onTap: () => _endTime(context),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xff352D3C),
-                              borderRadius: BorderRadius.circular(10),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Select end time",
+                              style: TextStyle(color: Color(0xff616161)),
                             ),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 5, vertical: 10),
-                            child: Text(
-                              !isEndPicked
-                                  ? "Select end time"
-                                  : endTime.format(context),
-                              style: const TextStyle(color: Colors.grey),
+                            InkWell(
+                              onTap: () => _endTime(context),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: const Color(0xff352D3C),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 5, vertical: 10),
+                                child: Row(
+                                  children: [Icon(Icons.access_time_filled,color: Color(0xff616161),),
+                                    SizedBox(width: 5,),
+                                    Text(
+                                      !isEndPicked
+                                          ? "Select end time"
+                                          : endTime.format(context),
+                                      style: const TextStyle(color: Colors.grey),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                       ],
                     ),
@@ -397,7 +438,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                         onPressed: () async {
                           setState(() {
                             isButtonLoading = true;
-
                           });
                           if (titleController.text.isEmpty) {
                             Toast().errorMessage("Event name cannot be empty");
@@ -499,7 +539,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                               Toast()
                                   .successMessage("Event successfully created");
                             });
-
                           }
                         },
                         child: isButtonLoading
