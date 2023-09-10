@@ -19,6 +19,7 @@ import 'Controllers/Users/user_navigation_controller.dart';
 import 'firebase_options.dart';
 
 void main() async {
+
   Paint.enableDithering = true;
   WidgetsFlutterBinding.ensureInitialized();
   Stripe.publishableKey =
@@ -32,6 +33,7 @@ NotificationService().initNotification();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await FirebaseAuth.instance.signOut();
 
   runApp(MyApp());
 }

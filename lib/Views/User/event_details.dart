@@ -11,7 +11,6 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
-import "package:timezone/data/latest.dart" as tz;
 import "../Misc/notification_service.dart";
 
 import 'package:percent_indicator/circular_percent_indicator.dart';
@@ -30,6 +29,7 @@ class EventDetailsScreen extends StatefulWidget {
 class _EventDetailsScreenState extends State<EventDetailsScreen> {
   int participants = 0;
   double rate = 0;
+  bool isLoading=false;
   List<Map<String, dynamic>> bookedUserData = [];
   List<Map<String, dynamic>> eventData = [];
   List<Map<String, dynamic>> userData = [];
@@ -42,10 +42,6 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   late AutoScrollController controller;
   ScrollController scrollController = ScrollController();
 
-  Future _scrollToIndex(int index) async {
-    await controller.scrollToIndex(index,
-        preferPosition: AutoScrollPosition.begin);
-  }
 
   Map<String, dynamic>? paymentIntent;
 
@@ -89,6 +85,22 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           ),
         },
       );
+      
+      await FirebaseTable().usersTable.doc(FirebaseAuth.instance.currentUser!.uid).collection("Reciepts").doc(widget.data["id"]).set(
+          {"id":widget.data["id"],
+            "bill":DateTime.now().millisecondsSinceEpoch,
+            "name":widget.data["name"],
+            "image":widget.data["image"],
+          "userdata":bookedUserData,
+          "price":bookedUserData.length*widget.data["price"],
+            "Date":   DateFormat('yMMMMd').format(
+              DateTime.parse(
+                DateTime.now().toString(),
+              ),
+            ),
+
+
+          });
 
       Toast().successMessage("Booked slot");
       DateTime date = DateTime.parse(widget.data["start_time"]);
@@ -101,12 +113,14 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           "we hope to see you there!",
           (number - DateTime.now().millisecondsSinceEpoch));
       Get.to(PaymentReciept(
-        eventData: eventData,
+        eventData: widget.data,
         userData: userData,
         bookedUserData: bookedUserData,
       ));
       bookedUserData = [];
-    } catch (e) {}
+    } catch (e) {
+      Toast().errorMessage("Something went Wrong, please try again");
+    }
   }
 
   createPaymentIntent() async {
@@ -429,13 +443,11 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                         DateTime.parse(client["end_time"]))
                                     ? (client["raters"].contains(FirebaseAuth
                                             .instance.currentUser!.email)
-                                        ? ElevatedButton(style: ElevatedButton.styleFrom(minimumSize: Size(Get.width, 40),
-                                    primary: Color(0xffB83B5D),textStyle: TextStyle(fontSize: 15,fontWeight: FontWeight.w500) // Background color
+                                        ? ElevatedButton(style: ElevatedButton.styleFrom(minimumSize: Size(Get.width, 40), backgroundColor: const Color(0xffB83B5D),textStyle: const TextStyle(fontSize: 15,fontWeight: FontWeight.w500) // Background color
                                 ),
                                             onPressed: () {},
                                             child: const Text("Already Rated"))
-                                        : ElevatedButton(style: ElevatedButton.styleFrom(minimumSize: Size(Get.width, 40),
-                                    primary: Colors.red,textStyle: TextStyle(fontSize: 15,fontWeight: FontWeight.w500) // Background color
+                                        : ElevatedButton(style: ElevatedButton.styleFrom(minimumSize: Size(Get.width, 40), backgroundColor: Colors.red,textStyle: const TextStyle(fontSize: 15,fontWeight: FontWeight.w500) // Background color
                                 ),
                                             onPressed: () {
                                               FirebaseTable()
@@ -454,14 +466,12 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                             child: const Text("Rate")))
                                     : (client["emails"].contains(FirebaseAuth
                                             .instance.currentUser!.email)
-                                        ? ElevatedButton(style: ElevatedButton.styleFrom(minimumSize: Size(Get.width, 40),
-                                    primary: Colors.red,textStyle: TextStyle(fontSize: 15,fontWeight: FontWeight.w500) // Background color
+                                        ? ElevatedButton(style: ElevatedButton.styleFrom(minimumSize: Size(Get.width, 40), backgroundColor: Colors.red,textStyle: const TextStyle(fontSize: 15,fontWeight: FontWeight.w500) // Background color
                                 ),
                                             onPressed: () {},
                                             child: const Text("Booked"),
                                           )
-                                        : ElevatedButton(style: ElevatedButton.styleFrom(minimumSize: Size(Get.width, 40),
-                                    primary: Color(0xffB83B5D),textStyle: TextStyle(fontSize: 15,fontWeight: FontWeight.w500) // Background color
+                                        : ElevatedButton(style: ElevatedButton.styleFrom(minimumSize: Size(Get.width, 40), backgroundColor: const Color(0xffB83B5D),textStyle: const TextStyle(fontSize: 15,fontWeight: FontWeight.w500) // Background color
                                 ),
                                             onPressed: () async {
                                               showModalBottomSheet<void>(
@@ -616,7 +626,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                                                                         style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w600),
                                                                                       ),
                                                                                       const SizedBox(
-                                                                                        height: 20,
+                                                                                        height: 120,
                                                                                       ),
                                                                                       Container(
                                                                                         height: Get.height * 0.50,
@@ -710,16 +720,17 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                                                                                               SizedBox(
                                                                                                                 width: 260,
                                                                                                                 height: 80,
-                                                                                                                child: TextField(
+                                                                                                                child: TextField(keyboardType: TextInputType.number,
                                                                                                                   controller: ageController[index],
                                                                                                                   style: const TextStyle(color: Color(0xFFF8F8FF)),
                                                                                                                   decoration: InputDecoration(
                                                                                                                     filled: true,
                                                                                                                     fillColor: const Color(0xff38304C),
                                                                                                                     border: InputBorder.none,
-                                                                                                                    labelText: "Phone number",
-                                                                                                                    prefixIcon: const Icon(Icons.phone),
-                                                                                                                    hintText: "Enter phone number",
+                                                                                                                    labelText: "Age",
+                                                                                                                    prefixIcon: const Icon(Icons.text_increase),
+                                                                                                                    hintText: "Enter Age",
+
                                                                                                                     hintStyle: const TextStyle(fontSize: 16, color: Colors.grey, fontWeight: FontWeight.w400),
                                                                                                                     focusedBorder: OutlineInputBorder(
                                                                                                                       borderRadius: BorderRadius.circular(15),
@@ -733,7 +744,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                                                                                                   ),
                                                                                                                 ),
                                                                                                               ),
-                                                                                                              const SizedBox(height: 10),
+
                                                                                                             ],
                                                                                                           ),
                                                                                                         ),
@@ -771,31 +782,97 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                                                                           ),
                                                                                         );
                                                                                       }).toList()),
-                                                                                      const SizedBox(height: 15),
-                                                                                      ElevatedButton(style: ElevatedButton.styleFrom(minimumSize: Size(Get.width, 40),
-                                                                                          primary: Color(0xffB83B5D),textStyle: TextStyle(fontSize: 15,fontWeight: FontWeight.w500) // Background color
+                                                                                      const SizedBox(height: 85),
+                                                                                      ElevatedButton(style: ElevatedButton.styleFrom(minimumSize: Size(Get.width, 40), backgroundColor: const Color(0xffB83B5D),textStyle: const TextStyle(fontSize: 15,fontWeight: FontWeight.w500) // Background color
                                                                                       ),
                                                                                           onPressed: () async {
-                                                                                            for (int i = 0; i < participants; i++) {
-                                                                                              Map<String, dynamic> userData = {
-                                                                                                "no": "${i + 1}",
-                                                                                                "name": nameController[i].text,
-                                                                                                "email": emailController[i].text,
-                                                                                                "age": ageController[i].text
-                                                                                              };
-                                                                                              bookedUserData.add(userData);
+                                                                                        modalState((){
+                                                                                          isLoading=true;
+                                                                                        });
+                                                                                        bool validate=false;
+                                                                                        for(int i=0;i<nameController.length;i++)
+                                                                                          {
+                                                                                            if(nameController[i].text.isEmpty)
+                                                                                              {
+                                                                                                Toast().errorMessage("Name Cannot be empty");
+                                                                                                modalState((){
+                                                                                                  isLoading=false;
+                                                                                                });
+                                                                                                validate=false;
+                                                                                                break;
 
-                                                                                              await FirebaseTable().eventsTable.doc(widget.data["id"]).update({
-                                                                                                "participants": FieldValue.arrayUnion([userData])
+                                                                                              }
+                                                                                            else if(emailController[i].text.isEmpty)
+                                                                                              {
+                                                                                                validate=false;
+                                                                                                Toast().errorMessage("Email cannot be empty");
+                                                                                                modalState((){
+                                                                                                  isLoading=false;
+                                                                                                });
+                                                                                                break;
+                                                                                              }
+                                                                                            else if(ageController[i].text.isEmpty)
+                                                                                            {
+                                                                                              validate=false;
+                                                                                              Toast().errorMessage("Age cannot be empty");
+                                                                                              modalState((){
+                                                                                                isLoading=false;
                                                                                               });
-                                                                                              userData = {};
+                                                                                              break;
                                                                                             }
+                                                                                            else{
+                                                                                              validate=true;
+                                                                                            }
+                                                                                          }
+                                                                                        if(validate) {
 
-                                                                                            Navigator.pop(context);
-                                                                                            Navigator.pop(context);
-                                                                                            makePayment();
+                                                                                          for (int i = 0; i <
+                                                                                              participants; i++) {
+                                                                                            Map<
+                                                                                                String,
+                                                                                                dynamic> userData = {
+                                                                                              "no": "${i +
+                                                                                                  1}",
+                                                                                              "name": nameController[i]
+                                                                                                  .text,
+                                                                                              "email": emailController[i]
+                                                                                                  .text,
+                                                                                              "age": ageController[i]
+                                                                                                  .text
+                                                                                            };
+                                                                                            bookedUserData
+                                                                                                .add(
+                                                                                                userData);
+
+                                                                                            await FirebaseTable()
+                                                                                                .eventsTable
+                                                                                                .doc(
+                                                                                                widget
+                                                                                                    .data["id"])
+                                                                                                .update(
+                                                                                                {
+                                                                                                  "participants": FieldValue
+                                                                                                      .arrayUnion(
+                                                                                                      [
+                                                                                                        userData
+                                                                                                      ])
+                                                                                                });
+
+                                                                                          }
+                                                                                          modalState((){
+                                                                                            isLoading=true;
+                                                                                          });
+
+                                                                                          Navigator
+                                                                                              .pop(
+                                                                                              context);
+                                                                                          Navigator
+                                                                                              .pop(
+                                                                                              context);
+                                                                                          makePayment();
+                                                                                        }
                                                                                           },
-                                                                                          child: const Text("Pay")),
+                                                                                          child:isLoading?CircularProgressIndicator(): const Text("Pay")),
                                                                                     ],
                                                                                   )),
                                                                             );
@@ -819,20 +896,19 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                   height: 20,
                                 ),
                               DateTime.now().isBefore(
-                                  DateTime.parse(client["end_time"]))?ElevatedButton(style: ElevatedButton.styleFrom(minimumSize: Size(Get.width, 40),
-                                  primary: Colors.blue,textStyle: TextStyle(fontSize: 15,fontWeight: FontWeight.w500) // Background color
+                                  DateTime.parse(client["end_time"]))?ElevatedButton(style: ElevatedButton.styleFrom(minimumSize: Size(Get.width, 40), backgroundColor: Colors.blue,textStyle: const TextStyle(fontSize: 15,fontWeight: FontWeight.w500) // Background color
                               ),
                                     onPressed: () async {
                                       showModalBottomSheet<void>(
                                         context: context,
                                         builder: (BuildContext context) {
-                                          return Container(color: Color(0xff0F1A20),
+                                          return Container(color: const Color(0xff0F1A20),
                                             padding: const EdgeInsets.all(10),
                                             height: 400,
                                             child: Column(
                                               children: [
-                                                Text("Share",style: TextStyle(color: Colors.white,fontSize: 20),),
-                                                SizedBox(height: 15,),
+                                                const Text("Share",style: TextStyle(color: Colors.white,fontSize: 20),),
+                                                const SizedBox(height: 15,),
                                                 StreamBuilder<QuerySnapshot>(
                                                     stream: FirebaseTable()
                                                         .usersTable
@@ -918,6 +994,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                                                               completeData);
                                                                       Toast().successMessage(
                                                                           "Event shared successfully");
+                                                                      Navigator.pop(
+                                                                          context);
                                                                       Navigator.pop(
                                                                           context);
                                                                     },

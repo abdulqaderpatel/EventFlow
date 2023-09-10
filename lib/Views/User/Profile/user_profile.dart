@@ -5,6 +5,7 @@ import 'package:eventflow/Views/User/Profile/edit_user_profile.dart';
 import 'package:eventflow/Views/User/Profile/user_follower_page.dart';
 import 'package:eventflow/Views/User/Profile/user_following_page.dart';
 import 'package:eventflow/Views/User/user_enrolled_events.dart';
+import 'package:eventflow/Views/User/user_reciepts.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -256,6 +257,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                           ),
                                         ),
                                       ],
+                                    ),
+                                    SizedBox(height: Get.height*0.05,),
+                                    ElevatedButton(style: ElevatedButton.styleFrom(minimumSize: Size(Get.width*0.9, 40), backgroundColor: Colors.red,textStyle: const TextStyle(fontSize: 15,fontWeight: FontWeight.w500) // Background color
+                                    ),
+                                      onPressed: () {Get.to(UserRecieptsScreen());},
+                                      child: const Text("Your Reciepts"),
                                     ),
                                   ],
                                 ),

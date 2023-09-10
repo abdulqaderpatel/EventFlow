@@ -99,7 +99,7 @@ class _AdminEventDetailsScreenState extends State<AdminEventDetailsScreen> {
       NotificationService().showNotification(
           1, "Event starting soon", "we hope to see you there!", 10000);
       Get.to(PaymentReciept(
-        eventData: eventData,
+        eventData: widget.data,
         userData: userData,
         bookedUserData: bookedUserData,
       ));
