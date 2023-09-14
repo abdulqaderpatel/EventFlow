@@ -6,6 +6,7 @@ import 'package:eventflow/Views/Misc/reciept/payment_reciept.dart';
 import 'package:eventflow/Views/Misc/toast/toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
@@ -103,6 +104,26 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           ),
         ),
       });
+
+     final serviceId='service_mvh1mfq';
+     final templateId='template_1h0pxtb';
+     final userid="D7BfmJv7IK0otiGd6";
+     
+     final url=Uri.parse("https://api.emailjs.com/api/v1.0/email/send");
+     final response=await http.post(url,headers: {
+     'origin': 'http://localhost',
+       'Content-Type':'application/json'
+     },body:jsonEncode( {
+       'service_id':serviceId,
+       'template_id':templateId,
+       'user_id':userid,
+       "template_params":{
+         "name":FirebaseAuth.instance.currentUser!.displayName,
+         "to_email":FirebaseAuth.instance.currentUser!.email,
+         "event":widget.data["name"]
+       }
+     }));
+     print(response.body);
 
       Toast().successMessage("Booked slot");
       DateTime date = DateTime.parse(widget.data["start_time"]);

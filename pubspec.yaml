@@ -42,6 +42,7 @@ dependencies:
   flutter_rating_bar:
   animated_background:
   gradient_widgets:
+  flutter_email_sender:
 
 dev_dependencies:
   flutter_test:
