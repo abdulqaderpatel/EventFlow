@@ -23,85 +23,122 @@ class PaymentReciept extends StatelessWidget {
       required this.userData,
       required this.bookedUserData});
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          height: Get.height,
-          color: const Color(0xff1C2124),
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Container(
-            padding: const EdgeInsets.all(10),
-            child: Center(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                const Text(
-                  "Your Payment was successful",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25,
-                      color: Colors.white),
-                ),
-                Column(
-                  children: [
-                    const Text(
-                      "Payment Reciept",
-                      style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    Container(
-                      height: Get.height * 0.17,
-                      width: Get.height * 0.17,
-                      decoration: BoxDecoration(
-                          color: const Color(
-                            0xffff8c85,
-                          ),
-                          borderRadius: BorderRadius.circular(25)),
-                      child: Image.asset(
-                        "assets/images/main-logo.png",
+            height: Get.height,
+            color: const Color(0xff1C2124),
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              child: Center(
+                  child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Column(
+                    children: [
+                      const Text(
+                        "Payment Reciept",
+                        style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
-                    ),
-                    SizedBox(
-                      height: Get.height * 0.01,
-                    ),
-                    SizedBox(
-                      height: 40,
-                      child: Text(
-                        "EventFlow",
-                        style: GoogleFonts.roboto(
-                          textStyle: const TextStyle(
-                              fontSize: 32,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600),
+                      const SizedBox(
+                        height: 40,
+                      ),
+                      Container(
+                        height: Get.height * 0.17,
+                        width: Get.height * 0.17,
+                        decoration: BoxDecoration(
+                            color: const Color(
+                              0xffff8c85,
+                            ),
+                            borderRadius: BorderRadius.circular(25)),
+                        child: Image.asset(
+                          "assets/images/main-logo.png",
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    Row(
+                      SizedBox(
+                        height: Get.height * 0.01,
+                      ),
+                      SizedBox(
+                        height: 40,
+                        child: Text(
+                          "EventFlow",
+                          style: GoogleFonts.roboto(
+                            textStyle: const TextStyle(
+                                fontSize: 32,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 40,
+                      ),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                const Text(
+                                  "Bill to: ",
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w800,
+                                      color: Colors.white),
+                                ),
+                                Text(
+                                  FirebaseAuth.instance.currentUser!.displayName
+                                      .toString(),
+                                  style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                const Text(
+                                  "Bill no: ",
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w800,
+                                      color: Colors.white),
+                                ),
+                                Text(
+                                  DateTime.now()
+                                      .millisecondsSinceEpoch
+                                      .toString(),
+                                  style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          ]),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
                             children: [
                               const Text(
-                                "Bill to: ",
+                                "Amount: ",
                                 style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w800,
                                     color: Colors.white),
                               ),
                               Text(
-                                FirebaseAuth.instance.currentUser!.displayName
-                                    .toString(),
+                                "${eventData["price"] * bookedUserData.length}",
                                 style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w500,
@@ -112,129 +149,88 @@ class PaymentReciept extends StatelessWidget {
                           Row(
                             children: [
                               const Text(
-                                "Bill no: ",
+                                "Date: ",
                                 style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w800,
                                     color: Colors.white),
                               ),
                               Text(
-                                DateTime.now()
-                                    .millisecondsSinceEpoch
-                                    .toString(),
+                                DateFormat('yMMMMd').format(
+                                  DateTime.parse(
+                                    DateTime.now().toString(),
+                                  ),
+                                ),
                                 style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w500,
                                     color: Colors.white),
                               ),
                             ],
-                          ),
-                        ]),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            const Text(
-                              "Amount: ",
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w800,
-                                  color: Colors.white),
-                            ),
-                            Text(
-                              "${eventData["price"] * bookedUserData.length}",
-                              style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            const Text(
-                              "Date: ",
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w800,
-                                  color: Colors.white),
-                            ),
-                            Text(
-                              DateFormat('yMMMMd').format(
-                                DateTime.parse(
-                                  DateTime.now().toString(),
-                                ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      DataTable(
+                        horizontalMargin: 0,
+                        columns: const [
+                          DataColumn(
+                              label: Text('NO',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white))),
+                          DataColumn(
+                              label: Text('Name',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white))),
+                          DataColumn(
+                              label: Text('Email',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white))),
+                          DataColumn(
+                              label: Text('Age',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white))),
+                        ],
+                        rows: <DataRow>[
+                          ...bookedUserData.map((e) {
+                            return DataRow(cells: [
+                              DataCell(Text(e["no"],
+                                  style: const TextStyle(
+                                      color: Colors.white, fontSize: 10))),
+                              DataCell(Text(e["name"],
+                                  style: const TextStyle(
+                                      color: Colors.white, fontSize: 10))),
+                              DataCell(Text(e["email"],
+                                  style: const TextStyle(
+                                      color: Colors.white, fontSize: 10))),
+                              DataCell(
+                                Text(e["age"],
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 10)),
                               ),
-                              style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    DataTable(
-                      horizontalMargin: 0,
-                      columns: const [
-                        DataColumn(
-                            label: Text('NO',
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white))),
-                        DataColumn(
-                            label: Text('Name',
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white))),
-                        DataColumn(
-                            label: Text('Email',
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white))),
-                        DataColumn(
-                            label: Text('Age',
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white))),
-                      ],
-                      rows: <DataRow>[
-                        ...bookedUserData.map((e) {
-                          return DataRow(cells: [
-                            DataCell(Text(e["no"],
-                                style: const TextStyle(color: Colors.white,fontSize: 10))),
-                            DataCell(Text(e["name"],
-                                style: const TextStyle(color: Colors.white,fontSize: 10))),
-                            DataCell(Text(e["email"],
-                                style: const TextStyle(color: Colors.white,fontSize: 10))),
-                            DataCell(
-                              Text(e["age"],
-                                  style: const TextStyle(color: Colors.white,fontSize: 10)),
-                            ),
-                          ]);
-                        })
-                      ],
-                    ),
-                    const Text(
-                        "Please carry along this reciept when attending the event",
-                        style: TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.bold))
-                  ],
-                ),
-
-              ],
-            )),
+                            ]);
+                          })
+                        ],
+                      ),
+                      const Text(
+                          "Please carry along this reciept when attending the event",
+                          style: TextStyle(
+                              fontSize: 13, fontWeight: FontWeight.bold))
+                    ],
+                  ),
+                ],
+              )),
+            ),
           ),
         ),
       ),

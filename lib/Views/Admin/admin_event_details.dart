@@ -233,7 +233,7 @@ class _AdminEventDetailsScreenState extends State<AdminEventDetailsScreen> {
                                         ),
                                       ),
                                       style: const TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 14,
                                           color: Color(0xffD2D4D4),
                                           fontWeight: FontWeight.w500),
                                     ),
@@ -258,7 +258,7 @@ class _AdminEventDetailsScreenState extends State<AdminEventDetailsScreen> {
                                         ),
                                       )}",
                                       style: const TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 14,
                                           color: Color(0xffD2D4D4),
                                           fontWeight: FontWeight.w500),
                                     ),
@@ -333,7 +333,9 @@ class _AdminEventDetailsScreenState extends State<AdminEventDetailsScreen> {
                                     DateTime.now().isBefore(
                                             DateTime.parse(client["end_time"]))
                                         ? "Participant limit: ${client["max_participants"]}"
-                                        :client["raters"].length==0?"No ratings yet":"Average Rating: ${client["rating"] / client["raters"].length} from ${client["raters"].length} ${client["raters"].length == 1 ? "review" : "reviews"}",
+                                        : client["raters"].length == 0
+                                            ? "No ratings yet"
+                                            : "Average Rating: ${client["rating"] / client["raters"].length} from ${client["raters"].length} ${client["raters"].length == 1 ? "review" : "reviews"}",
                                     style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 20,

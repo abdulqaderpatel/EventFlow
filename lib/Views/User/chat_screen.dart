@@ -19,8 +19,13 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final messageController = TextEditingController();
   final ScrollController scrollController = ScrollController();
-  List<Color> colors=[Colors.redAccent,Colors.pink,Colors.green,Colors.blue];
-  int swipe=0;
+  List<Color> colors = [
+    Colors.redAccent,
+    Colors.pink,
+    Colors.green,
+    Colors.blue
+  ];
+  int swipe = 0;
 
   @override
   void initState() {
@@ -60,55 +65,56 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ),
             const Spacer(),
-            InkWell(onTap: (){
-    if(swipe==3)
-    {
-    setState(() {
-    swipe=0;
-    });
-    }
-    else {
-      setState(() {
-        swipe++;
-      });
-    }},child: Container(height: 30,width: 30,decoration: BoxDecoration(shape: BoxShape.circle,color:swipe==3?colors[0]:colors[swipe+1]),))
+            InkWell(
+                onTap: () {
+                  if (swipe == 3) {
+                    setState(() {
+                      swipe = 0;
+                    });
+                  } else {
+                    setState(() {
+                      swipe++;
+                    });
+                  }
+                },
+                child: Container(
+                  height: 30,
+                  width: 30,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: swipe == 3 ? colors[0] : colors[swipe + 1]),
+                ))
           ],
         ),
       ),
-      body: GestureDetector(onHorizontalDragEnd:(details){
-        if (details.primaryVelocity! > 0) {
-          print(swipe);
-          if(swipe==3)
-          {
-            setState(() {
-              swipe=0;
-            });
+      body: GestureDetector(
+        onHorizontalDragEnd: (details) {
+          if (details.primaryVelocity! > 0) {
+            print(swipe);
+            if (swipe == 3) {
+              setState(() {
+                swipe = 0;
+              });
+            } else {
+              setState(() {
+                swipe++;
+              });
+            }
           }
-          else{
-            setState(() {
-              swipe++;
-            });
 
+          if (details.primaryVelocity! < 0) {
+            print(swipe);
+            if (swipe == 0) {
+              setState(() {
+                swipe = 3;
+              });
+            } else {
+              setState(() {
+                swipe--;
+              });
+            }
           }
-        }
-
-
-        if (details.primaryVelocity! < 0) {
-          print(swipe);
-          if(swipe==0)
-          {
-            setState(() {
-              swipe=3;
-            });
-          }
-          else{
-            setState(() {
-              swipe--;
-            });
-
-          }
-        }
-      },
+        },
         child: Container(
           constraints: BoxConstraints(minWidth: Get.width),
           height: Get.height,
@@ -121,7 +127,9 @@ class _ChatScreenState extends State<ChatScreen> {
                     height: Get.height * 0.8,
                     padding: const EdgeInsets.only(bottom: 20),
                     margin: EdgeInsets.only(
-                        top: 20, left: Get.width * 0.05, right: Get.width * 0.05),
+                        top: 20,
+                        left: Get.width * 0.05,
+                        right: Get.width * 0.05),
                     child: SingleChildScrollView(
                       controller: scrollController,
                       child: StreamBuilder<QuerySnapshot>(
@@ -142,9 +150,11 @@ class _ChatScreenState extends State<ChatScreen> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.end,
                                             children: [
-                                              AnimatedContainer( duration: const Duration(milliseconds: 300),
-                                                decoration:  BoxDecoration(
-color: colors[swipe],
+                                              AnimatedContainer(
+                                                duration: const Duration(
+                                                    milliseconds: 300),
+                                                decoration: BoxDecoration(
+                                                    color: colors[swipe],
                                                     borderRadius:
                                                         const BorderRadius.only(
                                                       topLeft:
@@ -154,7 +164,8 @@ color: colors[swipe],
                                                       bottomLeft:
                                                           Radius.circular(10),
                                                     )),
-                                                padding: const EdgeInsets.all(10),
+                                                padding:
+                                                    const EdgeInsets.all(10),
                                                 constraints: BoxConstraints(
                                                     minWidth: 50,
                                                     maxWidth: Get.width * 0.75,
@@ -182,11 +193,12 @@ color: colors[swipe],
                                                           client["admin_image"],
                                                       "description":
                                                           client["description"],
-                                                      "emails": client["emails"],
+                                                      "emails":
+                                                          client["emails"],
                                                       "end_time":
                                                           client["end_time"],
-                                                      "event_creator":
-                                                          client["event_creator"],
+                                                      "event_creator": client[
+                                                          "event_creator"],
                                                       "id": client["id"],
                                                       "image": client["image"],
                                                       "location":
@@ -194,42 +206,54 @@ color: colors[swipe],
                                                       "max_participants": client[
                                                           "max_participants"],
                                                       "name": client["name"],
-                                                      "participants":
-                                                          client["participants"],
+                                                      "participants": client[
+                                                          "participants"],
                                                       "price": client["price"],
                                                       "start_time":
                                                           client["start_time"],
                                                       "username":
                                                           client["username"],
                                                     })),
-                                                child: AnimatedContainer( duration: const Duration(milliseconds: 300),
+                                                child: AnimatedContainer(
+                                                  duration: const Duration(
+                                                      milliseconds: 300),
                                                   margin: const EdgeInsets.only(
                                                       bottom: 20),
                                                   width: Get.width * 0.6,
                                                   child: Column(
                                                     children: [
-                                                      AnimatedContainer( duration: const Duration(milliseconds: 300),
-                                                        height: Get.height * 0.2,
+                                                      AnimatedContainer(
+                                                        duration:
+                                                            const Duration(
+                                                                milliseconds:
+                                                                    300),
+                                                        height:
+                                                            Get.height * 0.2,
                                                         width: Get.width,
                                                         decoration: BoxDecoration(
                                                             image: DecorationImage(
-                                                                fit: BoxFit.cover,
+                                                                fit: BoxFit
+                                                                    .cover,
                                                                 image: NetworkImage(
                                                                     client[
                                                                         "image"]))),
                                                       ),
-                                                      AnimatedContainer( duration: const Duration(milliseconds: 300),
+                                                      AnimatedContainer(
+                                                        duration:
+                                                            const Duration(
+                                                                milliseconds:
+                                                                    300),
                                                         padding:
-                                                            const EdgeInsets.all(
-                                                                10),
-                                                        color:
-                                                            colors[swipe],
+                                                            const EdgeInsets
+                                                                .all(10),
+                                                        color: colors[swipe],
                                                         child: Column(
                                                           children: [
                                                             Row(
                                                               children: [
                                                                 Text(
-                                                                  client["name"],
+                                                                  client[
+                                                                      "name"],
                                                                   style: const TextStyle(
                                                                       color: Colors
                                                                           .white,
@@ -291,8 +315,10 @@ color: colors[swipe],
                                             mainAxisAlignment:
                                                 MainAxisAlignment.start,
                                             children: [
-                                              AnimatedContainer( duration: const Duration(milliseconds: 300),
-                                                decoration:const BoxDecoration(
+                                              AnimatedContainer(
+                                                duration: const Duration(
+                                                    milliseconds: 300),
+                                                decoration: const BoxDecoration(
                                                     color: Color(0xff3E4649),
                                                     borderRadius:
                                                         BorderRadius.only(
@@ -303,7 +329,8 @@ color: colors[swipe],
                                                       bottomRight:
                                                           Radius.circular(10),
                                                     )),
-                                                padding: const EdgeInsets.all(10),
+                                                padding:
+                                                    const EdgeInsets.all(10),
                                                 constraints: BoxConstraints(
                                                     minWidth: 50,
                                                     maxWidth: Get.width * 0.75,
@@ -331,11 +358,12 @@ color: colors[swipe],
                                                           client["admin_image"],
                                                       "description":
                                                           client["description"],
-                                                      "emails": client["emails"],
+                                                      "emails":
+                                                          client["emails"],
                                                       "end_time":
                                                           client["end_time"],
-                                                      "event_creator":
-                                                          client["event_creator"],
+                                                      "event_creator": client[
+                                                          "event_creator"],
                                                       "id": client["id"],
                                                       "image": client["image"],
                                                       "location":
@@ -343,37 +371,55 @@ color: colors[swipe],
                                                       "max_participants": client[
                                                           "max_participants"],
                                                       "name": client["name"],
-                                                      "participants":
-                                                          client["participants"],
+                                                      "participants": client[
+                                                          "participants"],
                                                       "price": client["price"],
                                                       "start_time":
                                                           client["start_time"],
                                                       "username":
                                                           client["username"],
                                                     })),
-                                                child: AnimatedContainer( duration: const Duration(milliseconds: 300),
+                                                child: AnimatedContainer(
+                                                  duration: const Duration(
+                                                      milliseconds: 300),
                                                   margin: const EdgeInsets.only(
                                                       bottom: 20),
                                                   width: Get.width * 0.6,
                                                   child: Column(
                                                     children: [
-                                                      Image(
-                                                        image: NetworkImage(
-                                                          client["image"],
-                                                        ),
+                                                      AnimatedContainer(
+                                                        duration:
+                                                            const Duration(
+                                                                milliseconds:
+                                                                    300),
+                                                        height:
+                                                            Get.height * 0.2,
+                                                        width: Get.width,
+                                                        decoration: BoxDecoration(
+                                                            image: DecorationImage(
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                                image: NetworkImage(
+                                                                    client[
+                                                                        "image"]))),
                                                       ),
-                                                      Container(
+                                                      AnimatedContainer(
+                                                        duration:
+                                                            const Duration(
+                                                                milliseconds:
+                                                                    300),
                                                         padding:
-                                                            const EdgeInsets.all(
-                                                                10),
-                                                        color:Color(
-                                                            0xff1C1C1C),
+                                                            const EdgeInsets
+                                                                .all(10),
+                                                        color:
+                                                            Color(0xff3E4649),
                                                         child: Column(
                                                           children: [
                                                             Row(
                                                               children: [
                                                                 Text(
-                                                                  client["name"],
+                                                                  client[
+                                                                      "name"],
                                                                   style: const TextStyle(
                                                                       color: Colors
                                                                           .white,

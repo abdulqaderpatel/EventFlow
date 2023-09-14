@@ -19,21 +19,19 @@ import 'Controllers/Users/user_navigation_controller.dart';
 import 'firebase_options.dart';
 
 void main() async {
-
   Paint.enableDithering = true;
   WidgetsFlutterBinding.ensureInitialized();
   Stripe.publishableKey =
       "pk_test_51NjJbkSDqOoAu1YvgQpN7weD8MzoNFW7rCOPBMnAZaJlWnpXkW2EvauiTP8PYpnQC73YJbX9K3jnkMBqVKTHqdTE00frWxNHzF";
-NotificationService().initNotification();
+  NotificationService().initNotification();
   tz.initializeTimeZones();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    systemNavigationBarColor: Color(0xff00141C), // navigation bar color
-    statusBarColor: Color(0xff00141C) // status bar color
-  ));
+      systemNavigationBarColor: Color(0xff00141C), // navigation bar color
+      statusBarColor: Color(0xff00141C) // status bar color
+      ));
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await FirebaseAuth.instance.signOut();
 
   runApp(MyApp());
 }

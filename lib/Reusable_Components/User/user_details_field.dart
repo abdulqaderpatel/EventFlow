@@ -7,13 +7,17 @@ class UserDetailField extends StatelessWidget {
   final String placeholder;
   final String details;
   final VoidCallback? voidCallback;
+  final bool? isIcon;
+  final IconData? textIcon;
 
   const UserDetailField(
       {super.key,
       required this.icon,
       required this.placeholder,
       required this.details,
-      this.voidCallback});
+      this.isIcon = false,
+      this.voidCallback,
+      this.textIcon});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +48,7 @@ class UserDetailField extends StatelessWidget {
                 style: const TextStyle(
                     overflow: TextOverflow.ellipsis,
                     color: Colors.grey,
-                    fontSize: 17,
+                    fontSize: 14,
                     fontWeight: FontWeight.w500),
               ),
               Icon(
@@ -57,17 +61,21 @@ class UserDetailField extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               InkWell(
-                onTap: voidCallback,
-                child: Text(
-                  details,
-                  maxLines: 1,
-                  style: const TextStyle(
-                      overflow: TextOverflow.ellipsis,
-                      color: Colors.white,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600),
-                ),
-              )
+                  onTap: voidCallback,
+                  child: !isIcon!
+                      ? Text(
+                          details,
+                          maxLines: 1,
+                          style: const TextStyle(
+                              overflow: TextOverflow.ellipsis,
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600),
+                        )
+                      : Icon(
+                          textIcon,
+                          color: Colors.white,
+                        ))
             ],
           )
         ],

@@ -62,10 +62,8 @@ class _UserEnrolledEventsScreenState extends State<UserEnrolledEventsScreen> {
                             border: currentIndex == 0
                                 ? Border.all(width: 2, color: Colors.grey)
                                 : null,
-                            gradient: LinearGradient(colors: [
-                              Color(0xffF907FC),
-                              Color(0xff05D6D9)
-                            ]),
+                            gradient: LinearGradient(
+                                colors: [Color(0xffF907FC), Color(0xff05D6D9)]),
                             borderRadius: BorderRadius.circular(20),
                             color: Colors.red),
                         child: Stack(
@@ -95,12 +93,10 @@ class _UserEnrolledEventsScreenState extends State<UserEnrolledEventsScreen> {
                       Container(
                         margin: EdgeInsets.only(right: 20),
                         height: 100,
-                        width: 150,
+                        width: 130,
                         decoration: BoxDecoration(
-                            gradient: LinearGradient(colors: [
-                              Color(0xffFF0000),
-                              Color(0xffFF7878)
-                            ]),
+                            gradient: LinearGradient(
+                                colors: [Color(0xffFF0000), Color(0xffFF7878)]),
                             border: currentIndex == 1
                                 ? Border.all(width: 2, color: Colors.grey)
                                 : null,
@@ -159,24 +155,21 @@ class _UserEnrolledEventsScreenState extends State<UserEnrolledEventsScreen> {
                                                 "description":
                                                     client["description"],
                                                 "emails": client["emails"],
-                                                "end_time":
-                                                    client["end_time"],
+                                                "end_time": client["end_time"],
                                                 "event_creator":
                                                     client["event_creator"],
                                                 "id": client["id"],
                                                 "image": client["image"],
-                                                "location":
-                                                    client["location"],
-                                                "max_participants": client[
-                                                    "max_participants"],
+                                                "location": client["location"],
+                                                "max_participants":
+                                                    client["max_participants"],
                                                 "name": client["name"],
                                                 "participants":
                                                     client["participants"],
                                                 "price": client["price"],
                                                 "start_time":
                                                     client["start_time"],
-                                                "username":
-                                                    client["username"],
+                                                "username": client["username"],
                                                 "rating": client["rating"],
                                               });
                                             }),
@@ -204,8 +197,8 @@ class _UserEnrolledEventsScreenState extends State<UserEnrolledEventsScreen> {
                                                   Stack(
                                                     children: [
                                                       Container(
-                                                        height: Get.height *
-                                                            0.275,
+                                                        height:
+                                                            Get.height * 0.275,
                                                         width: Get.width,
                                                         decoration: BoxDecoration(
                                                             borderRadius:
@@ -224,13 +217,11 @@ class _UserEnrolledEventsScreenState extends State<UserEnrolledEventsScreen> {
                                                             child:
                                                                 Image.network(
                                                               client["image"],
-                                                              fit: BoxFit
-                                                                  .cover,
+                                                              fit: BoxFit.cover,
                                                             )),
                                                       ),
                                                       Positioned(
-                                                        top: Get.height *
-                                                            0.025,
+                                                        top: Get.height * 0.025,
                                                         right:
                                                             Get.width * 0.076,
                                                         child: Container(
@@ -238,8 +229,8 @@ class _UserEnrolledEventsScreenState extends State<UserEnrolledEventsScreen> {
                                                           width: 60,
                                                           decoration:
                                                               BoxDecoration(
-                                                            shape: BoxShape
-                                                                .circle,
+                                                            shape:
+                                                                BoxShape.circle,
                                                             color: const Color(
                                                                     0xff65696E)
                                                                 .withOpacity(
@@ -265,7 +256,8 @@ class _UserEnrolledEventsScreenState extends State<UserEnrolledEventsScreen> {
                                                                       color: Colors
                                                                           .white,
                                                                       fontWeight:
-                                                                          FontWeight.w600),
+                                                                          FontWeight
+                                                                              .w600),
                                                                 ),
                                                                 Text(
                                                                   DateFormat(
@@ -308,8 +300,8 @@ class _UserEnrolledEventsScreenState extends State<UserEnrolledEventsScreen> {
                                                               .spaceBetween,
                                                       children: [
                                                         SizedBox(
-                                                          width: Get.width *
-                                                              0.65,
+                                                          width:
+                                                              Get.width * 0.65,
                                                           child: Column(
                                                             children: [
                                                               Row(
@@ -339,7 +331,7 @@ class _UserEnrolledEventsScreenState extends State<UserEnrolledEventsScreen> {
                                                                         color: Colors
                                                                             .white,
                                                                         fontSize:
-                                                                            17,
+                                                                            15,
                                                                         fontWeight:
                                                                             FontWeight.w500),
                                                                   ),
@@ -355,7 +347,7 @@ class _UserEnrolledEventsScreenState extends State<UserEnrolledEventsScreen> {
                                                                         color: Colors
                                                                             .white,
                                                                         fontSize:
-                                                                            17,
+                                                                            15,
                                                                         fontWeight:
                                                                             FontWeight.w500),
                                                                   ),
@@ -373,8 +365,8 @@ class _UserEnrolledEventsScreenState extends State<UserEnrolledEventsScreen> {
                                                                   BorderRadius
                                                                       .circular(
                                                                           20),
-                                                              color: Colors
-                                                                  .white),
+                                                              color:
+                                                                  Colors.white),
                                                           child: Text(
                                                             "₹ ${client["price"]}",
                                                             style: const TextStyle(
@@ -413,24 +405,21 @@ class _UserEnrolledEventsScreenState extends State<UserEnrolledEventsScreen> {
                                                 "description":
                                                     client["description"],
                                                 "emails": client["emails"],
-                                                "end_time":
-                                                    client["end_time"],
+                                                "end_time": client["end_time"],
                                                 "event_creator":
                                                     client["event_creator"],
                                                 "id": client["id"],
                                                 "image": client["image"],
-                                                "location":
-                                                    client["location"],
-                                                "max_participants": client[
-                                                    "max_participants"],
+                                                "location": client["location"],
+                                                "max_participants":
+                                                    client["max_participants"],
                                                 "name": client["name"],
                                                 "participants":
                                                     client["participants"],
                                                 "price": client["price"],
                                                 "start_time":
                                                     client["start_time"],
-                                                "username":
-                                                    client["username"],
+                                                "username": client["username"],
                                               });
                                             }),
                                           );
@@ -458,8 +447,8 @@ class _UserEnrolledEventsScreenState extends State<UserEnrolledEventsScreen> {
                                                   Stack(
                                                     children: [
                                                       Container(
-                                                        height: Get.height *
-                                                            0.275,
+                                                        height:
+                                                            Get.height * 0.275,
                                                         width: Get.width,
                                                         decoration: BoxDecoration(
                                                             borderRadius:
@@ -478,13 +467,11 @@ class _UserEnrolledEventsScreenState extends State<UserEnrolledEventsScreen> {
                                                             child:
                                                                 Image.network(
                                                               client["image"],
-                                                              fit: BoxFit
-                                                                  .cover,
+                                                              fit: BoxFit.cover,
                                                             )),
                                                       ),
                                                       Positioned(
-                                                        top: Get.height *
-                                                            0.025,
+                                                        top: Get.height * 0.025,
                                                         right:
                                                             Get.width * 0.076,
                                                         child: Container(
@@ -492,8 +479,8 @@ class _UserEnrolledEventsScreenState extends State<UserEnrolledEventsScreen> {
                                                           width: 60,
                                                           decoration:
                                                               BoxDecoration(
-                                                            shape: BoxShape
-                                                                .circle,
+                                                            shape:
+                                                                BoxShape.circle,
                                                             color: const Color(
                                                                     0xff65696E)
                                                                 .withOpacity(
@@ -519,7 +506,8 @@ class _UserEnrolledEventsScreenState extends State<UserEnrolledEventsScreen> {
                                                                       color: Colors
                                                                           .white,
                                                                       fontWeight:
-                                                                          FontWeight.w600),
+                                                                          FontWeight
+                                                                              .w600),
                                                                 ),
                                                                 Text(
                                                                   DateFormat(
@@ -562,8 +550,8 @@ class _UserEnrolledEventsScreenState extends State<UserEnrolledEventsScreen> {
                                                               .spaceBetween,
                                                       children: [
                                                         SizedBox(
-                                                          width: Get.width *
-                                                              0.65,
+                                                          width:
+                                                              Get.width * 0.65,
                                                           child: Column(
                                                             children: [
                                                               Row(
@@ -627,8 +615,8 @@ class _UserEnrolledEventsScreenState extends State<UserEnrolledEventsScreen> {
                                                                   BorderRadius
                                                                       .circular(
                                                                           20),
-                                                              color: Colors
-                                                                  .white),
+                                                              color:
+                                                                  Colors.white),
                                                           child: Text(
                                                             "₹ ${client["price"]}",
                                                             style: const TextStyle(

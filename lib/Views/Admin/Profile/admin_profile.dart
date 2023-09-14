@@ -243,13 +243,17 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                                     SizedBox(
                                       width: Get.width * 0.05,
                                     ),
-                                    InkWell(onTap:()=> Navigator.push(context, MaterialPageRoute(builder: (context){
-                                      return AdminEventsScreen();
-                                    })),
+                                    InkWell(
+                                      onTap: () => Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return AdminEventsScreen();
+                                      })),
                                       child: const UserDetailField(
                                         icon: Icons.event,
                                         placeholder: "Enrolled events",
                                         details: "view",
+                                        isIcon: true,
+                                        textIcon: Icons.event,
                                       ),
                                     ),
                                   ],
