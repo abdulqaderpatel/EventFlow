@@ -8,14 +8,14 @@ import 'package:eventflow/Views/User/Profile/create_user_profile.dart';
 import 'package:eventflow/Views/User/user_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:google_fonts/google_fonts.dart';
 import "package:timezone/data/latest.dart" as tz;
-import 'Controllers/Users/user_navigation_controller.dart';
+
 import 'firebase_options.dart';
 
 void main() async {
@@ -25,7 +25,7 @@ void main() async {
       "pk_test_51NjJbkSDqOoAu1YvgQpN7weD8MzoNFW7rCOPBMnAZaJlWnpXkW2EvauiTP8PYpnQC73YJbX9K3jnkMBqVKTHqdTE00frWxNHzF";
   NotificationService().initNotification();
   tz.initializeTimeZones();
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       systemNavigationBarColor: Color(0xff00141C), // navigation bar color
       statusBarColor: Color(0xff00141C) // status bar color
       ));

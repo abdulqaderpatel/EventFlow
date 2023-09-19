@@ -17,9 +17,8 @@ class UserProfileSubmitButton extends StatelessWidget {
           style: ElevatedButton.styleFrom(  shape:
           RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
-      side: BorderSide(color: Colors.red))
-      ,minimumSize: Size(Get.width, 40),
-              primary: Color(0xffFE7A3E),textStyle: TextStyle(fontSize: 15,fontWeight: FontWeight.w500) // Background color
+      side: const BorderSide(color: Colors.red)), backgroundColor: const Color(0xffFE7A3E)
+      ,minimumSize: Size(Get.width, 40),textStyle: const TextStyle(fontSize: 15,fontWeight: FontWeight.w500) // Background color
           ),
           onPressed: voidCallback,
           child: !isLoading

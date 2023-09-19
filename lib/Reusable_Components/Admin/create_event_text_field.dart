@@ -64,7 +64,7 @@ class CreateEventTextField extends StatelessWidget {
             SizedBox(
                 height: 120,
                 width: width,
-                child: TextFormField(style: TextStyle(color: Colors.white),
+                child: TextFormField(style: const TextStyle(color: Colors.white),
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
                   minLines: 5,

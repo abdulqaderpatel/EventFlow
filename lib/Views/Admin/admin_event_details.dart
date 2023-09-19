@@ -12,7 +12,7 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
-import "package:timezone/data/latest.dart" as tz;
+
 import "../Misc/notification_service.dart";
 
 import 'package:percent_indicator/circular_percent_indicator.dart';
@@ -43,10 +43,7 @@ class _AdminEventDetailsScreenState extends State<AdminEventDetailsScreen> {
   late AutoScrollController controller;
   ScrollController scrollController = ScrollController();
 
-  Future _scrollToIndex(int index) async {
-    await controller.scrollToIndex(index,
-        preferPosition: AutoScrollPosition.begin);
-  }
+
 
   Map<String, dynamic>? paymentIntent;
 
@@ -92,9 +89,9 @@ class _AdminEventDetailsScreenState extends State<AdminEventDetailsScreen> {
       );
 
       Toast().successMessage("Booked slot");
-      DateTime date = DateTime.parse(widget.data["start_time"]);
-      var time = Timestamp.fromDate(date);
-      int number = time.millisecondsSinceEpoch;
+
+
+
 
       NotificationService().showNotification(
           1, "Event starting soon", "we hope to see you there!", 10000);
@@ -104,7 +101,9 @@ class _AdminEventDetailsScreenState extends State<AdminEventDetailsScreen> {
         bookedUserData: bookedUserData,
       ));
       bookedUserData = [];
-    } catch (e) {}
+    } catch (e) {
+      Toast().errorMessage("An unknown error occurred");
+    }
   }
 
   createPaymentIntent() async {
@@ -145,11 +144,11 @@ class _AdminEventDetailsScreenState extends State<AdminEventDetailsScreen> {
                 .where("id", isEqualTo: widget.data["id"])
                 .snapshots(),
             builder: (context, snapshot) {
-              List<Container> clientWidgets = [];
+              List<SizedBox> clientWidgets = [];
               if (snapshot.hasData) {
                 final clients = snapshot.data?.docs;
                 for (var client in clients!) {
-                  final clientWidget = Container(
+                  final clientWidget = SizedBox(
                     height: Get.height,
                     child: ListView(
                       children: [
@@ -418,9 +417,8 @@ class _AdminEventDetailsScreenState extends State<AdminEventDetailsScreen> {
                                 ),
                                 ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                        minimumSize: Size(Get.width, 40),
-                                        primary: Color(0xffB83B5D),
-                                        textStyle: TextStyle(
+                                        minimumSize: Size(Get.width, 40), backgroundColor: const Color(0xffB83B5D),
+                                        textStyle: const TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight
                                                 .w500) // Background color

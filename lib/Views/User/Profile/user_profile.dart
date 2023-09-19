@@ -216,25 +216,35 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                               child: Column(
                                 children: [
                                   const SizedBox(
-                                    height: 40,
+                                    height: 5,
                                   ),
-                                  Row(
-                                    children: [
-                                      UserDetailField(
-                                          icon: Icons.supervised_user_circle,
-                                          placeholder: "username",
-                                          details: client["username"]),
+
+                                      Row(
+                                        children: [
+                                          UserDetailField(isLong: true,
+                                              icon: Icons.supervised_user_circle,
+                                              placeholder: "username",
+                                              details: client["username"]),
+                                        ],
+                                      ),
+                                  SizedBox(
+                                    height: Get.height * 0.03,
+                                  ),
                                       SizedBox(
                                         width: Get.width * 0.05,
                                       ),
-                                      UserDetailField(
-                                          icon: Icons.email,
-                                          placeholder: "email",
-                                          details: client["email"]),
-                                    ],
-                                  ),
+                                      Row(
+                                        children: [
+                                          UserDetailField(
+                                            isLong: true,
+                                              icon: Icons.email,
+                                              placeholder: "email",
+                                              details: client["email"]),
+                                        ],
+                                      ),
+
                                   SizedBox(
-                                    height: Get.height * 0.05,
+                                    height: Get.height * 0.03,
                                   ),
                                   Row(
                                     children: [

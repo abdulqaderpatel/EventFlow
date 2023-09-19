@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../Reusable_Components/Admin/admin_text_field.dart';
+
 import '../user_navigation_bar.dart';
 
 class CreateUserProfileScreen extends StatefulWidget {
@@ -202,7 +202,7 @@ class _CreateUserProfileScreenState extends State<CreateUserProfileScreen> {
                                   width: Get.width * 0.8,
                                   labelText: "Username",
                                   validator: (value) {
-                                    print(value);
+
 
                                     return "";
                                   },

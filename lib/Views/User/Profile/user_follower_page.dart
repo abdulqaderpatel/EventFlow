@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eventflow/Views/User/chat_screen.dart';
-import 'package:eventflow/Views/User/notifications.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:badges/badges.dart' as badge;
+
 
 import '../../Misc/Firebase/firebase_tables.dart';
 
@@ -28,7 +27,7 @@ class _UserFollowerScreenState extends State<UserFollowerScreen> {
         appBar: AppBar(
 
           backgroundColor: const Color(0xff00141C),
-          title: Text("Followers"),
+          title: const Text("Followers"),
         ),
         body: Container(
           color: const Color(0xff0A171F),

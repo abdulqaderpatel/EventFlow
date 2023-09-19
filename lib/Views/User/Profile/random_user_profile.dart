@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eventflow/Reusable_Components/User/user_details_field.dart';
 import 'package:eventflow/Views/User/chat_screen.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -88,7 +87,7 @@ class _RandomUserProfileScreenState extends State<RandomUserProfileScreen> {
                                                       widget.userData);
                                                 }));
                                               },
-                                              child: Icon(
+                                              child: const Icon(
                                                 Icons.chat,
                                                 color: Colors.white,
                                               ))
@@ -180,14 +179,13 @@ class _RandomUserProfileScreenState extends State<RandomUserProfileScreen> {
                                 horizontal: Get.width * 0.02),
                             child: Column(
                               children: [
-                                SizedBox(height: 20),
+                                const SizedBox(height: 20),
                                 client["follower"].contains(
                                         FirebaseAuth.instance.currentUser!.uid)
                                     ? ElevatedButton(
                                         style: ElevatedButton.styleFrom(
-                                            minimumSize: Size(Get.width, 40),
-                                            primary: Colors.red,
-                                            textStyle: TextStyle(
+                                            minimumSize: Size(Get.width, 40), backgroundColor: Colors.red,
+                                            textStyle: const TextStyle(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight
                                                     .w500) // Background color
@@ -232,9 +230,8 @@ class _RandomUserProfileScreenState extends State<RandomUserProfileScreen> {
                                         child: const Text("Unfollow"))
                                     : ElevatedButton(
                                         style: ElevatedButton.styleFrom(
-                                            minimumSize: Size(Get.width, 40),
-                                            primary: Colors.green,
-                                            textStyle: TextStyle(
+                                            minimumSize: Size(Get.width, 40), backgroundColor: Colors.green,
+                                            textStyle: const TextStyle(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight
                                                     .w500) // Background color
@@ -298,13 +295,13 @@ class _RandomUserProfileScreenState extends State<RandomUserProfileScreen> {
                                               .set(items[0]);
                                         },
                                         child: const Text("follow")),
-                                SizedBox(height: 15),
-                                Icon(
+                                const SizedBox(height: 15),
+                                const Icon(
                                   Icons.event,
                                   color: Colors.grey,
                                   size: 28,
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 15,
                                 ),
                                 SingleChildScrollView(
@@ -325,7 +322,7 @@ class _RandomUserProfileScreenState extends State<RandomUserProfileScreen> {
                                                 final clients =
                                                     snapshot.data?.docs;
                                                 for (var client in clients!) {
-                                                  var currentIndex = 0;
+
 
                                                   final clientWidget = InkWell(
                                                     onTap: () {
@@ -374,7 +371,7 @@ class _RandomUserProfileScreenState extends State<RandomUserProfileScreen> {
                                                           decoration:
                                                               BoxDecoration(
                                                             gradient:
-                                                                LinearGradient(
+                                                                const LinearGradient(
                                                               colors: [
                                                                 Colors.black,
                                                                 Color(

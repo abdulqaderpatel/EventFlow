@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
-import 'package:eventflow/Views/User/event_details.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 
 class RecieptDetailsScreen extends StatefulWidget {
   final String id;
@@ -51,7 +50,7 @@ class _RecieptDetailsScreenState extends State<RecieptDetailsScreen> {
                                         children: [
                                           Text(
                                             client["name"],
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontSize: 30,
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.white),

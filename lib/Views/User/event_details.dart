@@ -105,25 +105,27 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         ),
       });
 
-     final serviceId='service_mvh1mfq';
-     final templateId='template_1h0pxtb';
-     final userid="D7BfmJv7IK0otiGd6";
-     
-     final url=Uri.parse("https://api.emailjs.com/api/v1.0/email/send");
-     final response=await http.post(url,headers: {
-     'origin': 'http://localhost',
-       'Content-Type':'application/json'
-     },body:jsonEncode( {
-       'service_id':serviceId,
-       'template_id':templateId,
-       'user_id':userid,
-       "template_params":{
-         "name":FirebaseAuth.instance.currentUser!.displayName,
-         "to_email":FirebaseAuth.instance.currentUser!.email,
-         "event":widget.data["name"]
-       }
-     }));
-     print(response.body);
+      final serviceId = 'service_mvh1mfq';
+      final templateId = 'template_1h0pxtb';
+      final userid = "D7BfmJv7IK0otiGd6";
+
+      final url = Uri.parse("https://api.emailjs.com/api/v1.0/email/send");
+      final response = await http.post(url,
+          headers: {
+            'origin': 'http://localhost',
+            'Content-Type': 'application/json'
+          },
+          body: jsonEncode({
+            'service_id': serviceId,
+            'template_id': templateId,
+            'user_id': userid,
+            "template_params": {
+              "name": FirebaseAuth.instance.currentUser!.displayName,
+              "to_email": FirebaseAuth.instance.currentUser!.email,
+              "event": widget.data["name"]
+            }
+          }));
+      print(response.body);
 
       Toast().successMessage("Booked slot");
       DateTime date = DateTime.parse(widget.data["start_time"]);
@@ -421,7 +423,12 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                                             "max_participants"])
                                                     .toString()),
                                                 center: Text(
-                                                  "${client["max_participants"] - client["participants"].length} spots left",
+                                                  client["max_participants"] -
+                                                              client["participants"]
+                                                                  .length ==
+                                                          0
+                                                      ? "No spots left!!"
+                                                      : "${client["max_participants"] - client["participants"].length} spots left",
                                                   style: const TextStyle(
                                                       fontSize: 20.0,
                                                       fontWeight:
@@ -535,388 +542,407 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                                         .w500) // Background color
                                                 ),
                                             onPressed: () async {
-                                              showModalBottomSheet<void>(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return StatefulBuilder(
-                                                      builder:
-                                                          (BuildContext context,
-                                                              modalState) {
-                                                    return Container(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              10),
-                                                      height: 300,
-                                                      color: const Color(
-                                                          0xff2C384C),
-                                                      child: Center(
-                                                        child: Column(
-                                                          children: <Widget>[
-                                                            const SizedBox(
-                                                                height: 15),
-                                                            const Text(
-                                                              'Enter no of participants',
-                                                              style: TextStyle(
-                                                                  fontSize: 24,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600),
-                                                            ),
-                                                            const SizedBox(
-                                                              height: 40,
-                                                            ),
-                                                            Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                InkWell(
-                                                                    onTap: () {
-                                                                      modalState(
+                                              if (client["max_participants"] -
+                                                      client["participants"]
+                                                          .length ==
+                                                  0) {
+                                                Toast().errorMessage(
+                                                    "no spots left!!");
+                                              } else {
+                                                showModalBottomSheet<void>(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return StatefulBuilder(
+                                                        builder: (BuildContext
+                                                                context,
+                                                            modalState) {
+                                                      return Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(10),
+                                                        height: 300,
+                                                        color: const Color(
+                                                            0xff2C384C),
+                                                        child: Center(
+                                                          child: Column(
+                                                            children: <Widget>[
+                                                              const SizedBox(
+                                                                  height: 15),
+                                                              const Text(
+                                                                'Enter no of participants',
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        24,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600),
+                                                              ),
+                                                              const SizedBox(
+                                                                height: 40,
+                                                              ),
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  InkWell(
+                                                                      onTap:
                                                                           () {
-                                                                        participants++;
-                                                                      });
+                                                                        modalState(
+                                                                            () {
+                                                                          participants++;
+                                                                        });
+                                                                      },
+                                                                      child:
+                                                                          const Icon(
+                                                                        Icons
+                                                                            .add,
+                                                                        size:
+                                                                            32,
+                                                                        color: Colors
+                                                                            .white,
+                                                                      )),
+                                                                  const SizedBox(
+                                                                    width: 10,
+                                                                  ),
+                                                                  Text(
+                                                                    participants
+                                                                        .toString(),
+                                                                    style: const TextStyle(
+                                                                        fontSize:
+                                                                            32,
+                                                                        fontWeight:
+                                                                            FontWeight.w500),
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    width: 10,
+                                                                  ),
+                                                                  InkWell(
+                                                                    onTap: () {
+                                                                      if (participants !=
+                                                                          0) {
+                                                                        modalState(
+                                                                            () {
+                                                                          participants--;
+                                                                        });
+                                                                      }
                                                                     },
                                                                     child:
                                                                         const Icon(
-                                                                      Icons.add,
+                                                                      Icons
+                                                                          .remove,
                                                                       size: 32,
                                                                       color: Colors
                                                                           .white,
-                                                                    )),
-                                                                const SizedBox(
-                                                                  width: 10,
-                                                                ),
-                                                                Text(
-                                                                  participants
-                                                                      .toString(),
-                                                                  style: const TextStyle(
-                                                                      fontSize:
-                                                                          32,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500),
-                                                                ),
-                                                                const SizedBox(
-                                                                  width: 10,
-                                                                ),
-                                                                InkWell(
-                                                                  onTap: () {
-                                                                    if (participants !=
-                                                                        0) {
-                                                                      modalState(
-                                                                          () {
-                                                                        participants--;
-                                                                      });
-                                                                    }
-                                                                  },
-                                                                  child:
-                                                                      const Icon(
-                                                                    Icons
-                                                                        .remove,
-                                                                    size: 32,
-                                                                    color: Colors
-                                                                        .white,
+                                                                    ),
                                                                   ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            const SizedBox(
-                                                                height: 15),
-                                                            ElevatedButton(
-                                                                child: const Text(
-                                                                    'Enter Details'),
-                                                                onPressed: () {
-                                                                  nameController
-                                                                      .clear();
-                                                                  emailController
-                                                                      .clear();
-                                                                  ageController
-                                                                      .clear();
-                                                                  participantPages
-                                                                      .clear();
-                                                                  for (int i =
-                                                                          0;
-                                                                      i < participants;
-                                                                      i++) {
-                                                                    nameController
-                                                                        .add(
-                                                                            TextEditingController());
-                                                                    emailController
-                                                                        .add(
-                                                                            TextEditingController());
-                                                                    ageController
-                                                                        .add(
-                                                                            TextEditingController());
-                                                                    participantPages
-                                                                        .add(i +
-                                                                            1);
-                                                                  }
+                                                                ],
+                                                              ),
+                                                              const SizedBox(
+                                                                  height: 15),
+                                                              ElevatedButton(
+                                                                  child: const Text(
+                                                                      'Enter Details'),
+                                                                  onPressed:
+                                                                      () {
+                                                                    if (participants >
+                                                                        client["max_participants"] -
+                                                                            client["participants"].length) {
+                                                                      Toast().errorMessage(
+                                                                          "Not enough spots left!!");
+                                                                    }
+                                                                    else if(participants==0)
+                                                                      {
+                                                                        Toast().errorMessage("Please enter a valid number");
+                                                                      }
+                                                                    else {
+                                                                      nameController
+                                                                          .clear();
+                                                                      emailController
+                                                                          .clear();
+                                                                      ageController
+                                                                          .clear();
+                                                                      participantPages
+                                                                          .clear();
+                                                                      for (int i =
+                                                                              0;
+                                                                          i < participants;
+                                                                          i++) {
+                                                                        nameController
+                                                                            .add(TextEditingController());
+                                                                        emailController
+                                                                            .add(TextEditingController());
+                                                                        ageController
+                                                                            .add(TextEditingController());
+                                                                        participantPages
+                                                                            .add(i +
+                                                                                1);
+                                                                      }
 
-                                                                  Navigator.pop(
-                                                                      context);
-                                                                  showModalBottomSheet<
-                                                                      void>(
-                                                                    isScrollControlled:
-                                                                        true,
-                                                                    context:
-                                                                        context,
-                                                                    builder:
-                                                                        (BuildContext
-                                                                            context) {
-                                                                      return SingleChildScrollView(
-                                                                        child:
-                                                                            Padding(
-                                                                          padding:
-                                                                              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                                                                          child:
-                                                                              StatefulBuilder(builder: (BuildContext context, modalState) {
-                                                                            return Container(
-                                                                              padding: const EdgeInsets.only(top: 15),
-                                                                              color: const Color(0xff201A30),
-                                                                              child: Container(
-                                                                                  padding: const EdgeInsets.all(10),
-                                                                                  margin: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
-                                                                                  height: Get.height,
-                                                                                  child: Column(
-                                                                                    mainAxisSize: MainAxisSize.min,
-                                                                                    children: [
-                                                                                      const Text(
-                                                                                        "Enter Participant Details",
-                                                                                        style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w600),
-                                                                                      ),
-                                                                                      const SizedBox(
-                                                                                        height: 120,
-                                                                                      ),
-                                                                                      Container(
-                                                                                        height: Get.height * 0.50,
-                                                                                        child: ListView.builder(
-                                                                                          scrollDirection: Axis.horizontal,
-                                                                                          shrinkWrap: true,
-                                                                                          itemCount: participants,
-                                                                                          controller: scrollController,
-                                                                                          itemBuilder: (context, index) {
-                                                                                            nameController[0].text = FirebaseAuth.instance.currentUser!.displayName!;
-                                                                                            emailController[0].text = FirebaseAuth.instance.currentUser!.email!;
-                                                                                            return Column(
-                                                                                              mainAxisAlignment: MainAxisAlignment.start,
-                                                                                              children: [
-                                                                                                Container(
-                                                                                                  width: 280,
-                                                                                                  padding: const EdgeInsets.only(top: 15),
-                                                                                                  child: Row(
-                                                                                                    children: [
-                                                                                                      Expanded(
-                                                                                                        child: Container(
-                                                                                                          margin: const EdgeInsets.only(right: 20),
-                                                                                                          alignment: Alignment.center,
-                                                                                                          decoration: BoxDecoration(
-                                                                                                            borderRadius: BorderRadius.circular(10),
-                                                                                                          ),
-                                                                                                          child: Column(
-                                                                                                            children: [
-                                                                                                              Text(
-                                                                                                                "Person ${index + 1}",
-                                                                                                                textAlign: TextAlign.center,
-                                                                                                                style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w600),
-                                                                                                              ),
-                                                                                                              const SizedBox(
-                                                                                                                height: 10,
-                                                                                                              ),
-                                                                                                              SizedBox(
-                                                                                                                width: 260,
-                                                                                                                height: 80,
-                                                                                                                child: TextField(
-                                                                                                                  controller: nameController[index],
-                                                                                                                  style: const TextStyle(color: Color(0xFFF8F8FF)),
-                                                                                                                  decoration: InputDecoration(
-                                                                                                                    filled: true,
-                                                                                                                    fillColor: const Color(0xff38304C),
-                                                                                                                    border: InputBorder.none,
-                                                                                                                    labelText: "Name",
-                                                                                                                    prefixIcon: const Icon(Icons.person),
-                                                                                                                    hintText: "Enter name",
-                                                                                                                    hintStyle: const TextStyle(fontSize: 16, color: Colors.grey, fontWeight: FontWeight.w400),
-                                                                                                                    focusedBorder: OutlineInputBorder(
-                                                                                                                      borderRadius: BorderRadius.circular(15),
-                                                                                                                    ),
-                                                                                                                    enabledBorder: OutlineInputBorder(
-                                                                                                                      borderRadius: BorderRadius.circular(15),
-                                                                                                                      borderSide: const BorderSide(
-                                                                                                                        width: 0,
-                                                                                                                      ),
-                                                                                                                    ),
-                                                                                                                  ),
-                                                                                                                ),
-                                                                                                              ),
-                                                                                                              const SizedBox(height: 10),
-                                                                                                              SizedBox(
-                                                                                                                width: 260,
-                                                                                                                height: 80,
-                                                                                                                child: TextField(
-                                                                                                                  controller: emailController[index],
-                                                                                                                  style: const TextStyle(color: Color(0xFFF8F8FF)),
-                                                                                                                  decoration: InputDecoration(
-                                                                                                                    filled: true,
-                                                                                                                    fillColor: const Color(0xff38304C),
-                                                                                                                    border: InputBorder.none,
-                                                                                                                    labelText: "Email",
-                                                                                                                    prefixIcon: const Icon(Icons.email),
-                                                                                                                    hintText: "Enter email",
-                                                                                                                    hintStyle: const TextStyle(fontSize: 16, color: Colors.grey, fontWeight: FontWeight.w400),
-                                                                                                                    focusedBorder: OutlineInputBorder(
-                                                                                                                      borderRadius: BorderRadius.circular(15),
-                                                                                                                    ),
-                                                                                                                    enabledBorder: OutlineInputBorder(
-                                                                                                                      borderRadius: BorderRadius.circular(15),
-                                                                                                                      borderSide: const BorderSide(
-                                                                                                                        width: 0,
-                                                                                                                      ),
-                                                                                                                    ),
-                                                                                                                  ),
-                                                                                                                ),
-                                                                                                              ),
-                                                                                                              const SizedBox(height: 10),
-                                                                                                              SizedBox(
-                                                                                                                width: 260,
-                                                                                                                height: 80,
-                                                                                                                child: TextField(
-                                                                                                                  keyboardType: TextInputType.number,
-                                                                                                                  controller: ageController[index],
-                                                                                                                  style: const TextStyle(color: Color(0xFFF8F8FF)),
-                                                                                                                  decoration: InputDecoration(
-                                                                                                                    filled: true,
-                                                                                                                    fillColor: const Color(0xff38304C),
-                                                                                                                    border: InputBorder.none,
-                                                                                                                    labelText: "Age",
-                                                                                                                    prefixIcon: const Icon(Icons.text_increase),
-                                                                                                                    hintText: "Enter Age",
-                                                                                                                    hintStyle: const TextStyle(fontSize: 16, color: Colors.grey, fontWeight: FontWeight.w400),
-                                                                                                                    focusedBorder: OutlineInputBorder(
-                                                                                                                      borderRadius: BorderRadius.circular(15),
-                                                                                                                    ),
-                                                                                                                    enabledBorder: OutlineInputBorder(
-                                                                                                                      borderRadius: BorderRadius.circular(15),
-                                                                                                                      borderSide: const BorderSide(
-                                                                                                                        width: 0,
-                                                                                                                      ),
-                                                                                                                    ),
-                                                                                                                  ),
-                                                                                                                ),
-                                                                                                              ),
-                                                                                                            ],
-                                                                                                          ),
-                                                                                                        ),
-                                                                                                      ),
-                                                                                                    ],
-                                                                                                  ),
-                                                                                                ),
-                                                                                                const SizedBox(
-                                                                                                  width: 20,
-                                                                                                )
-                                                                                              ],
-                                                                                            );
-                                                                                          },
-                                                                                        ),
-                                                                                      ),
-                                                                                      Row(
-                                                                                          children: participantPages.map((e) {
-                                                                                        return InkWell(
-                                                                                          onTap: () {
-                                                                                            scrollController.animateTo((e - 1) * 280.toDouble(), duration: const Duration(milliseconds: 500), curve: Curves.ease);
-                                                                                          },
-                                                                                          child: Row(
-                                                                                            children: [
-                                                                                              Container(
-                                                                                                  color: const Color(0xff382E4C),
-                                                                                                  height: 20,
-                                                                                                  width: 20,
-                                                                                                  child: Center(
-                                                                                                      child: Text(
-                                                                                                    e.toString(),
-                                                                                                    style: const TextStyle(color: Colors.white),
-                                                                                                  ))),
-                                                                                              const SizedBox(width: 5),
-                                                                                            ],
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                      showModalBottomSheet<
+                                                                          void>(
+                                                                        isScrollControlled:
+                                                                            true,
+                                                                        context:
+                                                                            context,
+                                                                        builder:
+                                                                            (BuildContext
+                                                                                context) {
+                                                                          return SingleChildScrollView(
+                                                                            child:
+                                                                                Padding(
+                                                                              padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                                                                              child: StatefulBuilder(builder: (BuildContext context, modalState) {
+                                                                                return Container(
+                                                                                  padding: const EdgeInsets.only(top: 15),
+                                                                                  color: const Color(0xff201A30),
+                                                                                  child: Container(
+                                                                                      padding: const EdgeInsets.all(10),
+                                                                                      margin: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
+                                                                                      height: Get.height,
+                                                                                      child: Column(
+                                                                                        mainAxisSize: MainAxisSize.min,
+                                                                                        children: [
+                                                                                          const Text(
+                                                                                            "Enter Participant Details",
+                                                                                            style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w600),
                                                                                           ),
-                                                                                        );
-                                                                                      }).toList()),
-                                                                                      const SizedBox(height: 85),
-                                                                                      ElevatedButton(
-                                                                                          style: ElevatedButton.styleFrom(minimumSize: Size(Get.width, 40), backgroundColor: const Color(0xffB83B5D), textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500) // Background color
+                                                                                          const SizedBox(
+                                                                                            height: 120,
+                                                                                          ),
+                                                                                          Container(
+                                                                                            height: Get.height * 0.50,
+                                                                                            child: ListView.builder(
+                                                                                              scrollDirection: Axis.horizontal,
+                                                                                              shrinkWrap: true,
+                                                                                              itemCount: participants,
+                                                                                              controller: scrollController,
+                                                                                              itemBuilder: (context, index) {
+                                                                                                nameController[0].text = FirebaseAuth.instance.currentUser!.displayName!;
+                                                                                                emailController[0].text = FirebaseAuth.instance.currentUser!.email!;
+                                                                                                return Column(
+                                                                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                                                                  children: [
+                                                                                                    Container(
+                                                                                                      width: 280,
+                                                                                                      padding: const EdgeInsets.only(top: 15),
+                                                                                                      child: Row(
+                                                                                                        children: [
+                                                                                                          Expanded(
+                                                                                                            child: Container(
+                                                                                                              margin: const EdgeInsets.only(right: 20),
+                                                                                                              alignment: Alignment.center,
+                                                                                                              decoration: BoxDecoration(
+                                                                                                                borderRadius: BorderRadius.circular(10),
+                                                                                                              ),
+                                                                                                              child: Column(
+                                                                                                                children: [
+                                                                                                                  Text(
+                                                                                                                    "Person ${index + 1}",
+                                                                                                                    textAlign: TextAlign.center,
+                                                                                                                    style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w600),
+                                                                                                                  ),
+                                                                                                                  const SizedBox(
+                                                                                                                    height: 10,
+                                                                                                                  ),
+                                                                                                                  SizedBox(
+                                                                                                                    width: 260,
+                                                                                                                    height: 80,
+                                                                                                                    child: TextField(
+                                                                                                                      controller: nameController[index],
+                                                                                                                      style: const TextStyle(color: Color(0xFFF8F8FF)),
+                                                                                                                      decoration: InputDecoration(
+                                                                                                                        filled: true,
+                                                                                                                        fillColor: const Color(0xff38304C),
+                                                                                                                        border: InputBorder.none,
+                                                                                                                        labelText: "Name",
+                                                                                                                        prefixIcon: const Icon(Icons.person),
+                                                                                                                        hintText: "Enter name",
+                                                                                                                        hintStyle: const TextStyle(fontSize: 16, color: Colors.grey, fontWeight: FontWeight.w400),
+                                                                                                                        focusedBorder: OutlineInputBorder(
+                                                                                                                          borderRadius: BorderRadius.circular(15),
+                                                                                                                        ),
+                                                                                                                        enabledBorder: OutlineInputBorder(
+                                                                                                                          borderRadius: BorderRadius.circular(15),
+                                                                                                                          borderSide: const BorderSide(
+                                                                                                                            width: 0,
+                                                                                                                          ),
+                                                                                                                        ),
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                  ),
+                                                                                                                  const SizedBox(height: 10),
+                                                                                                                  SizedBox(
+                                                                                                                    width: 260,
+                                                                                                                    height: 80,
+                                                                                                                    child: TextField(
+                                                                                                                      controller: emailController[index],
+                                                                                                                      style: const TextStyle(color: Color(0xFFF8F8FF)),
+                                                                                                                      decoration: InputDecoration(
+                                                                                                                        filled: true,
+                                                                                                                        fillColor: const Color(0xff38304C),
+                                                                                                                        border: InputBorder.none,
+                                                                                                                        labelText: "Email",
+                                                                                                                        prefixIcon: const Icon(Icons.email),
+                                                                                                                        hintText: "Enter email",
+                                                                                                                        hintStyle: const TextStyle(fontSize: 16, color: Colors.grey, fontWeight: FontWeight.w400),
+                                                                                                                        focusedBorder: OutlineInputBorder(
+                                                                                                                          borderRadius: BorderRadius.circular(15),
+                                                                                                                        ),
+                                                                                                                        enabledBorder: OutlineInputBorder(
+                                                                                                                          borderRadius: BorderRadius.circular(15),
+                                                                                                                          borderSide: const BorderSide(
+                                                                                                                            width: 0,
+                                                                                                                          ),
+                                                                                                                        ),
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                  ),
+                                                                                                                  const SizedBox(height: 10),
+                                                                                                                  SizedBox(
+                                                                                                                    width: 260,
+                                                                                                                    height: 80,
+                                                                                                                    child: TextField(
+                                                                                                                      keyboardType: TextInputType.number,
+                                                                                                                      controller: ageController[index],
+                                                                                                                      style: const TextStyle(color: Color(0xFFF8F8FF)),
+                                                                                                                      decoration: InputDecoration(
+                                                                                                                        filled: true,
+                                                                                                                        fillColor: const Color(0xff38304C),
+                                                                                                                        border: InputBorder.none,
+                                                                                                                        labelText: "Age",
+                                                                                                                        prefixIcon: const Icon(Icons.text_increase),
+                                                                                                                        hintText: "Enter Age",
+                                                                                                                        hintStyle: const TextStyle(fontSize: 16, color: Colors.grey, fontWeight: FontWeight.w400),
+                                                                                                                        focusedBorder: OutlineInputBorder(
+                                                                                                                          borderRadius: BorderRadius.circular(15),
+                                                                                                                        ),
+                                                                                                                        enabledBorder: OutlineInputBorder(
+                                                                                                                          borderRadius: BorderRadius.circular(15),
+                                                                                                                          borderSide: const BorderSide(
+                                                                                                                            width: 0,
+                                                                                                                          ),
+                                                                                                                        ),
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                  ),
+                                                                                                                ],
+                                                                                                              ),
+                                                                                                            ),
+                                                                                                          ),
+                                                                                                        ],
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                    const SizedBox(
+                                                                                                      width: 20,
+                                                                                                    )
+                                                                                                  ],
+                                                                                                );
+                                                                                              },
+                                                                                            ),
+                                                                                          ),
+                                                                                          Row(
+                                                                                              children: participantPages.map((e) {
+                                                                                            return InkWell(
+                                                                                              onTap: () {
+                                                                                                scrollController.animateTo((e - 1) * 280.toDouble(), duration: const Duration(milliseconds: 500), curve: Curves.ease);
+                                                                                              },
+                                                                                              child: Row(
+                                                                                                children: [
+                                                                                                  Container(
+                                                                                                      color: const Color(0xff382E4C),
+                                                                                                      height: 20,
+                                                                                                      width: 20,
+                                                                                                      child: Center(
+                                                                                                          child: Text(
+                                                                                                        e.toString(),
+                                                                                                        style: const TextStyle(color: Colors.white),
+                                                                                                      ))),
+                                                                                                  const SizedBox(width: 5),
+                                                                                                ],
                                                                                               ),
-                                                                                          onPressed: () async {
-                                                                                            modalState(() {
-                                                                                              isLoading = true;
-                                                                                            });
-                                                                                            bool validate = false;
-                                                                                            for (int i = 0; i < nameController.length; i++) {
-                                                                                              if (nameController[i].text.isEmpty) {
-                                                                                                Toast().errorMessage("Name Cannot be empty");
+                                                                                            );
+                                                                                          }).toList()),
+                                                                                          const SizedBox(height: 85),
+                                                                                          ElevatedButton(
+                                                                                              style: ElevatedButton.styleFrom(minimumSize: Size(Get.width, 40), backgroundColor: const Color(0xffB83B5D), textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500) // Background color
+                                                                                                  ),
+                                                                                              onPressed: () async {
                                                                                                 modalState(() {
-                                                                                                  isLoading = false;
+                                                                                                  isLoading = true;
                                                                                                 });
-                                                                                                validate = false;
-                                                                                                break;
-                                                                                              } else if (emailController[i].text.isEmpty) {
-                                                                                                validate = false;
-                                                                                                Toast().errorMessage("Email cannot be empty");
-                                                                                                modalState(() {
-                                                                                                  isLoading = false;
-                                                                                                });
-                                                                                                break;
-                                                                                              } else if (ageController[i].text.isEmpty) {
-                                                                                                validate = false;
-                                                                                                Toast().errorMessage("Age cannot be empty");
-                                                                                                modalState(() {
-                                                                                                  isLoading = false;
-                                                                                                });
-                                                                                                break;
-                                                                                              } else {
-                                                                                                validate = true;
-                                                                                              }
-                                                                                            }
-                                                                                            if (validate) {
-                                                                                              for (int i = 0; i < participants; i++) {
-                                                                                                Map<String, dynamic> userData = {
-                                                                                                  "no": "${i + 1}",
-                                                                                                  "name": nameController[i].text,
-                                                                                                  "email": emailController[i].text,
-                                                                                                  "age": ageController[i].text
-                                                                                                };
-                                                                                                bookedUserData.add(userData);
+                                                                                                bool validate = false;
+                                                                                                for (int i = 0; i < nameController.length; i++) {
+                                                                                                  if (nameController[i].text.isEmpty) {
+                                                                                                    Toast().errorMessage("Name Cannot be empty");
+                                                                                                    modalState(() {
+                                                                                                      isLoading = false;
+                                                                                                    });
+                                                                                                    validate = false;
+                                                                                                    break;
+                                                                                                  } else if (emailController[i].text.isEmpty) {
+                                                                                                    validate = false;
+                                                                                                    Toast().errorMessage("Email cannot be empty");
+                                                                                                    modalState(() {
+                                                                                                      isLoading = false;
+                                                                                                    });
+                                                                                                    break;
+                                                                                                  } else if (ageController[i].text.isEmpty) {
+                                                                                                    validate = false;
+                                                                                                    Toast().errorMessage("Age cannot be empty");
+                                                                                                    modalState(() {
+                                                                                                      isLoading = false;
+                                                                                                    });
+                                                                                                    break;
+                                                                                                  } else {
+                                                                                                    validate = true;
+                                                                                                  }
+                                                                                                }
+                                                                                                if (validate) {
+                                                                                                  for (int i = 0; i < participants; i++) {
+                                                                                                    Map<String, dynamic> userData = {
+                                                                                                      "no": "${i + 1}",
+                                                                                                      "name": nameController[i].text,
+                                                                                                      "email": emailController[i].text,
+                                                                                                      "age": ageController[i].text
+                                                                                                    };
+                                                                                                    bookedUserData.add(userData);
 
-                                                                                                await FirebaseTable().eventsTable.doc(widget.data["id"]).update({
-                                                                                                  "participants": FieldValue.arrayUnion([userData])
-                                                                                                });
-                                                                                              }
-                                                                                              modalState(() {
-                                                                                                isLoading = true;
-                                                                                              });
+                                                                                                    await FirebaseTable().eventsTable.doc(widget.data["id"]).update({
+                                                                                                      "participants": FieldValue.arrayUnion([userData])
+                                                                                                    });
+                                                                                                  }
+                                                                                                  modalState(() {
+                                                                                                    isLoading = true;
+                                                                                                  });
 
-                                                                                              Navigator.pop(context);
-                                                                                              Navigator.pop(context);
-                                                                                              makePayment();
-                                                                                            }
-                                                                                          },
-                                                                                          child: isLoading ? CircularProgressIndicator() : const Text("Pay")),
-                                                                                    ],
-                                                                                  )),
-                                                                            );
-                                                                          }),
-                                                                        ),
+                                                                                                  Navigator.pop(context);
+                                                                                                  Navigator.pop(context);
+                                                                                                  makePayment();
+                                                                                                }
+                                                                                              },
+                                                                                              child: isLoading ? CircularProgressIndicator() : const Text("Pay")),
+                                                                                        ],
+                                                                                      )),
+                                                                                );
+                                                                              }),
+                                                                            ),
+                                                                          );
+                                                                        },
                                                                       );
-                                                                    },
-                                                                  );
-                                                                }),
-                                                          ],
+                                                                    }
+                                                                  }),
+                                                            ],
+                                                          ),
                                                         ),
-                                                      ),
-                                                    );
-                                                  });
-                                                },
-                                              );
+                                                      );
+                                                    });
+                                                  },
+                                                );
+                                              }
                                             },
                                             child: const Text("Book a spot"),
                                           )),

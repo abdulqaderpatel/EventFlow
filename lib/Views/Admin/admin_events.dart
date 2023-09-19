@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
-import 'package:eventflow/Views/Misc/firebase_messaging.dart';
-import 'package:eventflow/Views/User/event_details.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:get/get.dart';
 
 import 'package:intl/intl.dart';
@@ -27,10 +26,7 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
   ];
   int currentIndex = 0;
 
-  @override
-  void initState() {
-    // TODO: implement initState
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -56,14 +52,14 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
                     child: Column(
                       children: [
                         Container(
-                          margin: EdgeInsets.only(right: 20),
+                          margin: const EdgeInsets.only(right: 20),
                           height: 100,
-                          width: 150,
+                          width: 130,
                           decoration: BoxDecoration(
                               border: currentIndex == 0
                                   ? Border.all(width: 2, color: Colors.grey)
                                   : null,
-                              gradient: LinearGradient(colors: [
+                              gradient: const LinearGradient(colors: [
                                 Color(0xffF907FC),
                                 Color(0xff05D6D9)
                               ]),
@@ -94,11 +90,11 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
                     child: Column(
                       children: [
                         Container(
-                          margin: EdgeInsets.only(right: 20),
+                          margin: const EdgeInsets.only(right: 20),
                           height: 100,
-                          width: 150,
+                          width: 130,
                           decoration: BoxDecoration(
-                              gradient: LinearGradient(colors: [
+                              gradient: const LinearGradient(colors: [
                                 Color(0xffFF0000),
                                 Color(0xffFF7878)
                               ]),
@@ -130,7 +126,7 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
               ),
               Container(
                 height: Get.height * 0.75,
-                padding: EdgeInsets.symmetric(vertical: 10),
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 child: ListView(
                   children: [
                     StreamBuilder<QuerySnapshot>(
@@ -181,7 +177,7 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
                                             children: [
                                               Container(
                                                 decoration: BoxDecoration(
-                                                  gradient: LinearGradient(
+                                                  gradient: const LinearGradient(
                                                     colors: [
                                                       Colors.black,
                                                       Color(0xff4D4855)
@@ -434,7 +430,7 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
                                             children: [
                                               Container(
                                                 decoration: BoxDecoration(
-                                                  gradient: LinearGradient(
+                                                  gradient: const LinearGradient(
                                                     colors: [
                                                       Colors.black,
                                                       Color(0xff4D4855)
@@ -442,7 +438,7 @@ class _AdminEventsScreenState extends State<AdminEventsScreen> {
                                                     begin: Alignment.bottomLeft,
                                                     end: Alignment.topRight,
                                                   ),
-                                                  color: Color(0xffFF4655),
+                                                  color: const Color(0xffFF4655),
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                     20,

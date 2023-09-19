@@ -250,7 +250,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                                       })),
                                       child: const UserDetailField(
                                         icon: Icons.event,
-                                        placeholder: "Enrolled events",
+                                        placeholder: "Your events",
                                         details: "view",
                                         isIcon: true,
                                         textIcon: Icons.event,

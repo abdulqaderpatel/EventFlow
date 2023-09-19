@@ -57,7 +57,7 @@ class _UserEnrolledEventsScreenState extends State<UserEnrolledEventsScreen> {
                       Container(
                         margin: EdgeInsets.only(right: 20),
                         height: 100,
-                        width: 150,
+                        width: 130,
                         decoration: BoxDecoration(
                             border: currentIndex == 0
                                 ? Border.all(width: 2, color: Colors.grey)

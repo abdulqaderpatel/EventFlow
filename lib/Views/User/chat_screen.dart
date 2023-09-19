@@ -90,7 +90,6 @@ class _ChatScreenState extends State<ChatScreen> {
       body: GestureDetector(
         onHorizontalDragEnd: (details) {
           if (details.primaryVelocity! > 0) {
-            print(swipe);
             if (swipe == 3) {
               setState(() {
                 swipe = 0;
@@ -103,7 +102,6 @@ class _ChatScreenState extends State<ChatScreen> {
           }
 
           if (details.primaryVelocity! < 0) {
-            print(swipe);
             if (swipe == 0) {
               setState(() {
                 swipe = 3;
@@ -412,7 +410,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                             const EdgeInsets
                                                                 .all(10),
                                                         color:
-                                                            Color(0xff3E4649),
+                                                            const Color(0xff3E4649),
                                                         child: Column(
                                                           children: [
                                                             Row(

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eventflow/Views/User/chat_screen.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -56,7 +56,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                               mainAxisAlignment:
                                                   MainAxisAlignment.start,
                                               children: [
-                                                Container(
+                                                SizedBox(
                                                   height: 40,
                                                   child: ClipRect(
                                                       child: Image.network(
@@ -99,26 +99,63 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                               children: [
                                                 ElevatedButton(
                                                   onPressed: () {
-                                                    FirebaseTable().usersTable.doc(FirebaseAuth.instance.currentUser!.uid).update({"following":FieldValue.arrayUnion([client["id"]])});
-                                                    FirebaseTable().usersTable.doc(client["id"]).update({"follower":FieldValue.arrayUnion([FirebaseAuth.instance.currentUser!.uid])});
-                                                    FirebaseTable().usersTable.doc(FirebaseAuth.instance.currentUser!.uid).collection("notifications").doc(client["id"]).delete();
+                                                    FirebaseTable()
+                                                        .usersTable
+                                                        .doc(FirebaseAuth
+                                                            .instance
+                                                            .currentUser!
+                                                            .uid)
+                                                        .update({
+                                                      "following":
+                                                          FieldValue.arrayUnion(
+                                                              [client["id"]])
+                                                    });
+                                                    FirebaseTable()
+                                                        .usersTable
+                                                        .doc(client["id"])
+                                                        .update({
+                                                      "follower": FieldValue
+                                                          .arrayUnion([
+                                                        FirebaseAuth.instance
+                                                            .currentUser!.uid
+                                                      ])
+                                                    });
+                                                    FirebaseTable()
+                                                        .usersTable
+                                                        .doc(FirebaseAuth
+                                                            .instance
+                                                            .currentUser!
+                                                            .uid)
+                                                        .collection(
+                                                            "notifications")
+                                                        .doc(client["id"])
+                                                        .delete();
                                                   },
-                                                  child:
-                                                      const Text("Follow back"),
                                                   style:
                                                       ElevatedButton.styleFrom(
                                                           backgroundColor:
                                                               Colors.blue),
+                                                  child:
+                                                      const Text("Follow back"),
                                                 ),
                                                 ElevatedButton(
                                                   onPressed: () {
-                                                    FirebaseTable().usersTable.doc(FirebaseAuth.instance.currentUser!.uid).collection("notifications").doc(client["id"]).delete();
+                                                    FirebaseTable()
+                                                        .usersTable
+                                                        .doc(FirebaseAuth
+                                                            .instance
+                                                            .currentUser!
+                                                            .uid)
+                                                        .collection(
+                                                            "notifications")
+                                                        .doc(client["id"])
+                                                        .delete();
                                                   },
-                                                  child: const Text("Cancel"),
                                                   style:
                                                       ElevatedButton.styleFrom(
                                                           backgroundColor:
                                                               Colors.red),
+                                                  child: const Text("Cancel"),
                                                 ),
                                               ],
                                             ),
