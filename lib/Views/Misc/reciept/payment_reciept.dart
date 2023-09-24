@@ -224,7 +224,7 @@ class PaymentReciept extends StatelessWidget {
                       ),
                       const Text(
                           "Please carry along this reciept when attending the event",
-                          style: TextStyle(
+                          style: TextStyle(color: Colors.grey,
                               fontSize: 13, fontWeight: FontWeight.bold))
                     ],
                   ),

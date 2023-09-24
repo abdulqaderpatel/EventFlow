@@ -257,6 +257,7 @@ class _RecieptDetailsScreenState extends State<RecieptDetailsScreen> {
                                           const Text(
                                               "Please carry along this reciept when attending the event",
                                               style: TextStyle(
+                                                color: Colors.grey,
                                                   fontSize: 13,
                                                   fontWeight: FontWeight.bold))
                                         ],
