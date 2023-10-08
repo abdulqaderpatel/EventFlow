@@ -39,7 +39,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          color: Color(0xff111111),
+          color: const Color(0xff111111),
           child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseTable()
                   .usersTable
@@ -155,7 +155,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                                 Navigator.push(context,
                                                     MaterialPageRoute(
                                                         builder: (context) {
-                                                  return UserFollowerScreen();
+                                                  return const UserFollowerScreen();
                                                 }));
                                               },
                                               child: Text(
@@ -185,7 +185,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                                 Navigator.push(context,
                                                     MaterialPageRoute(
                                                         builder: (context) {
-                                                  return UserFollowingScreen();
+                                                  return const UserFollowingScreen();
                                                 }));
                                               },
                                               child: Text(
@@ -260,7 +260,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                         onTap: () => Navigator.push(context,
                                             MaterialPageRoute(
                                                 builder: (context) {
-                                          return UserEnrolledEventsScreen();
+                                          return const UserEnrolledEventsScreen();
                                         })),
                                         child: const UserDetailField(
                                           icon: Icons.event,
@@ -285,7 +285,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                                 .w500) // Background color
                                         ),
                                     onPressed: () {
-                                      Get.to(UserRecieptsScreen());
+                                      Get.to(const UserRecieptsScreen());
                                     },
                                     child: const Text("Your Reciepts"),
                                   ),

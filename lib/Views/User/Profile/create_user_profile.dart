@@ -166,12 +166,10 @@ class _CreateUserProfileScreenState extends State<CreateUserProfileScreen> {
                                           profileImage!,
                                         ),
                                       )
-                                    : CircleAvatar(
+                                    : const CircleAvatar(
                                         radius: 56,
                                         backgroundColor: Colors.white,
-                                        backgroundImage: NetworkImage(
-                                          items[0]["image"],
-                                        ),
+
                                       ),
                               ),
                             ),

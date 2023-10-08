@@ -174,9 +174,7 @@ class _CreateAdminProfileScreenState extends State<CreateAdminProfileScreen> {
                                           : CircleAvatar(
                                               radius: 56,
                                               backgroundColor: Colors.white,
-                                              backgroundImage: NetworkImage(
-                                                items[0]["image"],
-                                              ),
+
                                             ),
                                     ),
                                   ),

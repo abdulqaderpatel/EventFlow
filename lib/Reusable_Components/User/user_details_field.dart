@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -23,66 +22,64 @@ class UserDetailField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      child: Container(
-        height: Get.height * 0.11,
-        width:isLong?Get.width: Get.width * 0.45,
-        padding: const EdgeInsets.only(
-          top: 8,
-          left: 8,
-          right: 8,
-          bottom: 20,
+    return Container(
+      height: Get.height * 0.11,
+      width:isLong?Get.width*0.95: Get.width * 0.45,
+      padding: const EdgeInsets.only(
+        top: 8,
+        left: 8,
+        right: 8,
+        bottom: 20,
+      ),
+      decoration: BoxDecoration(
+        color: const Color(0xff1C1C1E),
+        borderRadius: BorderRadius.circular(
+          20,
         ),
-        decoration: BoxDecoration(
-          color: const Color(0xff1C1C1E),
-          borderRadius: BorderRadius.circular(
-            20,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+             Text(
+                placeholder,
+                maxLines: 1,
+                style: const TextStyle(
+                    overflow: TextOverflow.ellipsis,
+                    color: Colors.grey,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500),
+              ),
+              Icon(
+                icon,
+                color: Colors.blueGrey,
+              ),
+            ],
           ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-               Text(
-                  placeholder,
-                  maxLines: 1,
-                  style: const TextStyle(
-                      overflow: TextOverflow.ellipsis,
-                      color: Colors.grey,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500),
-                ),
-                Icon(
-                  icon,
-                  color: Colors.blueGrey,
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment:isLong?MainAxisAlignment.start: MainAxisAlignment.center,
-              children: [
-                InkWell(
-                    onTap: voidCallback,
-                    child: !isIcon!
-                        ? Text(
-                            details,
-                            maxLines: 2,
-                            style: TextStyle(
-                                overflow: TextOverflow.clip,
-                                color: Colors.white,
-                                fontSize: isLong?16:14,
-                                fontWeight: FontWeight.w500),
-                          )
-                        : Icon(
-                            textIcon,
-                            color: Colors.white,
-                          ))
-              ],
-            )
-          ],
-        ),
+          Row(
+            mainAxisAlignment:isLong?MainAxisAlignment.start: MainAxisAlignment.center,
+            children: [
+              InkWell(
+                  onTap: voidCallback,
+                  child: !isIcon!
+                      ? Text(
+                          details,
+                          maxLines: 2,
+                          style: TextStyle(
+                              overflow: TextOverflow.clip,
+                              color: Colors.white,
+                              fontSize: isLong?16:14,
+                              fontWeight: FontWeight.w500),
+                        )
+                      : Icon(
+                          textIcon,
+                          color: Colors.white,
+                        ))
+            ],
+          )
+        ],
       ),
     );
   }

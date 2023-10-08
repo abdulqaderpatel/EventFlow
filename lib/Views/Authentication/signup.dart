@@ -46,7 +46,7 @@ class _SignupScreenState extends State<SignupScreen> {
   late List<Map<String, dynamic>> users;
   late List<Map<String, dynamic>> admins;
   static final emailRegExp = RegExp(
-      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+      r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 
   Future<bool> checkIfAdminLoggingIntoUser(String email) async {
     users = [];
@@ -364,9 +364,11 @@ class _SignupScreenState extends State<SignupScreen> {
                               }
                               Toast().successMessage(
                                   "Account created successfully");
-                              setState(() {
-                                buttonLoader=false;
-                              });
+                              if(mounted) {
+                                setState(() {
+                                  buttonLoader = false;
+                                });
+                              }
                             } on FirebaseAuthException catch (e) {
                               if (e.code == "email-already-in-use") {
                                 Toast().errorMessage(

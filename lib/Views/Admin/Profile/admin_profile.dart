@@ -1,14 +1,8 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventflow/Reusable_Components/User/user_details_field.dart';
 import 'package:eventflow/Views/Admin/admin_events.dart';
 import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
-import 'package:eventflow/Views/User/Profile/edit_user_profile.dart';
-import 'package:eventflow/Views/User/Profile/user_follower_page.dart';
-import 'package:eventflow/Views/User/Profile/user_following_page.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:http/http.dart' as http;
+
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -37,64 +31,11 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
 
   FirebaseStorage storage = FirebaseStorage.instance;
 
-  void requestPermission() async {
-    var firebaseMessage = FirebaseMessaging.instance;
-    NotificationSettings settings = await firebaseMessage.requestPermission(
-        alert: true,
-        announcement: true,
-        badge: true,
-        carPlay: true,
-        criticalAlert: true,
-        provisional: false,
-        sound: true);
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print("granted");
-    } else if (settings.authorizationStatus ==
-        AuthorizationStatus.provisional) {
-      print("provisional");
-    } else {
-      print("revoked");
-    }
-  }
 
-  void sendPushMessage(List<dynamic> token, String body, String title) async {
-    try {
-      await http.post(Uri.parse("https://fcm.googleapis.com/fcm/send"),
-          headers: <String, String>{
-            'Content-Type': "application/json",
-            "Authorization":
-                "key=AAAAzyRvaDI:APA91bGXHlILnAiR7dKA_7Iv7H2kz1B7GQK8qRzXWG2_qjSqC9qIm5B0AmTIqnKCu81aQHfCbMlDwJQsBfE63u551WdwkMzVPy7bzTwboCriebPK2x1TV9SWyvqTAVCCjqDTYkC3epQn"
-          },
-          body: jsonEncode(<String, dynamic>{
-            "priority": "high",
-            "data": <String, dynamic>{
-              "click_action": "FLUTTER_NOTIFICATION_CLICK",
-              "status": "done",
-              "body": body,
-              "title": title
-            },
-            "notification": <String, dynamic>{
-              "title": title,
-              "body": body,
-              "android_channel_id": "dbfood"
-            },
-            "to": token
-          }));
-    } catch (e) {}
-  }
 
-  void initDetails() async {
-    DocumentSnapshot snap =
-        await FirebaseTable().eventsTable.doc("1693758139569").get();
-    List<dynamic> token = snap["token"];
-    print(token);
-  }
 
-  @override
-  void initState() {
-    requestPermission();
-    initDetails();
-  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -215,23 +156,18 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                                 const SizedBox(
                                   height: 40,
                                 ),
-                                Row(
-                                  children: [
-                                    UserDetailField(
-                                        icon: Icons.supervised_user_circle,
-                                        placeholder: "username",
-                                        details: client["username"]),
-                                    SizedBox(
-                                      width: Get.width * 0.05,
-                                    ),
-                                    UserDetailField(
-                                        icon: Icons.email,
-                                        placeholder: "email",
-                                        details: client["email"]),
-                                  ],
-                                ),
+                                UserDetailField(isLong: true,
+                                    icon: Icons.supervised_user_circle,
+                                    placeholder: "username",
+                                    details: client["username"]),
+                                SizedBox(height: Get.height*0.03,),
+                                UserDetailField(
+                                  isLong:true,
+                                    icon: Icons.email,
+                                    placeholder: "email",
+                                    details: client["email"]),
                                 SizedBox(
-                                  height: Get.height * 0.05,
+                                  height: Get.height * 0.03,
                                 ),
                                 Row(
                                   children: [
@@ -246,7 +182,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                                     InkWell(
                                       onTap: () => Navigator.push(context,
                                           MaterialPageRoute(builder: (context) {
-                                        return AdminEventsScreen();
+                                        return const AdminEventsScreen();
                                       })),
                                       child: const UserDetailField(
                                         icon: Icons.event,
