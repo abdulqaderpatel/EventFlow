@@ -189,9 +189,11 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         .get();
 
     for (var element in data.docs) {
-      setState(() {
-        temp.add(element.data());
-      });
+      if (mounted) {
+        setState(() {
+          temp.add(element.data());
+        });
+      }
     }
 
     setState(() {
@@ -296,7 +298,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 5),
                           width: Get.width * 0.5,
                           decoration: BoxDecoration(
-                              color:  const Color(0xff4E4654),
+                              color:  const Color(0xff352D3C),
                               borderRadius: BorderRadius.circular(10)),
                           child: DropdownButtonHideUnderline(
                             child: DropdownButton<String>(

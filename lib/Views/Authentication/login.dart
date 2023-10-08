@@ -119,7 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
     users = [];
     var userData = await FirebaseTable()
         .adminsTable
-        .where('email', isEqualTo: FirebaseAuth.instance.currentUser!.email)
+        .where('email', isEqualTo: FirebaseAuth.instance.currentUser?.email)
         .get();
 
     List<Map<String, dynamic>> userTemp = [];
@@ -441,11 +441,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                   "name": FirebaseAuth
                                       .instance.currentUser!.displayName,
                                   "image": "",
-                                  "phone_number": 0
+                                  "phone_number": 0,
+                                  "id":FirebaseAuth.instance.currentUser!.uid,
                                 }).then((value) {
-                                  setState(() {
-                                    googleLoader = false;
-                                  });
+                                  if(mounted) {
+                                    setState(() {
+                                      googleLoader = false;
+                                    });
+                                  }
                                   Navigator.pushReplacement(context,
                                       MaterialPageRoute(builder: (context) {
                                     return const CreateAdminProfileScreen();
