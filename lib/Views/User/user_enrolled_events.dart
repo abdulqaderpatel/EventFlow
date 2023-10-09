@@ -1,16 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
-import 'package:eventflow/Views/Misc/firebase_messaging.dart';
 import 'package:eventflow/Views/User/event_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-
 import 'package:intl/intl.dart';
 
-import '../Admin/admin_event_details.dart';
 
 class UserEnrolledEventsScreen extends StatefulWidget {
   const UserEnrolledEventsScreen({super.key});
@@ -28,17 +23,14 @@ class _UserEnrolledEventsScreenState extends State<UserEnrolledEventsScreen> {
   ];
   int currentIndex = 0;
 
-  @override
-  void initState() {
-    // TODO: implement initState
-  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
       child: Container(
-        color: Color(0xff00141C),
+        color: const Color(0xff00141C),
         padding:
             EdgeInsets.only(left: Get.width * 0.05, right: Get.width * 0.05),
         child: Column(
@@ -55,14 +47,14 @@ class _UserEnrolledEventsScreenState extends State<UserEnrolledEventsScreen> {
                   child: Column(
                     children: [
                       Container(
-                        margin: EdgeInsets.only(right: 20),
+                        margin: const EdgeInsets.only(right: 20),
                         height: 100,
                         width: 130,
                         decoration: BoxDecoration(
                             border: currentIndex == 0
                                 ? Border.all(width: 2, color: Colors.grey)
                                 : null,
-                            gradient: LinearGradient(
+                            gradient: const LinearGradient(
                                 colors: [Color(0xffF907FC), Color(0xff05D6D9)]),
                             borderRadius: BorderRadius.circular(20),
                             color: Colors.red),
@@ -91,11 +83,11 @@ class _UserEnrolledEventsScreenState extends State<UserEnrolledEventsScreen> {
                   child: Column(
                     children: [
                       Container(
-                        margin: EdgeInsets.only(right: 20),
+                        margin: const EdgeInsets.only(right: 20),
                         height: 100,
                         width: 130,
                         decoration: BoxDecoration(
-                            gradient: LinearGradient(
+                            gradient: const LinearGradient(
                                 colors: [Color(0xffFF0000), Color(0xffFF7878)]),
                             border: currentIndex == 1
                                 ? Border.all(width: 2, color: Colors.grey)
@@ -125,7 +117,7 @@ class _UserEnrolledEventsScreenState extends State<UserEnrolledEventsScreen> {
             ),
             Container(
               height: Get.height * 0.80,
-              padding: EdgeInsets.symmetric(vertical: 10),
+              padding: const EdgeInsets.symmetric(vertical: 10),
               child: ListView(
                 children: [
                   StreamBuilder<QuerySnapshot>(
@@ -179,7 +171,7 @@ class _UserEnrolledEventsScreenState extends State<UserEnrolledEventsScreen> {
                                           children: [
                                             Container(
                                               decoration: BoxDecoration(
-                                                gradient: LinearGradient(
+                                                gradient: const LinearGradient(
                                                   colors: [
                                                     Colors.black,
                                                     Color(0xff4D4855)
@@ -428,7 +420,7 @@ class _UserEnrolledEventsScreenState extends State<UserEnrolledEventsScreen> {
                                           children: [
                                             Container(
                                               decoration: BoxDecoration(
-                                                gradient: LinearGradient(
+                                                gradient: const LinearGradient(
                                                   colors: [
                                                     Colors.black,
                                                     Color(0xff4D4855)
@@ -436,7 +428,7 @@ class _UserEnrolledEventsScreenState extends State<UserEnrolledEventsScreen> {
                                                   begin: Alignment.bottomLeft,
                                                   end: Alignment.topRight,
                                                 ),
-                                                color: Color(0xffFF4655),
+                                                color: const Color(0xffFF4655),
                                                 borderRadius:
                                                     BorderRadius.circular(
                                                   20,

@@ -1,11 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventflow/Views/Misc/Firebase/firebase_tables.dart';
-import 'package:eventflow/Views/Misc/firebase_messaging.dart';
+
 import 'package:eventflow/Views/User/event_details.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import 'package:intl/intl.dart';
@@ -36,10 +34,7 @@ class _DisplayEventsScreenState extends State<DisplayEventsScreen> {
   ];
   int selectedEventNo = 0;
 
-  @override
-  void initState() {
-    // TODO: implement initState
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -365,7 +360,7 @@ class _DisplayEventsScreenState extends State<DisplayEventsScreen> {
                                   : InkWell(
                                       child: Container(),
                                     );
-                              ;
+
                               clientWidgets.add(clientWidget);
                             }
                           }

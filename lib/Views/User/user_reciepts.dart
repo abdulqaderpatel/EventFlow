@@ -18,28 +18,6 @@ class UserRecieptsScreen extends StatefulWidget {
 }
 
 class _UserRecieptsScreenState extends State<UserRecieptsScreen> {
-  List<String> categoryTypes = [
-    "Trekking",
-    "Concert",
-    "Marathon",
-    "Educational",
-    "Celebration",
-    "Misc"
-  ];
-  List<String> categoryImages = [
-    "assets/images/mountain.jpeg",
-    "assets/images/timepass3.jpg",
-    "assets/images/marathon.jpeg",
-    "assets/images/educational.jpeg",
-    "assets/images/celebration.jpeg",
-    "assets/images/others.jpeg"
-  ];
-  int selectedEventNo = 0;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-  }
 
   @override
   Widget build(BuildContext context) {
