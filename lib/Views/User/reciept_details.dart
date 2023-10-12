@@ -193,66 +193,68 @@ class _RecieptDetailsScreenState extends State<RecieptDetailsScreen> {
                                           const SizedBox(
                                             height: 10,
                                           ),
-                                          DataTable(
-                                            horizontalMargin: 0,
-                                            columns: const [
-                                              DataColumn(
-                                                  label: Text('NO',
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color:
-                                                              Colors.white))),
-                                              DataColumn(
-                                                  label: Text('Name',
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color:
-                                                              Colors.white))),
-                                              DataColumn(
-                                                  label: Text('Email',
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color:
-                                                              Colors.white))),
-                                              DataColumn(
-                                                  label: Text('Age',
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color:
-                                                              Colors.white))),
-                                            ],
-                                            rows: <DataRow>[
-                                              ...client["userdata"].map((e) {
-                                                return DataRow(cells: [
-                                                  DataCell(Text(e["no"],
-                                                      style: const TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 10))),
-                                                  DataCell(Text(e["name"],
-                                                      style: const TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 10))),
-                                                  DataCell(Text(e["email"],
-                                                      style: const TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 10))),
-                                                  DataCell(
-                                                    Text(e["age"],
+                                          SingleChildScrollView(scrollDirection: Axis.horizontal,
+                                            child: DataTable(
+                                              horizontalMargin: 0,
+                                              columns: const [
+                                                DataColumn(
+                                                    label: Text('NO',
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color:
+                                                                Colors.white))),
+                                                DataColumn(
+                                                    label: Text('Name',
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color:
+                                                                Colors.white))),
+                                                DataColumn(
+                                                    label: Text('Email',
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color:
+                                                                Colors.white))),
+                                                DataColumn(
+                                                    label: Text('Age',
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color:
+                                                                Colors.white))),
+                                              ],
+                                              rows: <DataRow>[
+                                                ...client["userdata"].map((e) {
+                                                  return DataRow(cells: [
+                                                    DataCell(Text(e["no"],
                                                         style: const TextStyle(
                                                             color: Colors.white,
-                                                            fontSize: 10)),
-                                                  ),
-                                                ]);
-                                              })
-                                            ],
+                                                            fontSize: 10))),
+                                                    DataCell(Text(e["name"],
+                                                        style: const TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 10))),
+                                                    DataCell(Text(e["email"],
+                                                        style: const TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 10))),
+                                                    DataCell(
+                                                      Text(e["age"],
+                                                          style: const TextStyle(
+                                                              color: Colors.white,
+                                                              fontSize: 10)),
+                                                    ),
+                                                  ]);
+                                                })
+                                              ],
+                                            ),
                                           ),
                                           const Text(
                                               "Please carry along this reciept when attending the event",
