@@ -43,6 +43,7 @@ dependencies:
   animated_background:
   gradient_widgets:
   flutter_email_sender:
+  gap:
 
 dev_dependencies:
   flutter_test:
